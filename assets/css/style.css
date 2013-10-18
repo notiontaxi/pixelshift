@@ -1,0 +1,47 @@
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+
+.hero-unit{
+  padding: 20px 0px 20px 0px;
+
+}
+
+.inner-svg{
+  position: relative;
+}
+
+.tooltip {
+    min-width:256px;
+    max-width:30px;
+}
+
+.glyph{
+  position: absolute;
+  z-index: 99;
+  font-size:small;
+
+}
+
+.slider{
+  height: 18px;
+}
+
+#canvas-overlay{
+  z-index: 42;
+  position: absolute;
+}
+
+.centered{
+  text-align: center;
+}
+
+.circle{
+  height: 300px;
+
+}
+
+.hidden{
+  display: none;
+}
