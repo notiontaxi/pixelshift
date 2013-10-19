@@ -19,20 +19,12 @@ define([], function() {
   function Gui(canvas, fileProcessor, coordSys){
     this.canvas = canvas;
     this.fileProcessor = fileProcessor;
-    this.coordSystem = coordSys;
 
     this.bindEvents();
 
-    $('#mode').html('performance-action')
-    $('#showMode').html('Performance data')
-    $('#showMode').attr('title',"Current visualization-mode")
     $('#container').tooltip();
 
     this.resizeContainer()
-
-    this.glyphFactory = new GlyphFactory()
-
-    $('#canvas-overlay').append(this.glyphFactory.getSvgContainer())
   }
 
   Gui.prototype.bindEvents = function(){
