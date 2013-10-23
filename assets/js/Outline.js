@@ -30,6 +30,9 @@ define(['text!templates/task_outline.html', 'js/Canvas'], function(template, Can
   Outline.prototype.renderAndAppendTo = function(identifier){
     $(identifier).html($(template))
     this.initialize()
+    $( "#slider" ).slider();
+    $( "#slider1" ).slider();
+    $( "#slider2" ).slider();
   }
 
 

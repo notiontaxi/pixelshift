@@ -15,6 +15,7 @@ define([], function() {
 // --------------------------------------
 
     function Canvas(id){
+      /*
       this.id = id;
       this.cv = document.getElementById(this.id);
       this.ctx = this.cv.getContext('2d');
@@ -26,6 +27,7 @@ define([], function() {
       this.ctx.font = "bold 12px sans-serif"
       this.ctx.textAlign = 'center'
       this.ctx.textBaseline = 'middle'
+      */
     }
 
     Canvas.prototype.getElement = function(){

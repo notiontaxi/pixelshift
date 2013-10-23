@@ -3,34 +3,26 @@ body {
   padding-bottom: 40px;
 }
 
-.hero-unit{
-  padding: 20px 0px 20px 0px;
 
-}
-
-.inner-svg{
-  position: relative;
-}
-
-.tooltip {
-    min-width:256px;
-    max-width:30px;
-}
-
-.glyph{
-  position: absolute;
-  z-index: 99;
-  font-size:small;
-
-}
-
-.slider{
-  height: 18px;
-}
-
-#canvas-overlay{
+#canvas-overlay-left, #canvas-overlay-right{
   z-index: 42;
   position: absolute;
+  display:none;
+}
+
+#controls{
+  background-color: lightblue;
+  border-radius: 4px;
+  font-size: 12pt;
+}
+
+.my-slider{
+  margin-top: 10px;
+  max-width: 100px;
+}
+
+canvas{
+  border-radius: 4px;
 }
 
 .centered{

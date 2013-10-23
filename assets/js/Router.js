@@ -16,8 +16,11 @@ require([], function() {
   Router.prototype.navigate = function(){
 
     var location = $(window.location).attr('href').split('#')[1];
-    $('#'+location).click()
 
+    if(!location)
+      $('#welcome').click()
+    else  
+      $('#'+location).click()
   }
 
   Router.prototype.bindEvents = function(){
