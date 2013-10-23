@@ -15,19 +15,33 @@ define([], function() {
 // --------------------------------------
 
     function Canvas(id){
-      /*
+      
       this.id = id;
       this.cv = document.getElementById(this.id);
       this.ctx = this.cv.getContext('2d');
 
-      this.updateSize();
+
       
       this.highlight(false);
 
       this.ctx.font = "bold 12px sans-serif"
       this.ctx.textAlign = 'center'
       this.ctx.textBaseline = 'middle'
-      */
+
+    }
+
+    Canvas.prototype.drawImage = function(img){
+
+      var height = img.height * (this.cv.width/img.width)
+      var xOffset = 0
+      var yOffset = 0
+
+      if(height < this.cv.height){
+        yOffset = (this.cv.height - height) / 2
+      }
+
+      this.clear()
+      this.getContext().drawImage(img, xOffset, yOffset, this.cv.width, height)
     }
 
     Canvas.prototype.getElement = function(){
@@ -59,7 +73,7 @@ define([], function() {
     }
 
      Canvas.prototype.clear = function(){
-      this.ctx.fillStyle="lightgrey"
+      this.ctx.fillStyle="white"
       this.ctx.fillRect(0,0, this.ctx.canvas.width, this.ctx.canvas.height)
     } 
 

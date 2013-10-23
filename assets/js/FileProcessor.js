@@ -21,15 +21,19 @@ define([], function() {
 
 
   FileProcessor.prototype.processFile = function(event, callback, callbackObj){
-    this.callback = callback;
-    this.callbackObj = callbackObj;
     event.stopPropagation()
     event.preventDefault()
 
-    var files = event.dataTransfer.files
+    this.callback = callback;
+    this.callbackObj = callbackObj;
 
+    var files = event.dataTransfer.files
+    this.img = new Image
+    this.img.src = URL.createObjectURL(files[0])
+    this.callback(this.img, this.callbackObj);
     // event will be called, when reader finished reading (see method getFileReader())
-    this.reader.readAsText(files[0])
+    //this.reader.readAsText(files[0])
+
   }
 
 
@@ -42,41 +46,6 @@ define([], function() {
     return this.createCarDataSet(this.textToArray(content));
   }
 
-
-  FileProcessor.prototype.createCarDataSet = function(values){
-    if(!!values)
-    {
-      var carDatas = Array();
-
-      for(var i = 1; i < values.length; i++)
-        carDatas.push(new window.CarData(values[i]))
-
-      return new window.DataSet(carDatas)
-    }
-  }
-
-  FileProcessor.prototype.textToArray = function(text){
-
-    var lines = text.replace(/\r\n/g, "\n").split("\n");
-    if(this.checkContent(lines[0])){
-      var result = Array();
-
-      for(var i = 0; i < lines.length; i++)
-        result.push(lines[i].split('\t'));
-
-      return result;
-    }
-    else
-      return undefined;
-
-  }
-
-
-  FileProcessor.prototype.checkContent = function(checkMe){
-    var cleaned = checkMe.replace(/\t/g, '');
-    return cleaned == "CarManufacturerMPGCylindersDisplacementHorsepowerWeightAccelerationModel YearOrigin";
-  }
-
  
   FileProcessor.prototype.getFileReader = function(){
     if (!this.reader)
@@ -85,10 +54,12 @@ define([], function() {
         this.reader = new FileReader();
 
         this.reader.addEventListener("load", function(event) {
+          console.log("load");
         });  
         
         this.reader.addEventListener("loadend", function(event) {
-          this.callback(this.parseFile(event.target.result), this.callbackObj);
+          console.log("loaded");
+          this.callback(this.img, this.callbackObj);
         }.bind(this)); 
 
 

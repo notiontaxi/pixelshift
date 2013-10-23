@@ -16,47 +16,50 @@ define([], function() {
 // --------------------------------------
 
 
-  function Gui(canvas, fileProcessor, coordSys){
-    this.canvas = canvas;
-    this.fileProcessor = fileProcessor;
+  function Gui(canvas, fileProcessor){
+    Gui.prototype.canvas = canvas;
+    Gui.prototype.fileProcessor = fileProcessor;
+    Gui.prototype.dropZone = canvas.getElement()[0];
 
-    this.bindEvents();
+    Gui.prototype.bindEvents();
 
-    $('#container').tooltip();
+  }
 
-    this.resizeContainer()
+  Gui.prototype.initialize = function(){
+
   }
 
   Gui.prototype.bindEvents = function(){
-    $('#visualization-mode').click(function(e){
-      this.switchViewTo(e.target.id);
-    }.bind(this));
 
-    dropZone = document.getElementById('canvas-overlay');
-    dropZone.addEventListener('drop', function(event){var val = this.fileProcessor.processFile(event, this.start, this)}.bind(this), false);
-    dropZone.addEventListener('dragover', function(event){this.showDragOver(event, true)}.bind(this), false);
-    dropZone.addEventListener('dragleave', function(event){this.showDragOver(event, false)}.bind(this), false);
+    this.dropZone.addEventListener('drop', function(event){var val = this.fileProcessor.processFile(event, this.start, this)}.bind(this), false);
+    this.dropZone.addEventListener('dragover', function(event){this.showDragOver(event, true)}.bind(this), false);
+    this.dropZone.addEventListener('dragleave', function(event){this.showDragOver(event, false)}.bind(this), false);
 
+    /*
      window.onresize = function(e){
       this.canvas.updateSize(function(){this.draw()}.bind(this));
-      
+     
      }.bind(this);  
+    */ 
   }
 
 
 
   // pass thet to be in own context again
-  Gui.prototype.start = function(data, that){
-
-    if(!!data){
-      that.data = data
-      that.mode = $('#mode').html()
-      
-      that.draw(mode)
+  Gui.prototype.start = function(img, that){
+    if(!!img){     
+      img.onload = function() {
+        that.canvas.drawImage(img);
+      }
     }
 
   }
 
+  Gui.prototype.showDragOver = function(event, onOrOff){
+    event.stopPropagation();
+    event.preventDefault();
+    this.canvas.highlight(onOrOff);
+  }
 
   Gui.prototype.resizeContainer = function(){
     $("#canvas-overlay").css({
