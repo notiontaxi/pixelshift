@@ -30,18 +30,21 @@ define([], function() {
 
     }
 
-    Canvas.prototype.drawImage = function(img){
+    Canvas.prototype.drawImage = function(img, _this){
 
-      var height = img.height * (this.cv.width/img.width)
+      if(!_this)
+        var _this = this
+
+      var height = img.height * (_this.cv.width/img.width)
       var xOffset = 0
       var yOffset = 0
 
-      if(height < this.cv.height){
-        yOffset = (this.cv.height - height) / 2
+      if(height < _this.cv.height){
+        yOffset = (_this.cv.height - height) / 2
       }
 
-      this.clear()
-      this.getContext().drawImage(img, xOffset, yOffset, this.cv.width, height)
+      _this.clear()
+      _this.getContext().drawImage(img, xOffset, yOffset, _this.cv.width, height)
     }
 
     Canvas.prototype.getElement = function(){

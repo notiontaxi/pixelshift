@@ -7,7 +7,7 @@ https://github.com/notiontaxi
 
 "use strict"
 
-define(['text!templates/task_outline.html', 'js/Canvas', 'js/FileProcessor', 'js/Gui'], function(template, Canvas, FileProcessor, Gui) {
+define(['text!templates/task_outline.html', 'js/Canvas', 'js/DragNDrop'], function(template, Canvas, DragNDrop) {
 
   var Outline, module;
   module = function() {}
@@ -29,7 +29,7 @@ define(['text!templates/task_outline.html', 'js/Canvas', 'js/FileProcessor', 'js
     this.leftCanvas = new Canvas('canvas-left')
     this.rightCanvas = new Canvas('canvas-right')
 
-    Gui(this.leftCanvas, new FileProcessor)
+    DragNDrop(this.leftCanvas, this.leftCanvas.drawImage)
   }
 
   Outline.prototype.renderAndAppendTo = function(identifier){
