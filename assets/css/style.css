@@ -46,8 +46,10 @@ body {
   max-width: 100px;
 }
 
-canvas{
+.canvas{
   border-radius: 4px;
+  border: 1px solid lightgrey;
+  
 }
 
 .centered{

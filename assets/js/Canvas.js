@@ -112,7 +112,6 @@ define([], function() {
 
       if (onOrOff){
         if(this.gotNewImage){
-          console.log("GET")
           this.oldImageData = this.getImageData()
           this.gotNewImage = false
         }
@@ -127,7 +126,7 @@ define([], function() {
     }
 
      Canvas.prototype.clear = function(){
-      this.ctx.fillStyle="white"
+      this.ctx.fillStyle="grey"
       this.ctx.fillRect(0,0, this.ctx.canvas.width, this.ctx.canvas.height)
     } 
 
