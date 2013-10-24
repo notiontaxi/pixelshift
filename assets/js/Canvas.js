@@ -19,8 +19,6 @@ define([], function() {
       this.id = id;
       this.cv = document.getElementById(this.id);
       this.ctx = this.cv.getContext('2d');
-
-
       
       this.highlight(false);
 
@@ -35,16 +33,31 @@ define([], function() {
       if(!_this)
         var _this = this
 
-      var height = img.height * (_this.cv.width/img.width)
-      var xOffset = 0
-      var yOffset = 0
+      _this.imageHeight = 0
+      _this.imageWidth = 0
+      _this.imageXOffset = 0
+      _this.imageYOffset = 0
 
-      if(height < _this.cv.height){
-        yOffset = (_this.cv.height - height) / 2
+      if(img.width >= img.height)
+      {
+        _this.imageHeight = img.height * (_this.cv.width/img.width)
+        _this.imageWidth = _this.cv.width
+
+        if(_this.imageHeight < _this.cv.height){
+          _this.imageYOffset = (_this.cv.height - _this.imageHeight) / 2
+        }
+      }else{
+        _this.imageHeight = _this.cv.height
+        _this.imageWidth = img.width * (_this.cv.height/img.height)
+
+        if(_this.imageWidth < _this.cv.width){
+          _this.imageXOffset = (_this.cv.width - _this.imageWidth) / 2
+        }
+             
       }
 
       _this.clear()
-      _this.getContext().drawImage(img, xOffset, yOffset, _this.cv.width, height)
+      _this.getContext().drawImage(img, _this.imageXOffset, _this.imageYOffset, _this.imageWidth, _this.imageHeight)
     }
 
     Canvas.prototype.getElement = function(){
@@ -67,6 +80,8 @@ define([], function() {
     }
 
     Canvas.prototype.highlight = function(onOrOff){
+      // todo: fill canvas with old content when highlight off
+
       if (onOrOff)
         this.ctx.fillStyle="#4A8FF0";
       else
