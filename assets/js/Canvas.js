@@ -19,12 +19,22 @@ define([], function() {
       this.id = id;
       this.cv = document.getElementById(this.id);
       this.ctx = this.cv.getContext('2d');
+
+      this.imageHeight = this.cv.height 
+      this.imageWidth = this.cv.width
+      this.imageXOffset = 0
+      this.imageYOffset = 0
+
+      this.gotNewImage = true;
       
-      this.highlight(false);
+      this.clear()
 
       this.ctx.font = "bold 12px sans-serif"
       this.ctx.textAlign = 'center'
       this.ctx.textBaseline = 'middle'
+
+      this.oldImageData = this.getImageData()
+      this.gotNewImage = true
 
     }
 
@@ -55,9 +65,19 @@ define([], function() {
         }
              
       }
-
+      _this.gotNewImage = true
       _this.clear()
       _this.getContext().drawImage(img, _this.imageXOffset, _this.imageYOffset, _this.imageWidth, _this.imageHeight)
+    }
+
+    Canvas.prototype.copy = function(otherCanvas, draw){
+      this.imageHeight = otherCanvas.imageHeight
+      this.imageWidth = otherCanvas.imageWidth
+      this.imageXOffset = otherCanvas.imageXOffset
+      this.imageYOffset = otherCanvas.imageYOffset
+
+      if(draw)
+        this.putImageData(otherCanvas.getImageData(), this.imageXOffset, this.imageYOffset)
     }
 
     Canvas.prototype.getElement = function(){
@@ -66,6 +86,15 @@ define([], function() {
 
     Canvas.prototype.getContext = function(){
       return this.ctx;
+    }
+
+    Canvas.prototype.getImageData = function(){
+      return this.getContext().getImageData(this.imageXOffset,this.imageYOffset,this.imageWidth, this.imageHeight)
+    }
+
+    Canvas.prototype.putImageData = function(imageData){
+      this.clear()
+      this.getContext().putImageData(imageData,this.imageXOffset,this.imageYOffset);
     }
 
     Canvas.prototype.updateSize = function(func) {
@@ -80,14 +109,21 @@ define([], function() {
     }
 
     Canvas.prototype.highlight = function(onOrOff){
-      // todo: fill canvas with old content when highlight off
 
-      if (onOrOff)
+      if (onOrOff){
+        if(this.gotNewImage){
+          console.log("GET")
+          this.oldImageData = this.getImageData()
+          this.gotNewImage = false
+        }
+
         this.ctx.fillStyle="#4A8FF0";
-      else
-        this.ctx.fillStyle="#FFFFFF";
-
-      this.ctx.fillRect(0,0, this.ctx.canvas.width, this.ctx.canvas.height);
+        this.ctx.fillRect(0,0, this.ctx.canvas.width, this.ctx.canvas.height);
+      }
+      else{
+          this.putImageData(this.oldImageData)
+          this.gotNewImage = true
+      }
     }
 
      Canvas.prototype.clear = function(){
