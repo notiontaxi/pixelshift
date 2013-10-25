@@ -1,10 +1,18 @@
 <div>
   <div class="row" id="info">     
     <div class="row">
-      <div class="col-md-12 centered"><h2>Outline</h2>(Drop an image into the left canvas to begin)</div></br> 
+      <div class="col-md-12 centered">
+        <h2>Outline</h2>
+        (Drop an image into the left canvas or 
+          <button type="button" class="btn btn-default" id="upload-image">
+            upload
+          </button> a file to begin)
+      </div><input type="file" name="image" id="action-upload" style="display: none"></input>
+    </br> 
     </div>
   </div>
-
+    
+    
   <div class="row">       
     <div class="col-md-6 col-xs-12">  
       <canvas id="canvas-left" class="canvas" width="430" height="350">
@@ -21,9 +29,9 @@
   <div class="row">  
     <div class="controls" >
       <div class="col-md-4 col-xs-5 col-md-offset-1 slider-set">  
-          <div class="col-md-5 col-xs-5">Treshold</div>
+          <div class="col-md-4 col-xs-5">Treshold</div>
           <div class="col-md-4 col-xs-4 my-slider" id="slider-0"></div>
-          <div class="col-md-2 col-xs-2 " id="slider-0-output">10</div>    
+          <div class="col-md-2 col-xs-2 " id="slider-0-output">50</div>    
       </div>
       <div class="col-md-2 col-xs-4"> 
         <button type="button" class="btn btn-default" id="action-automatic-treshold">Automatic Treshold</button>

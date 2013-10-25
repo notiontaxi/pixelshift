@@ -43,7 +43,7 @@ body {
 
 .my-slider{
   margin-top: 5px;
-  max-width: 100px;
+ 
 }
 
 .canvas{
@@ -63,4 +63,8 @@ body {
 
 .hidden{
   display: none;
+}
+
+.ui-widget-header{
+  background: grey;
 }

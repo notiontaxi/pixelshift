@@ -33,6 +33,8 @@ define(['text!templates/task_outline.html', 'js/Canvas', 'js/DragNDrop', 'js/Ima
     this.initializeGui()
 
     DragNDrop(this.leftCanvas, this.leftCanvas.drawImage)
+
+    this.addEventListeners()
   }
 
   Outline.prototype.renderAndAppendTo = function(identifier){
@@ -92,10 +94,27 @@ define(['text!templates/task_outline.html', 'js/Canvas', 'js/DragNDrop', 'js/Ima
       function(event, ui){
         this.outline()
       }.bind(this)
-    )    
+    )   
+
+    // Outline button
+    $("#upload-image").click(
+      function(event, ui){
+        $('input[type="file"]').click()
+      }.bind(this)
+    ) 
+
   }
 
+  Outline.prototype.addEventListeners = function(){
+    document.getElementById('action-upload').addEventListener('change', this.handleFileSelect, false);
+  }
 
+  Outline.prototype.handleFileSelect = function(evt){
+
+    var file = evt.target.files[0] // FileList object
+    //this.leftCanvas.drawImage(file)
+    console.log(this)
+  }.bind(this)
 
 
 // --------------------------------------
