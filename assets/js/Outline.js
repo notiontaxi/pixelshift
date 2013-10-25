@@ -7,7 +7,7 @@ https://github.com/notiontaxi
 
 "use strict"
 
-define(['text!templates/task_outline.html', 'js/Canvas', 'js/DragNDrop'], function(template, Canvas, DragNDrop) {
+define(['text!templates/task_outline.html', 'js/Canvas', 'js/DragNDrop', 'js/ImageProcessor'], function(template, Canvas, DragNDrop, ImageProcessor) {
 
   var Outline, module;
   module = function() {}
@@ -25,6 +25,7 @@ define(['text!templates/task_outline.html', 'js/Canvas', 'js/DragNDrop'], functi
 
   Outline.prototype.initialize = function(){
 
+    this.imageProcessor = new ImageProcessor()
 
     this.leftCanvas = new Canvas('canvas-left')
     this.rightCanvas = new Canvas('canvas-right')
@@ -40,48 +41,48 @@ define(['text!templates/task_outline.html', 'js/Canvas', 'js/DragNDrop'], functi
 
   }
 
-  Outline.prototype.computeTreshold = function(){
+  Outline.prototype.computeThreshold = function(){
     return 0
   }
 
-  Outline.prototype.updateTreshold = function(treshold){
+  Outline.prototype.updateThreshold = function(threshold){
     var imgDataLeft = this.leftCanvas.getImageData()
 
     this.rightCanvas.copy(this.leftCanvas, false)
-    this.rightCanvas.putImageData(this.processTreshold(imgDataLeft, treshold))
+    this.rightCanvas.putImageData(this.processThreshold(imgDataLeft, threshold))
   }
 
-  Outline.prototype.outline = function(treshold){
+  Outline.prototype.outline = function(threshold){
     var imgDataLeft = this.leftCanvas.getImageData()
 
     this.rightCanvas.copy(this.leftCanvas, false)
-    this.rightCanvas.putImageData(this.processTreshold(imgDataLeft, treshold))
+    this.rightCanvas.putImageData(this.processThreshold(imgDataLeft, threshold))
   }  
 
-  Outline.prototype.processTreshold = function(imgDataLeft, treshold){
-    return imgDataLeft
+  Outline.prototype.processThreshold = function(imgDataLeft, threshold){
+    return this.imageProcessor.computeThreshold(threshold*2.55, imgDataLeft);
   }
 
   Outline.prototype.initializeGui = function(){
 
-    // Treshold slider
+    // threshold slider
     $( "#slider-0" ).slider(
       {
         range: "min",
-        value: 10,
-        min: 10,
-        max: 1000,
+        value: 50,
+        min: 0,
+        max: 100,
         slide: function( event, ui ) {
           $( "#slider-0-output" ).html(ui.value );
-          this.updateTreshold(ui.value)
+          this.updateThreshold(ui.value)
         }.bind(this)
       }
     );
 
-    // Automatic treshold button
-    $("#action-automatic-treshold").click(
+    // Automatic threshold button
+    $("#action-automatic-threshold").click(
       function(event, ui){
-        this.updateTreshold(this.computeTreshold())
+        this.updatethreshold(this.computeThreshold())
       }.bind(this)
     )
 
