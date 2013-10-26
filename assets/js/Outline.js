@@ -106,15 +106,13 @@ define(['text!templates/task_outline.html', 'js/Canvas', 'js/DragNDrop', 'js/Ima
   }
 
   Outline.prototype.addEventListeners = function(){
-    document.getElementById('action-upload').addEventListener('change', this.handleFileSelect, false);
+    document.getElementById('action-upload').addEventListener('change', 
+      function(evt){
+        var file = evt.target.files[0] // FileList object
+        this.leftCanvas.drawImage(file)
+      }.bind(this), false);
   }
 
-  Outline.prototype.handleFileSelect = function(evt){
-
-    var file = evt.target.files[0] // FileList object
-    //this.leftCanvas.drawImage(file)
-    console.log(this)
-  }.bind(this)
 
 
 // --------------------------------------
