@@ -7,7 +7,7 @@ https://github.com/notiontaxi
 
 "use strict"
 
-define(['text!templates/task_outline.html', 'js/Canvas', 'js/DragNDrop', 'js/ImageProcessor'], function(template, Canvas, DragNDrop, ImageProcessor) {
+define(['text!templates/task_outline.html', 'js/Canvas', 'js/DragNDrop', 'js/ImageProcessor', 'js/FileProcessor'], function(template, Canvas, DragNDrop, ImageProcessor, FileProcessor) {
 
   var Outline, module;
   module = function() {}
@@ -26,6 +26,8 @@ define(['text!templates/task_outline.html', 'js/Canvas', 'js/DragNDrop', 'js/Ima
   Outline.prototype.initialize = function(){
 
     this.imageProcessor = new ImageProcessor()
+
+    this.fileProcessor = new FileProcessor()
 
     this.leftCanvas = new Canvas('canvas-left')
     this.rightCanvas = new Canvas('canvas-right')
@@ -109,7 +111,7 @@ define(['text!templates/task_outline.html', 'js/Canvas', 'js/DragNDrop', 'js/Ima
     document.getElementById('action-upload').addEventListener('change', 
       function(evt){
         var file = evt.target.files[0] // FileList object
-        this.leftCanvas.drawImage(file)
+        this.fileProcessor.loadFileFromFilesystem(URL.createObjectURL(file), this.leftCanvas.drawImage, this.leftCanvas)
       }.bind(this), false);
   }
 

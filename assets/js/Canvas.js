@@ -39,7 +39,7 @@ define([], function() {
     }
 
     Canvas.prototype.drawImage = function(img, _this){
-      console.log(img)
+
       if(!_this)
         var _this = this
 
@@ -60,7 +60,7 @@ define([], function() {
         _this.imageHeight = _this.cv.height
         _this.imageWidth = img.width * (_this.cv.height/img.height)
 
-        if(_this.imageWidth <= _this.cv.width){
+        if(_this.imageWidth < _this.cv.width){
           _this.imageXOffset = (_this.cv.width - _this.imageWidth) / 2
         }
              

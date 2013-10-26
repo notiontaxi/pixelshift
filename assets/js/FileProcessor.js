@@ -36,6 +36,13 @@ define([], function() {
 
   }
 
+  FileProcessor.prototype.loadFileFromFilesystem = function(src, callback, callbackObj){
+    var img = new Image
+    img.src = src
+    img.onload = function() {
+        callback(img, callbackObj)
+    }
+  }
 
   FileProcessor.prototype.checkFileReaderSupport = function(){
     return window.File && window.FileList && window.FileReader;

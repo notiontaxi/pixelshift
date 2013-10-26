@@ -19,7 +19,7 @@ define(['js/FileProcessor'], function(FileProcessor) {
 
   function DragNDrop(canvas, callback){
     DragNDrop.prototype.canvas = canvas;
-    DragNDrop.prototype.fileProcessor = new FileProcessor
+    DragNDrop.prototype.fileProcessor = new FileProcessor()
     DragNDrop.prototype.dropZone = canvas.getElement()[0];
     DragNDrop.prototype.callback = callback;
     DragNDrop.prototype.callbackObject = canvas;
