@@ -26,7 +26,6 @@ define(['text!templates/task_outline.html', 'js/Canvas', 'js/DragNDrop', 'js/Ima
   Outline.prototype.initialize = function(){
 
     this.imageProcessor = new ImageProcessor()
-
     this.fileProcessor = new FileProcessor()
 
     this.leftCanvas = new Canvas('canvas-left')
@@ -45,27 +44,20 @@ define(['text!templates/task_outline.html', 'js/Canvas', 'js/DragNDrop', 'js/Ima
 
   }
 
-  Outline.prototype.computeThreshold = function(){
-    return 0
-  }
-
   Outline.prototype.updateThreshold = function(threshold){
+
     var imgDataLeft = this.leftCanvas.getImageData()
 
+    // compute threshold automatically, if not set          multiplycation cause input is 0-100
+    threshold = typeof threshold !== 'undefined' ? threshold*2.55 : this.imageProcessor.computeThreshold(imgDataLeft)
+
     this.rightCanvas.copy(this.leftCanvas, false)
-    this.rightCanvas.putImageData(this.processThreshold(imgDataLeft, threshold))
+    this.rightCanvas.putImageData(this.imageProcessor.processThreshold(threshold, imgDataLeft))
   }
 
   Outline.prototype.outline = function(threshold){
-    var imgDataLeft = this.leftCanvas.getImageData()
 
-    this.rightCanvas.copy(this.leftCanvas, false)
-    this.rightCanvas.putImageData(this.processThreshold(imgDataLeft, threshold))
   }  
-
-  Outline.prototype.processThreshold = function(imgDataLeft, threshold){
-    return this.imageProcessor.computeThreshold(threshold*2.55, imgDataLeft);
-  }
 
   Outline.prototype.initializeGui = function(){
 
@@ -77,7 +69,7 @@ define(['text!templates/task_outline.html', 'js/Canvas', 'js/DragNDrop', 'js/Ima
         min: 0,
         max: 100,
         slide: function( event, ui ) {
-          $( "#slider-0-output" ).html(ui.value );
+          $( "#slider-0-output" ).html(ui.value);
           this.updateThreshold(ui.value)
         }.bind(this)
       }
@@ -86,7 +78,7 @@ define(['text!templates/task_outline.html', 'js/Canvas', 'js/DragNDrop', 'js/Ima
     // Automatic threshold button
     $("#action-automatic-threshold").click(
       function(event, ui){
-        this.updatethreshold(this.computeThreshold())
+        this.updateThreshold()
       }.bind(this)
     )
 

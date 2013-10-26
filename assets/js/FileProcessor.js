@@ -31,9 +31,6 @@ define([], function() {
     this.img = new Image
     this.img.src = URL.createObjectURL(files[0])
     this.callback(this.img, this.callbackObj);
-    // event will be called, when reader finished reading (see method getFileReader())
-    //this.reader.readAsText(files[0])
-
   }
 
   FileProcessor.prototype.loadFileFromFilesystem = function(src, callback, callbackObj){
