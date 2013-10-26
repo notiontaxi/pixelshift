@@ -53,6 +53,8 @@ define(['text!templates/task_outline.html', 'js/Canvas', 'js/DragNDrop', 'js/Ima
 
     this.rightCanvas.copy(this.leftCanvas, false)
     this.rightCanvas.putImageData(this.imageProcessor.processThreshold(threshold, imgDataLeft))
+
+    return threshold
   }
 
   Outline.prototype.outline = function(threshold){
@@ -78,7 +80,9 @@ define(['text!templates/task_outline.html', 'js/Canvas', 'js/DragNDrop', 'js/Ima
     // Automatic threshold button
     $("#action-automatic-threshold").click(
       function(event, ui){
-        this.updateThreshold()
+        var treshhold = this.updateThreshold()/2.55
+        $( "#slider-0" ).slider('option',{value: Math.round(treshhold)});
+        $( "#slider-0-output" ).html(Math.round(treshhold));
       }.bind(this)
     )
 
