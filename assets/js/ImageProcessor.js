@@ -43,6 +43,8 @@ define(['js/Histogram'], function(Histogram) {
 
   ImageProcessor.prototype.processOutline = function(imageData){
 
+
+
   }
 
   ImageProcessor.prototype.computeThreshold = function(imageData){
@@ -103,6 +105,39 @@ define(['js/Histogram'], function(Histogram) {
   }
 
 
+  ImageProcessor.prototype.processDilate = function(imageData, imageWidth){
+    /*
+    jump 4 for r,g,b,a
+    jump imageWidth for width
+    */
+    var secondPixelInSecondRow = (imageWidth+2)*4
+    var secondLastPixelInSecondLastRow = imageData.data.length - (imageWidth+2)*4
+    // dilate the Pixels
+    for (var i = secondPixelInSecondRow; i <= secondLastPixelInSecondLastRow; i+=4){
+      // ignore all outer pixels
+      if(i/4%imageWidth !== 0 && i/4%imageWidth !== imageWidth-1){    
+            // just regard red
+        if (imageData.data[i] === 0){
+            if (imageData.data[i-4] === 255) this.setPixelTo(imageData, i-4, 42) // left
+            if (imageData.data[i+4] === 255) this.setPixelTo(imageData, i+4, 42) // right
+            if (imageData.data[i-imageWidth*4] === 255) this.setPixelTo(imageData, i-imageWidth*4, 42) // upper
+            if (imageData.data[i+imageWidth*4] === 255) this.setPixelTo(imageData, i+imageWidth*4, 42) // lower
+        }
+      }   
+    }
+
+    // reset the flagged values    
+    for (var i = 0; i < imageData.data.length; i+=4)
+      if (imageData.data[i] == 42)
+        imageData.data[i] = imageData.data[i+1] = imageData.data[i+2] = 0
+      
+    return imageData;
+  }
+
+  ImageProcessor.prototype.setPixelTo = function(imageData, pixel, color){
+    console.log(pixel)
+    imageData.data[pixel] = imageData.data[pixel+1] = imageData.data[pixel+2] = color
+  }
 
 
 // --------------------------------------

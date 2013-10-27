@@ -160,6 +160,14 @@ define([], function() {
         this.ctx.fillText(text, pos.x, pos.y);
     }
 
+    Canvas.prototype.getWidth = function(){
+      return this.imageWidth - this.imageXOffset
+    }
+
+    Canvas.prototype.getHeight = function(){
+      return this.imageHeight - this.imageYOffset
+    }    
+
 
 // --------------------------------------
     return Canvas

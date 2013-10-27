@@ -57,8 +57,9 @@ define(['text!templates/task_outline.html', 'js/Canvas', 'js/DragNDrop', 'js/Ima
     return threshold
   }
 
-  Outline.prototype.outline = function(threshold){
-
+  Outline.prototype.updateOutline = function(threshold){
+    var newImg = this.imageProcessor.processDilate(this.rightCanvas.getImageData(), this.rightCanvas.getWidth())
+    this.rightCanvas.putImageData(newImg)
   }  
 
   Outline.prototype.initializeGui = function(){
@@ -90,7 +91,7 @@ define(['text!templates/task_outline.html', 'js/Canvas', 'js/DragNDrop', 'js/Ima
     // Outline button
     $("#action-outline").click(
       function(event, ui){
-        this.outline()
+        this.updateOutline()
       }.bind(this)
     )   
 
