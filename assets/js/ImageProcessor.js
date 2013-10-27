@@ -105,7 +105,43 @@ define(['js/Histogram'], function(Histogram) {
   }
 
 
-  ImageProcessor.prototype.processDilate = function(imageData, imageWidth){
+  ImageProcessor.prototype.processOutline = function(imageData, imageDataCopy, imageWidth){
+    var originalImageData = imageData
+    var erodedIMageData = this.processErosion(imageDataCopy, imageWidth)
+
+    for (var i = 0; i < originalImageData.data.length; i+=4) {
+      if(erodedIMageData.data[i] === 255 && originalImageData.data[i] === 0)
+        originalImageData.data[i] = originalImageData.data[i+1] = originalImageData.data[i+2] = 0
+      else
+        originalImageData.data[i] = originalImageData.data[i+1] = originalImageData.data[i+2] = 255
+    }    
+
+    return originalImageData
+  }
+
+
+  ImageProcessor.prototype.processDilation = function(imageData, imageWidth){
+    var directions = {
+        left: true
+      , right: true
+      , upper: true
+      , lower: true
+    }
+    return this.morph(imageData, imageWidth, 255, 0, directions)
+  }
+
+  ImageProcessor.prototype.processErosion = function(imageData, imageWidth){
+    var directions = {
+        left: true
+      , right: true
+      , upper: true
+      , lower: true
+    }
+    return this.morph(imageData, imageWidth, 0, 255, directions)
+  }  
+
+
+  ImageProcessor.prototype.morph = function(imageData, imageWidth, lookFor, setTo, directions){
     /*
     jump 4 for r,g,b,a
     jump imageWidth for width
@@ -117,11 +153,11 @@ define(['js/Histogram'], function(Histogram) {
       // ignore all outer pixels
       if(i/4%imageWidth !== 0 && i/4%imageWidth !== imageWidth-1){    
             // just regard red
-        if (imageData.data[i] === 0){
-            if (imageData.data[i-4] === 255) this.setPixelTo(imageData, i-4, 42) // left
-            if (imageData.data[i+4] === 255) this.setPixelTo(imageData, i+4, 42) // right
-            if (imageData.data[i-imageWidth*4] === 255) this.setPixelTo(imageData, i-imageWidth*4, 42) // upper
-            if (imageData.data[i+imageWidth*4] === 255) this.setPixelTo(imageData, i+imageWidth*4, 42) // lower
+        if (imageData.data[i] === setTo){
+            if (directions.left && imageData.data[i-4] === lookFor) this.setPixelTo(imageData, i-4, 42) // left
+            if (directions.right && imageData.data[i+4] === lookFor) this.setPixelTo(imageData, i+4, 42) // right
+            if (directions.upper && imageData.data[i-imageWidth*4] === lookFor) this.setPixelTo(imageData, i-imageWidth*4, 42) // upper
+            if (directions.lower && imageData.data[i+imageWidth*4] === lookFor) this.setPixelTo(imageData, i+imageWidth*4, 42) // lower
         }
       }   
     }
@@ -129,13 +165,12 @@ define(['js/Histogram'], function(Histogram) {
     // reset the flagged values    
     for (var i = 0; i < imageData.data.length; i+=4)
       if (imageData.data[i] == 42)
-        imageData.data[i] = imageData.data[i+1] = imageData.data[i+2] = 0
+        imageData.data[i] = imageData.data[i+1] = imageData.data[i+2] = setTo
       
     return imageData;
   }
 
   ImageProcessor.prototype.setPixelTo = function(imageData, pixel, color){
-    console.log(pixel)
     imageData.data[pixel] = imageData.data[pixel+1] = imageData.data[pixel+2] = color
   }
 

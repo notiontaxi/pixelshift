@@ -57,10 +57,6 @@ define(['text!templates/task_outline.html', 'js/Canvas', 'js/DragNDrop', 'js/Ima
     return threshold
   }
 
-  Outline.prototype.updateOutline = function(threshold){
-    var newImg = this.imageProcessor.processDilate(this.rightCanvas.getImageData(), this.rightCanvas.getWidth())
-    this.rightCanvas.putImageData(newImg)
-  }  
 
   Outline.prototype.initializeGui = function(){
 
@@ -89,11 +85,28 @@ define(['text!templates/task_outline.html', 'js/Canvas', 'js/DragNDrop', 'js/Ima
 
 
     // Outline button
-    $("#action-outline").click(
+    $("#action-dilation").click(
       function(event, ui){
-        this.updateOutline()
+        var newImg = this.imageProcessor.processDilation(this.rightCanvas.getImageData(), this.rightCanvas.getWidth())
+        this.rightCanvas.putImageData(newImg)
       }.bind(this)
     )   
+
+    // Outline button
+    $("#action-erosion").click(
+      function(event, ui){
+        var newImg = this.imageProcessor.processErosion(this.rightCanvas.getImageData(), this.rightCanvas.getWidth())
+        this.rightCanvas.putImageData(newImg)
+      }.bind(this)
+    )   
+
+    // Outline button
+    $("#action-outline").click(
+      function(event, ui){
+        var newImg = this.imageProcessor.processOutline(this.rightCanvas.getImageData(), this.rightCanvas.getImageData() ,this.rightCanvas.getWidth())
+        this.rightCanvas.putImageData(newImg)
+      }.bind(this)
+    )           
 
     // Outline button
     $("#upload-image").click(
