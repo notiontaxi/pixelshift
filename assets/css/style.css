@@ -1,0 +1,70 @@
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+
+
+#canvas-overlay-left, #canvas-overlay-right{
+  z-index: 42;
+  position: absolute;
+  display:none;
+}
+
+.controls{
+  background-color: lightblue;
+  color: #333333;
+  border-radius: 4px;
+  font-size: 12pt;
+  margin: 5px;
+  min-height: 60px;
+  padding-top: 10px;
+}
+
+#canvas-left{
+  float: right;
+}
+
+.slider-set{
+  border-width: 1px;
+  border-style: solid;
+  border-color: grey;
+  padding: 5px;
+  border-radius: 4px;
+}
+
+.content-container{
+  background-color: grey;
+  border-radius: 4px;
+  margin: 10px;
+  padding: 10px;
+  color: lightgrey;
+  font-size: 14pt;
+}
+
+.my-slider{
+  margin-top: 5px;
+ 
+}
+
+.canvas{
+  border-radius: 4px;
+  border: 1px solid lightgrey;
+  
+}
+
+.centered{
+  text-align: center;
+}
+
+.circle{
+  height: 300px;
+
+}
+
+.hidden{
+  display: none;
+}
+
+.ui-widget-header{
+  background: grey;
+}
