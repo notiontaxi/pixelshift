@@ -18,12 +18,17 @@ define(['text!templates/task_outline.html', 'js/Canvas', 'js/DragNDrop', 'js/Ima
 
 
   function Outline(){
-    
-    
+     
     //Main.__super__.constructor.call(this);
   }
 
+
+
+
   Outline.prototype.initialize = function(){
+
+    this.wasSmallLayout = false
+    this.wasBigLayout = false
 
     this.imageProcessor = new ImageProcessor()
     this.fileProcessor = new FileProcessor()
@@ -33,10 +38,30 @@ define(['text!templates/task_outline.html', 'js/Canvas', 'js/DragNDrop', 'js/Ima
 
     this.initializeGui()
 
+    this.checkLayout()
+
     DragNDrop(this.leftCanvas, this.leftCanvas.drawImage)
 
     this.addEventListeners()
   }
+
+
+  Outline.prototype.checkLayout = function(){
+    if(document.width < 975){
+      this.wasSmallLayout = true
+    }else{
+      this.wasBigLayout = false
+    }
+  }
+
+  Outline.prototype.updateLayout = function(){
+    if(document.width < 975 && this.wasSmallLayout){
+
+    }else if(document.width > 974 && this.wasBigLayout){
+
+    }
+  }
+
 
   Outline.prototype.renderAndAppendTo = function(identifier){
     $(identifier).html($(template))
@@ -118,11 +143,18 @@ define(['text!templates/task_outline.html', 'js/Canvas', 'js/DragNDrop', 'js/Ima
   }
 
   Outline.prototype.addEventListeners = function(){
+
     document.getElementById('action-upload').addEventListener('change', 
       function(evt){
         var file = evt.target.files[0] // FileList object
         this.fileProcessor.loadFileFromFilesystem(URL.createObjectURL(file), this.leftCanvas.drawImage, this.leftCanvas)
       }.bind(this), false);
+
+
+    window.onresize = function(e){
+      this.updateLayout()
+    }.bind(this)   
+
   }
 
 
