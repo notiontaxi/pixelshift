@@ -43,12 +43,17 @@ body {
 .content-container{
   background-color: grey;
   border-radius: 4px;
-  margin: 10px;
+  margin: 5px;
   padding: 10px;
   color: lightgrey;
   font-size: 14pt;
+
+  min-width: 355px;
 }
 
+footer{
+  margin: 10px;
+}
 
 .btn{
   margin-top: 5px;
@@ -69,6 +74,10 @@ body {
 
 .canvas-container{
   min-height:300px;
+}
+
+.container{
+  padding:0px;
 }
 
 .centered{
