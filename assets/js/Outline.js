@@ -54,20 +54,20 @@ define(['text!templates/task_outline.html', 'js/Canvas', 'js/DragNDrop', 'js/Ima
     var width = window.outerWidth
 
     if(width < 992 && !this.wasSmallLayout){
-      this.leftCanvas.updateSize(300,300)
-      this.rightCanvas.updateSize(300,300)
+      this.leftCanvas.updateSize(310,310)
+      this.rightCanvas.updateSize(310,310)
       this.wasSmallLayout = true
       this.wasMediumLayout = this.wasLargeLayout = false
       //console.log("Setting layout to s")
     } else if(width >= 992 && width < 1200 && !this.wasMediumLayout){
-      this.leftCanvas.updateSize(410,410)
-      this.rightCanvas.updateSize(410,410)
+      this.leftCanvas.updateSize(430,430)
+      this.rightCanvas.updateSize(430,430)
       this.wasMediumLayout = true
       this.wasSmallLayout = this.wasLargeLayout = false
       //console.log("Setting layout to m")
     } else if(width >= 1200 && !this.wasLargeLayout){
-      this.leftCanvas.updateSize(520,520)
-      this.rightCanvas.updateSize(520,520)
+      this.leftCanvas.updateSize(530,530)
+      this.rightCanvas.updateSize(530,530)
       this.wasLargeLayout = true
       this.wasSmallLayout = this.wasMediumLayout = false
       //console.log("Setting layout to l")
