@@ -97,13 +97,15 @@ define([], function() {
       this.getContext().putImageData(imageData,this.imageXOffset,this.imageYOffset);
     }
 
-    Canvas.prototype.updateSize = function(func) {
+    Canvas.prototype.updateSize = function(width, height, func) {
 
-      this.ctx.canvas.width  = $('#container').width()*.833;
+      this.ctx.canvas.width  = width
+      this.ctx.canvas.height = height
+/*
       $("#canvas-overlay").css({
         'left': this.ctx.canvas.left+'px',
         'top': this.ctx.canvas.top+'px'
-      })
+      })*/
       if(!!func)
         func();
     }

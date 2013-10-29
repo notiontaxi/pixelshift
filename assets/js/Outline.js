@@ -28,7 +28,10 @@ define(['text!templates/task_outline.html', 'js/Canvas', 'js/DragNDrop', 'js/Ima
   Outline.prototype.initialize = function(){
 
     this.wasSmallLayout = false
-    this.wasBigLayout = false
+    this.wasMediumLayout = false
+    this.wasLargeLayout = false
+
+    this.reset
 
     this.imageProcessor = new ImageProcessor()
     this.fileProcessor = new FileProcessor()
@@ -38,27 +41,36 @@ define(['text!templates/task_outline.html', 'js/Canvas', 'js/DragNDrop', 'js/Ima
 
     this.initializeGui()
 
-    this.checkLayout()
+    this.updateLayout()
 
-    DragNDrop(this.leftCanvas, this.leftCanvas.drawImage)
+    var dragNDrop = new DragNDrop(this.leftCanvas, this.leftCanvas.drawImage)
 
     this.addEventListeners()
   }
 
 
-  Outline.prototype.checkLayout = function(){
-    if(document.width < 975){
-      this.wasSmallLayout = true
-    }else{
-      this.wasBigLayout = false
-    }
-  }
-
   Outline.prototype.updateLayout = function(){
-    if(document.width < 975 && this.wasSmallLayout){
 
-    }else if(document.width > 974 && this.wasBigLayout){
+    var width = window.outerWidth
 
+    if(width < 992 && !this.wasSmallLayout){
+      this.leftCanvas.updateSize(300,300)
+      this.rightCanvas.updateSize(300,300)
+      this.wasSmallLayout = true
+      this.wasMediumLayout = this.wasLargeLayout = false
+      //console.log("Setting layout to s")
+    } else if(width >= 992 && width < 1200 && !this.wasMediumLayout){
+      this.leftCanvas.updateSize(410,410)
+      this.rightCanvas.updateSize(410,410)
+      this.wasMediumLayout = true
+      this.wasSmallLayout = this.wasLargeLayout = false
+      //console.log("Setting layout to m")
+    } else if(width >= 1200 && !this.wasLargeLayout){
+      this.leftCanvas.updateSize(520,520)
+      this.rightCanvas.updateSize(520,520)
+      this.wasLargeLayout = true
+      this.wasSmallLayout = this.wasMediumLayout = false
+      //console.log("Setting layout to l")
     }
   }
 
@@ -153,7 +165,12 @@ define(['text!templates/task_outline.html', 'js/Canvas', 'js/DragNDrop', 'js/Ima
 
     window.onresize = function(e){
       this.updateLayout()
-    }.bind(this)   
+    }
+
+    window.onresize=function() {
+      if (this.reset){clearTimeout(this.reset)};
+        this.reset = setTimeout(function(){this.updateLayout()}.bind(this),200);
+    }.bind(this)
 
   }
 
