@@ -20,6 +20,9 @@ define([], function() {
       this.cv = document.getElementById(this.id);
       this.ctx = this.cv.getContext('2d');
 
+
+      this.canvasHeight = this.cv.height 
+      this.canvasWidth = this.cv.width
       this.imageHeight = this.cv.height 
       this.imageWidth = this.cv.width
       this.imageXOffset = 0
@@ -50,19 +53,19 @@ define([], function() {
 
       if(img.width > img.height)
       {
-        _this.imageHeight = img.height * (_this.cv.width/img.width)
+        _this.imageHeight = Math.round(img.height * (_this.cv.width/img.width))
         _this.imageWidth = _this.cv.width
 
-        if(_this.imageHeight < _this.cv.height){
-          _this.imageYOffset = (_this.cv.height - _this.imageHeight) / 2
-        }
-      }else{
+        if(_this.imageHeight < _this.cv.height)
+          _this.imageYOffset = Math.round((_this.cv.height - _this.imageHeight) / 2)
+        
+      } else {
         _this.imageHeight = _this.cv.height
-        _this.imageWidth = img.width * (_this.cv.height/img.height)
+        _this.imageWidth = Math.round(img.width * (_this.cv.height/img.height))
 
-        if(_this.imageWidth < _this.cv.width){
-          _this.imageXOffset = (_this.cv.width - _this.imageWidth) / 2
-        }
+        if(_this.imageWidth < _this.cv.width)
+          _this.imageXOffset = Math.round((_this.cv.width - _this.imageWidth) / 2)
+        
              
       }
       _this.gotNewImage = true
@@ -162,12 +165,20 @@ define([], function() {
         this.ctx.fillText(text, pos.x, pos.y);
     }
 
-    Canvas.prototype.getWidth = function(){
-      return this.imageWidth - this.imageXOffset
+    Canvas.prototype.getImageWidth = function(){
+      return this.imageWidth
     }
 
-    Canvas.prototype.getHeight = function(){
-      return this.imageHeight - this.imageYOffset
+    Canvas.prototype.getImageHeight = function(){
+      return this.imageHeight
+    }
+
+    Canvas.prototype.getCanvasWidth = function(){
+      return this.canvasWidth
+    }
+
+    Canvas.prototype.getCanvasHeight = function(){
+      return this.canvasHeight
     }    
 
 

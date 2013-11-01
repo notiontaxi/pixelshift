@@ -124,8 +124,8 @@ define(['js/Histogram'], function(Histogram) {
     var directions = {
         left: true
       , right: true
-      , upper: true
-      , lower: true
+      , up: true
+      , down: true
     }
     return this.morph(imageData, imageWidth, 255, 0, directions)
   }
@@ -134,8 +134,8 @@ define(['js/Histogram'], function(Histogram) {
     var directions = {
         left: true
       , right: true
-      , upper: true
-      , lower: true
+      , up: true
+      , down: true
     }
     return this.morph(imageData, imageWidth, 0, 255, directions)
   }  
@@ -146,26 +146,40 @@ define(['js/Histogram'], function(Histogram) {
     jump 4 for r,g,b,a
     jump imageWidth for width
     */
-    var secondPixelInSecondRow = (imageWidth+2)*4
-    var secondLastPixelInSecondLastRow = imageData.data.length - (imageWidth+2)*4
+    console.log(imageWidth)
+    var flag = 42
+    var deltaToSide = 0
+    var imageHeight = imageData.data.length / imageWidth / 4
+    var firstPixel = 0
+    var lastPixel = imageData.data.length - 4
     // dilate the Pixels
-    for (var i = secondPixelInSecondRow; i <= secondLastPixelInSecondLastRow; i+=4){
-      // ignore all outer pixels
-      if(i/4%imageWidth !== 0 && i/4%imageWidth !== imageWidth-1){    
-            // just regard red
+    for (var i = firstPixel; i <= lastPixel; i+=4){
+      deltaToSide = i/4%imageWidth
+      // left outer pixels
+      if(deltaToSide == 0){    
+        if(imageData.data[i] == setTo)
+          if (directions.right && imageData.data[i+4] === lookFor) this.setPixelTo(imageData, i+4, flag)
+        
+      // right outer pixels
+      }else if(deltaToSide == imageWidth-1){
+        if(imageData.data[i] == setTo)
+          if (directions.left && imageData.data[i-4] === lookFor) this.setPixelTo(imageData, i-4, flag)
+      //all inner pixels
+      }else{ 
+        // just regard red
         if (imageData.data[i] === setTo){
-            if (directions.left && imageData.data[i-4] === lookFor) this.setPixelTo(imageData, i-4, 42) // left
-            if (directions.right && imageData.data[i+4] === lookFor) this.setPixelTo(imageData, i+4, 42) // right
-            if (directions.upper && imageData.data[i-imageWidth*4] === lookFor) this.setPixelTo(imageData, i-imageWidth*4, 42) // upper
-            if (directions.lower && imageData.data[i+imageWidth*4] === lookFor) this.setPixelTo(imageData, i+imageWidth*4, 42) // lower
+            if (i >= 4 && directions.left && imageData.data[i-4] === lookFor) this.setPixelTo(imageData, i-4, flag) // left
+            if (directions.right && imageData.data[i+4] === lookFor) this.setPixelTo(imageData, i+4, flag) // right
+            if (i > imageWidth*4 && directions.up && imageData.data[i-imageWidth*4] === lookFor) this.setPixelTo(imageData, i-imageWidth*4, flag) // upper
+            if (directions.down && imageData.data[i+imageWidth*4] === lookFor) this.setPixelTo(imageData, i+imageWidth*4, flag) // lower
         }
-      }   
-    }
+      }
+    }   
 
     // reset the flagged values    
     for (var i = 0; i < imageData.data.length; i+=4)
-      if (imageData.data[i] == 42)
-        imageData.data[i] = imageData.data[i+1] = imageData.data[i+2] = setTo
+      if (imageData.data[i] == flag)
+        imageData.data[i] = imageData.data[i+1] = imageData.data[i+2] = setTo 
       
     return imageData;
   }

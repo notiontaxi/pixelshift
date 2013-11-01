@@ -124,7 +124,7 @@ define(['text!templates/task_outline.html', 'js/Canvas', 'js/DragNDrop', 'js/Ima
     // Outline button
     $("#action-dilation").click(
       function(event, ui){
-        var newImg = this.imageProcessor.processDilation(this.rightCanvas.getImageData(), this.rightCanvas.getWidth())
+        var newImg = this.imageProcessor.processDilation(this.rightCanvas.getImageData(), this.rightCanvas.getImageWidth())
         this.rightCanvas.putImageData(newImg)
       }.bind(this)
     )   
@@ -132,7 +132,7 @@ define(['text!templates/task_outline.html', 'js/Canvas', 'js/DragNDrop', 'js/Ima
     // Outline button
     $("#action-erosion").click(
       function(event, ui){
-        var newImg = this.imageProcessor.processErosion(this.rightCanvas.getImageData(), this.rightCanvas.getWidth())
+        var newImg = this.imageProcessor.processErosion(this.rightCanvas.getImageData(), this.rightCanvas.getImageWidth())
         this.rightCanvas.putImageData(newImg)
       }.bind(this)
     )   
@@ -140,7 +140,7 @@ define(['text!templates/task_outline.html', 'js/Canvas', 'js/DragNDrop', 'js/Ima
     // Outline button
     $("#action-outline").click(
       function(event, ui){
-        var newImg = this.imageProcessor.processOutline(this.rightCanvas.getImageData(), this.rightCanvas.getImageData() ,this.rightCanvas.getWidth())
+        var newImg = this.imageProcessor.processOutline(this.rightCanvas.getImageData(), this.rightCanvas.getImageData() ,this.rightCanvas.getImageWidth())
         this.rightCanvas.putImageData(newImg)
       }.bind(this)
     )           
@@ -173,8 +173,6 @@ define(['text!templates/task_outline.html', 'js/Canvas', 'js/DragNDrop', 'js/Ima
     }.bind(this)
 
   }
-
-
 
 // --------------------------------------
     return Outline
