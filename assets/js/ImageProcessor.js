@@ -71,7 +71,7 @@ define(['js/Histogram'], function(Histogram) {
 
     }
 
-    console.log("Computed threshold: "+currentTreshold)
+    //console.log("Computed threshold: "+currentTreshold)
     return currentTreshold
   }
 
@@ -146,7 +146,7 @@ define(['js/Histogram'], function(Histogram) {
     jump 4 for r,g,b,a
     jump imageWidth for width
     */
-    console.log(imageWidth)
+
     var flag = 42
     var deltaToSide = 0
     var imageHeight = imageData.data.length / imageWidth / 4
