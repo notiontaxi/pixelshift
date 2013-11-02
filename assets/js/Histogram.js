@@ -40,7 +40,7 @@ define([], function() {
         var greyValue = this.rgbToGreyscale(imageData.data[i], imageData.data[i+1], imageData.data[i+2]);
         this.histogram[greyValue]++;
       }
-      console.log("Histogram data computed")
+      //console.log("Histogram data computed")
     }
 
     this.normalizeGreyscale()
@@ -52,7 +52,7 @@ define([], function() {
     for(var i = 0; i <= this.values; i++)
       this.histogram[i] = 0
 
-    console.log("Empty histogram generated")
+    //console.log("Empty histogram generated")
   }
 
 
@@ -63,7 +63,7 @@ define([], function() {
     for(var i = 0; i < this.histogram.length; i++)
       this.histogram[i] = parseFloat((this.histogram[i] / totalSum).toFixed(4))
         
-    console.log("Histogram normalized")
+    //console.log("Histogram normalized")
 
     return this.histogram
   }
@@ -74,7 +74,7 @@ define([], function() {
       this.maxValue = (this.histogram[i] < this.maxValue) ? this.maxValue : this.histogram[i]
     }
         
-    console.log("Maximal value in Histogram is "+this.maxValue)   
+    //console.log("Maximal value in Histogram is "+this.maxValue)   
   }
 
   Histogram.prototype.totalSum = function(){

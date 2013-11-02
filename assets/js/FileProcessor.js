@@ -117,11 +117,11 @@ define([], function() {
         this.reader = new FileReader();
 
         this.reader.addEventListener("load", function(event) {
-          console.log("load");
+          //console.log("load");
         });  
         
         this.reader.addEventListener("loadend", function(event) {
-          console.log("loaded");
+          //console.log("loaded");
           this.callback(this.img, this.callbackObj);
         }.bind(this)); 
 

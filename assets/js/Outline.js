@@ -156,8 +156,8 @@ define(['text!templates/task_outline.html','text!templates/menu-bar.html' , 'js/
 
     $("#save-image").click(
       function(event, ui){
-        //event.stopPropagation()
-        //event.preventDefault()
+        event.stopPropagation()
+        event.preventDefault()
         // close drop down in menu
         $("#save-image").parent().parent().parent().removeClass("open")
         this.fileProcessor.saveCanvasToDisk(this.rightCanvas.getElement()[0])
