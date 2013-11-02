@@ -84,7 +84,7 @@ define([], function() {
     }
 
     Canvas.prototype.getElement = function(){
-      return $('#'+this.id)  
+      return $('#'+this.id)
     }
 
     Canvas.prototype.getContext = function(){

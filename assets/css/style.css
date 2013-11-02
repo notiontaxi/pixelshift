@@ -22,10 +22,6 @@ body {
 
 }
 
-#canvas-left{
-  
-}
-
 .slider-set{
   border-width: 1px;
   border-style: solid;
@@ -75,11 +71,10 @@ footer{
 
 }
 
-.menu-bar .dropdown-menu
-
 .canvas{
   border-radius: 4px;
-  border: 1px solid lightgrey;
+  border-color: lightgrey;
+  border: 1px solid;
   margin: 10px;
   
 }

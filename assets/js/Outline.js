@@ -149,9 +149,20 @@ define(['text!templates/task_outline.html','text!templates/menu-bar.html' , 'js/
     // Outline button
     $("#upload-image").click(
       function(event, ui){
+        event.stopPropagation()
+        event.preventDefault()
         $('input[type="file"]').click()
-      }.bind(this)
-    ) 
+      }.bind(this))
+
+    $("#save-image").click(
+      function(event, ui){
+        //event.stopPropagation()
+        //event.preventDefault()
+        // close drop down in menu
+        $("#save-image").parent().parent().parent().removeClass("open")
+        this.fileProcessor.saveCanvasToDisk(this.rightCanvas.getElement()[0])
+    
+    }.bind(this)) 
 
   }
 
