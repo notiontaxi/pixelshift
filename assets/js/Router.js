@@ -32,8 +32,7 @@ require([], function() {
 
   Router.prototype.changeLocationTo = function(event){
     require([event.data.locationClassPath], function(ShowMe) {
-      var showMe = new ShowMe()
-      showMe.renderAndAppendTo('#container')
+      var showMe = new ShowMe('#container')
     })
   }
 

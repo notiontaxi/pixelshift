@@ -17,8 +17,8 @@ define(['text!templates/welcome.html'], function(template) {
 
 
 
-  function Welcome(){
-    
+  function Welcome(identifier){
+    $(identifier).html($(template))
     
     //Main.__super__.constructor.call(this);
   }
@@ -27,8 +27,8 @@ define(['text!templates/welcome.html'], function(template) {
 
   }
 
-  Welcome.prototype.renderAndAppendTo = function(identifier){
-    $(identifier).html($(template))
+  Welcome.prototype.renderAndAppendTo = function(){
+    
 
   }
 
