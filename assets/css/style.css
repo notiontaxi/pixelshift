@@ -65,6 +65,18 @@ footer{
  
 }
 
+.menu-sign{
+  color: black;
+}
+
+.menu-bar .dropdown-menu,
+.menu-bar{
+  background-color: lightcyan;
+
+}
+
+.menu-bar .dropdown-menu
+
 .canvas{
   border-radius: 4px;
   border: 1px solid lightgrey;

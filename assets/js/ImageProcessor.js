@@ -152,7 +152,8 @@ define(['js/Histogram'], function(Histogram) {
     var imageHeight = imageData.data.length / imageWidth / 4
     var firstPixel = 0
     var lastPixel = imageData.data.length - 4
-    // dilate the Pixels
+
+    // process the pixels
     for (var i = firstPixel; i <= lastPixel; i+=4){
       deltaToSide = i/4%imageWidth
       // left outer pixels
