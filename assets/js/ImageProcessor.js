@@ -203,7 +203,7 @@ define(['js/Histogram', 'js/helper/Colors'], function(Histogram, ColorHelper) {
           this.floodFillBreadth(imageData, imageWidth, i, 0, label)
         }       
       }else{
-
+        this.floodFillSequential(imageData, imageWidth, colors)
       }
 
     return imageData;
@@ -248,6 +248,50 @@ define(['js/Histogram', 'js/helper/Colors'], function(Histogram, ColorHelper) {
       }
     }
   }
+
+  ImageProcessor.prototype.floodFillSequential = function(imageData, imageWidth, colors){
+    
+    var lookFor = 0;
+    var currentLabel = 250;
+
+    // label first line
+    for (var i = 0; i < imageWidth*4; i+=4){
+      if(imageData.data[i] === lookFor){
+        if(i > 4 && imageData.data[i-4] !== 255)
+          imageData.data[i] = imageData.data[i-4] // label from left pixel
+        else
+          imageData.data[i] = currentLabel++; // new label
+      }
+    }
+
+    // label sides
+    for (var i = imageWidth*4; i < imageData.data.length; i+=imageWidth*4){
+
+      // left side
+      if(imageData.data[i] === lookFor){
+        if(imageData.data[i-imageWidth*4] !== 255)
+          imageData.data[i] = imageData.data[i-imageWidth*4] // label from upper pixel
+        else
+          imageData.data[i] = currentLabel++; // new label
+        }
+
+      // right side
+      var rightPos = i+imageWidth*4-4
+      if(imageData.data[rightPos] === lookFor){
+        if(imageData.data[i-imageWidth*4] !== 255)
+          imageData.data[rightPos] = imageData.data[i-imageWidth*4] // label from upper pixel
+        else
+          imageData.data[rightPos] = currentLabel++; // new label
+        }
+
+      }   
+
+      
+  
+
+
+  }    
+  
 
 
 // --------------------------------------

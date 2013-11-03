@@ -84,7 +84,14 @@ var Areas, _ref, module,
       // Outline button
       $("#action-flood-sequential").click(
         function(event, ui){
-          $( "#algo-times" ).html("not implemented");
+          this.rightCanvas.copy(this.leftCanvas, false)
+          window.maxWidth = 0;
+          var start = new Date().getTime();
+          var newImg = this.imageProcessor.processFloodFill(this.leftCanvas.getImageData(), this.leftCanvas.getImageWidth())
+          var end = new Date().getTime();
+          var time = end - start;
+          this.rightCanvas.putImageData(newImg)      
+          $( "#algo-times" ).html("CPU time: "+time+" ms | Max width: "+window.maxWidth);
         }.bind(this)
       )   
 
