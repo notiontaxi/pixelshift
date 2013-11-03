@@ -27,7 +27,8 @@ require([], function() {
 
   Router.prototype.bindEvents = function(){
     $('#welcome').click({locationClassPath: 'js/Welcome'}, this.changeLocationTo)
-    $('#task_outline').click({locationClassPath: 'js/Outline'}, this.changeLocationTo)
+    $('#task-outline').click({locationClassPath: 'js/Outline'}, this.changeLocationTo)
+    $('#task-areas').click({locationClassPath: 'js/Areas'}, this.changeLocationTo)
   }  
 
   Router.prototype.changeLocationTo = function(event){

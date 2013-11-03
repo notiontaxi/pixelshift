@@ -7,7 +7,7 @@ https://github.com/notiontaxi
 
 "use strict"
 
-define(['text!templates/task_outline.html', 'js/DragNDrop'], function(contentTemplate, DragNDrop) {
+define(['text!templates/canvas-gui.html', 'js/DragNDrop', 'js/Canvas'], function(canvasGuiTemplate, DragNDrop, Canvas) {
 
   var CanvasGui, module;
   module = function() {}
@@ -16,9 +16,12 @@ define(['text!templates/task_outline.html', 'js/DragNDrop'], function(contentTem
 
 
 
-  function CanvasGui(leftCanvas, rightCanvas){
-    this.leftCanvas = leftCanvas
-    this.rightCanvas = rightCanvas
+  function CanvasGui(canvasContainerIdentifier){
+
+    $(canvasContainerIdentifier).html($(canvasGuiTemplate))
+
+    this.leftCanvas = new Canvas('canvas-left')
+    this.rightCanvas = new Canvas('canvas-right')
 
     this.initialize()
     this.addEventListeners()

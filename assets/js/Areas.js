@@ -7,25 +7,25 @@ https://github.com/notiontaxi
 
 "use strict"
 
-define(['text!templates/task-outline.html','text!templates/menu-bar.html' , 'js/Canvas', 'js/ImageProcessor', 'js/FileProcessor', 'js/CanvasGui'], function(contentTemplate, menuTemplate, Canvas, ImageProcessor, FileProcessor, CanvasGui) {
+define(['text!templates/task-areas.html','text!templates/menu-bar.html' , 'js/Canvas', 'js/ImageProcessor', 'js/FileProcessor', 'js/CanvasGui'], function(contentTemplate, menuTemplate, Canvas, ImageProcessor, FileProcessor, CanvasGui) {
 
-var Outline, _ref, module,
+var Areas, _ref, module,
 
 
   module = function() {}
-  Outline = (function(_super){
-    __extends(Outline, CanvasGui);
+  Areas = (function(_super){
+    __extends(Areas, CanvasGui);
 // --------------------------------------
 
 
 
-    function Outline(containerIdentifier){    
+    function Areas(containerIdentifier){    
 
       // render templates
       $(containerIdentifier).html($(menuTemplate))
       $(containerIdentifier).append($(contentTemplate))
 
-      Outline.__super__.constructor("#canvas-container")
+      Areas.__super__.constructor("#canvas-container")
 
       this.imageProcessor = new ImageProcessor()
       this.fileProcessor = new FileProcessor()
@@ -36,7 +36,7 @@ var Outline, _ref, module,
     }
 
 
-    Outline.prototype.updateThreshold = function(threshold){
+    Areas.prototype.updateThreshold = function(threshold){
 
       var imgDataLeft = this.leftCanvas.getImageData()
 
@@ -50,55 +50,30 @@ var Outline, _ref, module,
     }
 
 
-    Outline.prototype.initializeTools = function(){
+    Areas.prototype.initializeTools = function(){
 
-      // threshold slider
-      $( "#slider-0" ).slider(
-        {
-          range: "min",
-          value: 50,
-          min: 0,
-          max: 100,
-          slide: function( event, ui ) {
-            $( "#slider-0-output" ).html(ui.value);
-            this.updateThreshold(ui.value)
-          }.bind(this)
-        }
-      );
 
       // Automatic threshold button
-      $("#action-automatic-threshold").click(
+      $("#action-flood-stack").click(
         function(event, ui){
-          var treshhold = this.updateThreshold()/2.55
-          $( "#slider-0" ).slider('option',{value: Math.round(treshhold)});
-          $( "#slider-0-output" ).html(Math.round(treshhold));
+          $( "#algo-times" ).html("not implemented");
         }.bind(this)
       )
 
-
       // Outline button
-      $("#action-dilation").click(
+      $("#action-flood-queue").click(
         function(event, ui){
-          var newImg = this.imageProcessor.processDilation(this.rightCanvas.getImageData(), this.rightCanvas.getImageWidth())
-          this.rightCanvas.putImageData(newImg)
+          $( "#algo-times" ).html("not implemented");
         }.bind(this)
       )   
 
       // Outline button
-      $("#action-erosion").click(
+      $("#action-flood-sequential").click(
         function(event, ui){
-          var newImg = this.imageProcessor.processErosion(this.rightCanvas.getImageData(), this.rightCanvas.getImageWidth())
-          this.rightCanvas.putImageData(newImg)
+          $( "#algo-times" ).html("not implemented");
         }.bind(this)
       )   
 
-      // Outline button
-      $("#action-outline").click(
-        function(event, ui){
-          var newImg = this.imageProcessor.processOutline(this.rightCanvas.getImageData(), this.rightCanvas.getImageData() ,this.rightCanvas.getImageWidth())
-          this.rightCanvas.putImageData(newImg)
-        }.bind(this)
-      )           
 
       // Outline button
       $("#upload-image").click(
@@ -120,7 +95,7 @@ var Outline, _ref, module,
 
     }
 
-    Outline.prototype.addEventListeners = function(){
+    Areas.prototype.addEventListeners = function(){
 
       document.getElementById('action-upload').addEventListener('change', 
         function(evt){
@@ -131,7 +106,7 @@ var Outline, _ref, module,
     }
 
 // --------------------------------------
-    return Outline
+    return Areas
   })()
-  return module.exports = Outline
+  return module.exports = Areas
 })
