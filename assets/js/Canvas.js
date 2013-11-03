@@ -53,15 +53,28 @@ define([], function() {
 
       if(img.width > img.height)
       {
-        _this.imageHeight = Math.round(img.height * (_this.cv.width/img.width))
-        _this.imageWidth = _this.cv.width
+        if(img.width >= _this.cv.width){
+          _this.imageHeight = Math.round(img.height * (_this.cv.width/img.width))
+          _this.imageWidth = _this.cv.width
+        }else{
+          _this.imageWidth = img.width
+          _this.imageHeight = img.height
+          _this.imageXOffset = Math.round((_this.cv.width - _this.imageWidth) / 2)
+        }
 
         if(_this.imageHeight < _this.cv.height)
           _this.imageYOffset = Math.round((_this.cv.height - _this.imageHeight) / 2)
         
       } else {
-        _this.imageHeight = _this.cv.height
-        _this.imageWidth = Math.round(img.width * (_this.cv.height/img.height))
+
+        if(img.height >= _this.cv.height){
+          _this.imageHeight = _this.cv.height
+          _this.imageWidth = Math.round(img.width * (_this.cv.height/img.height))
+        }else{
+          _this.imageHeight = img.height
+          _this.imageWidth = img.width
+          _this.imageYOffset = Math.round((_this.cv.height - _this.imageHeight) / 2)    
+        }
 
         if(_this.imageWidth < _this.cv.width)
           _this.imageXOffset = Math.round((_this.cv.width - _this.imageWidth) / 2)
