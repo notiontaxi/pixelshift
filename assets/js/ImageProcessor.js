@@ -189,15 +189,25 @@ define(['js/Histogram', 'js/helper/Colors'], function(Histogram, ColorHelper) {
 
     var colors = (new ColorHelper).getColors()
     var label
-    for (var i = 0; i < imageData.data.length; i+=4)
-      if (imageData.data[i] == 0){
-        label = colors.pop().values
-        this.floodFillStack(imageData, imageWidth, i, 0, label)
+
+    if(type == "depth"){
+      for (var i = 0; i < imageData.data.length; i+=4)
+        if (imageData.data[i] == 0){
+          label = colors.pop().values
+          this.floodFillStack(imageData, imageWidth, i, 0, label)
+        }
+      }else if(type == "breadth"){
+       for (var i = 0; i < imageData.data.length; i+=4)
+        if (imageData.data[i] == 0){
+          label = colors.pop().values
+          this.floodFillBreadth(imageData, imageWidth, i, 0, label)
+        }       
+      }else{
+
       }
-      
+
     return imageData;
   }
-
 
   ImageProcessor.prototype.floodFillStack = function(imageData, imageWidth, position, lookFor, label){
     var s = Array()
@@ -215,6 +225,26 @@ define(['js/Histogram', 'js/helper/Colors'], function(Histogram, ColorHelper) {
         s.push(currPixPos - imageWidth*4)
         s.push(currPixPos + imageWidth*4)
         window.maxDepth = (s.length > window.maxDepth) ? s.length : window.maxDepth
+      }
+    }
+  }
+
+  ImageProcessor.prototype.floodFillBreadth = function(imageData, imageWidth, position, lookFor, label){
+    var s = Array()
+    var currPixPos
+    var lastPixel = imageData.data.length - 4
+    s.push(position)
+    while(s.length > 0){
+      currPixPos = s.shift()
+      if(imageData.data[currPixPos] === lookFor && currPixPos > 0 && currPixPos < lastPixel){
+        imageData.data[currPixPos] = label.r
+        imageData.data[currPixPos+1] = label.g
+        imageData.data[currPixPos+2] = label.b
+        s.push(currPixPos - 4)
+        s.push(currPixPos + 4)
+        s.push(currPixPos - imageWidth*4)
+        s.push(currPixPos + imageWidth*4)
+        window.maxWidth = (s.length > window.maxWidth) ? s.length : window.maxWidth
       }
     }
   }

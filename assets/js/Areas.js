@@ -59,7 +59,7 @@ var Areas, _ref, module,
           this.rightCanvas.copy(this.leftCanvas, false)
           window.maxDepth = 0;
           var start = new Date().getTime();
-          var newImg = this.imageProcessor.processFloodFill(this.leftCanvas.getImageData(), this.leftCanvas.getImageWidth())
+          var newImg = this.imageProcessor.processFloodFill(this.leftCanvas.getImageData(), this.leftCanvas.getImageWidth(), 'depth')
           var end = new Date().getTime();
           var time = end - start;
           this.rightCanvas.putImageData(newImg)      
@@ -70,7 +70,14 @@ var Areas, _ref, module,
       // Outline button
       $("#action-flood-queue").click(
         function(event, ui){
-          $( "#algo-times" ).html("not implemented");
+          this.rightCanvas.copy(this.leftCanvas, false)
+          window.maxWidth = 0;
+          var start = new Date().getTime();
+          var newImg = this.imageProcessor.processFloodFill(this.leftCanvas.getImageData(), this.leftCanvas.getImageWidth(), 'breadth')
+          var end = new Date().getTime();
+          var time = end - start;
+          this.rightCanvas.putImageData(newImg)      
+          $( "#algo-times" ).html("CPU time: "+time+" ms | Max width: "+window.maxWidth);
         }.bind(this)
       )   
 
