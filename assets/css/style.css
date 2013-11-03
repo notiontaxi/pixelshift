@@ -72,7 +72,19 @@ footer{
 .menu-bar .dropdown-menu,
 .menu-bar{
   background-color: lightcyan;
+  background-image: none;
+}
 
+.menu-bar{
+  margin-bottom: 0px;
+}
+
+.menu-nav{
+  margin: 5px;
+}
+
+.menu-name{
+  color: grey;
 }
 
 .canvas{
