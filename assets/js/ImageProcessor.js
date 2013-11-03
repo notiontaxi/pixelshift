@@ -7,7 +7,7 @@ https://github.com/notiontaxi
 
 "use strict"
 
-define(['js/Histogram'], function(Histogram) {
+define(['js/Histogram', 'js/helper/Colors'], function(Histogram, ColorHelper) {
 
   var ImageProcessor, module;
   module = function() {}
@@ -40,12 +40,6 @@ define(['js/Histogram'], function(Histogram) {
     return brightness
   }
 
-
-  ImageProcessor.prototype.processOutline = function(imageData){
-
-
-
-  }
 
   ImageProcessor.prototype.computeThreshold = function(imageData){
 
@@ -187,6 +181,42 @@ define(['js/Histogram'], function(Histogram) {
 
   ImageProcessor.prototype.setPixelTo = function(imageData, pixel, color){
     imageData.data[pixel] = imageData.data[pixel+1] = imageData.data[pixel+2] = color
+  }
+
+  ImageProcessor.prototype.processFloodFill = function(imageData, imageWidth, type){
+
+    imageData = this.processThreshold(this.computeThreshold(imageData),imageData)
+
+    var colors = (new ColorHelper).getColors()
+    var label
+    for (var i = 0; i < imageData.data.length; i+=4)
+      if (imageData.data[i] == 0){
+        label = colors.pop().values
+        this.floodFillStack(imageData, imageWidth, i, 0, label)
+      }
+      
+    return imageData;
+  }
+
+
+  ImageProcessor.prototype.floodFillStack = function(imageData, imageWidth, position, lookFor, label){
+    var s = Array()
+    var currPixPos
+    var lastPixel = imageData.data.length - 4
+    s.push(position)
+    while(s.length > 0){
+      currPixPos = s.pop()
+      if(imageData.data[currPixPos] === lookFor && currPixPos > 0 && currPixPos < lastPixel){
+        imageData.data[currPixPos] = label.r
+        imageData.data[currPixPos+1] = label.g
+        imageData.data[currPixPos+2] = label.b
+        s.push(currPixPos - 4)
+        s.push(currPixPos + 4)
+        s.push(currPixPos - imageWidth*4)
+        s.push(currPixPos + imageWidth*4)
+        window.maxDepth = (s.length > window.maxDepth) ? s.length : window.maxDepth
+      }
+    }
   }
 
 
