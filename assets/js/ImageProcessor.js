@@ -23,6 +23,15 @@ define(['js/Histogram', 'js/helper/Colors'], function(Histogram, ColorHelper) {
   }
 
 
+  ImageProcessor.prototype.processInvertColors = function(imageData){
+    for (var i = 0; i < imageData.data.length; i+=4) {
+      imageData.data[i + 0] = 255 - imageData.data[i + 0];
+      imageData.data[i + 1] = 255 - imageData.data[i + 1];
+      imageData.data[i + 2] = 255 - imageData.data[i + 2];
+    }
+    return imageData;
+  }
+
   ImageProcessor.prototype.processThreshold = function(threshold, imageData){
     for (var i = 0; i < imageData.data.length; i+=4) {
       // get grey value for the current Pixel
@@ -33,10 +42,18 @@ define(['js/Histogram', 'js/helper/Colors'], function(Histogram, ColorHelper) {
     return imageData;
   }
 
+  ImageProcessor.prototype.processGrayscale = function(imageData){
+    for (var i = 0; i < imageData.data.length; i+=4) {
+      var greyValue = this.rgbToGreyscale(imageData.data[i], imageData.data[i+1], imageData.data[i+2])
+      imageData.data[i] = imageData.data[i+1] = imageData.data[i+2] = greyValue
+    }
+    return imageData
+  }
+
   ImageProcessor.prototype.rgbToGreyscale = function(r,g,b){
     // The effective luminance of a pixel:
     // 0.3*RED + 0.59*GREEN + 0.11*Blue (modificated for bit shift)
-    var brightness = (4*r+7*g+b*3)>>>4 // Zero-Fill Right Shift
+    var brightness = (5*r+8*g+b*3)>>>4 // Zero-Fill Right Shift
     return brightness
   }
 

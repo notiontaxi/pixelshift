@@ -7,7 +7,7 @@ https://github.com/notiontaxi
 
 "use strict"
 
-define(['text!templates/task-areas.html','text!templates/menu-bar.html' , 'js/Canvas', 'js/ImageProcessor', 'js/FileProcessor', 'js/CanvasGui'], function(contentTemplate, menuTemplate, Canvas, ImageProcessor, FileProcessor, CanvasGui) {
+define(['text!templates/task-areas.html', 'js/ImageProcessor', 'js/CanvasGui'], function(contentTemplate, ImageProcessor, CanvasGui) {
 
 var Areas, _ref, module,
 
@@ -22,28 +22,22 @@ var Areas, _ref, module,
     function Areas(containerIdentifier){    
 
       // render templates
-      $(containerIdentifier).html($(menuTemplate))
-      $(containerIdentifier).append($(contentTemplate))
+      $(containerIdentifier).html($(contentTemplate))
 
       Areas.__super__.constructor("#canvas-container")
 
-      this.imageProcessor = new ImageProcessor()
-      this.fileProcessor = new FileProcessor()
-
       this.initializeTools()
-
-      this.addEventListeners()
     }
 
 
     Areas.prototype.updateThreshold = function(threshold){
 
-      var imgDataLeft = this.leftCanvas.getImageData()
+      var imgDataLeft = this.canvas.getImageData()
 
       // compute threshold automatically, if not set          multiplycation cause input is 0-100
       threshold = typeof threshold !== 'undefined' ? threshold*2.55 : this.imageProcessor.computeThreshold(imgDataLeft)
 
-      this.rightCanvas.copy(this.leftCanvas, false)
+      this.rightCanvas.copy(this.canvas, false)
       this.rightCanvas.putImageData(this.imageProcessor.processThreshold(threshold, imgDataLeft))
 
       return threshold
@@ -56,10 +50,10 @@ var Areas, _ref, module,
       // Automatic threshold button
       $("#action-flood-stack").click(
         function(event, ui){
-          this.rightCanvas.copy(this.leftCanvas, false)
+          this.rightCanvas.copy(this.canvas, false)
           window.maxDepth = 0;
           var start = new Date().getTime();
-          var newImg = this.imageProcessor.processFloodFill(this.leftCanvas.getImageData(), this.leftCanvas.getImageWidth(), 'depth')
+          var newImg = this.imageProcessor.processFloodFill(this.canvas.getImageData(), this.canvas.getImageWidth(), 'depth')
           var end = new Date().getTime();
           var time = end - start;
           this.rightCanvas.putImageData(newImg)      
@@ -70,10 +64,10 @@ var Areas, _ref, module,
       // Outline button
       $("#action-flood-queue").click(
         function(event, ui){
-          this.rightCanvas.copy(this.leftCanvas, false)
+          this.rightCanvas.copy(this.canvas, false)
           window.maxWidth = 0;
           var start = new Date().getTime();
-          var newImg = this.imageProcessor.processFloodFill(this.leftCanvas.getImageData(), this.leftCanvas.getImageWidth(), 'breadth')
+          var newImg = this.imageProcessor.processFloodFill(this.canvas.getImageData(), this.canvas.getImageWidth(), 'breadth')
           var end = new Date().getTime();
           var time = end - start;
           this.rightCanvas.putImageData(newImg)      
@@ -84,10 +78,10 @@ var Areas, _ref, module,
       // Outline button
       $("#action-flood-sequential").click(
         function(event, ui){
-          this.rightCanvas.copy(this.leftCanvas, false)
+          this.rightCanvas.copy(this.canvas, false)
           window.maxWidth = 0;
           var start = new Date().getTime();
-          var newImg = this.imageProcessor.processFloodFill(this.leftCanvas.getImageData(), this.leftCanvas.getImageWidth())
+          var newImg = this.imageProcessor.processFloodFill(this.canvas.getImageData(), this.canvas.getImageWidth())
           var end = new Date().getTime();
           var time = end - start;
           this.rightCanvas.putImageData(newImg)      
@@ -95,36 +89,8 @@ var Areas, _ref, module,
         }.bind(this)
       )   
 
-
-      // Outline button
-      $("#upload-image").click(
-        function(event, ui){
-          event.stopPropagation()
-          event.preventDefault()
-          $('input[type="file"]').click()
-        }.bind(this))
-
-      $("#save-image").click(
-        function(event, ui){
-          event.stopPropagation()
-          event.preventDefault()
-          // close drop down in menu
-          $("#save-image").parent().parent().parent().removeClass("open")
-          this.fileProcessor.saveCanvasToDisk(this.rightCanvas.getElement()[0])
-      
-      }.bind(this)) 
-
     }
 
-    Areas.prototype.addEventListeners = function(){
-
-      document.getElementById('action-upload').addEventListener('change', 
-        function(evt){
-          var file = evt.target.files[0] // FileList object
-          this.fileProcessor.loadFileFromFilesystem(URL.createObjectURL(file), this.leftCanvas.drawImage, this.leftCanvas)
-        }.bind(this), false);
-
-    }
 
 // --------------------------------------
     return Areas

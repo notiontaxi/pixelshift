@@ -7,11 +7,12 @@ https://github.com/notiontaxi
 
 "use strict"
 
-define(['text!templates/canvas-gui.html', 'js/DragNDrop', 'js/Canvas'], function(canvasGuiTemplate, DragNDrop, Canvas) {
+define(['text!templates/canvas-gui.html', 'js/DragNDrop', 'js/Canvas', 'js/MenuGui'], function(canvasGuiTemplate, DragNDrop, Canvas, MenuGui) {
 
-  var CanvasGui, module;
+  var CanvasGui, _ref, module;
   module = function() {}
   CanvasGui = (function(){
+    __extends(CanvasGui, MenuGui);
 // --------------------------------------
 
 
@@ -20,8 +21,7 @@ define(['text!templates/canvas-gui.html', 'js/DragNDrop', 'js/Canvas'], function
 
     $(canvasContainerIdentifier).html($(canvasGuiTemplate))
 
-    this.leftCanvas = new Canvas('canvas-left')
-    this.rightCanvas = new Canvas('canvas-right')
+    CanvasGui.__super__.constructor("#menu-container","canvas-left", "canvas-right")
 
     this.initialize()
     this.addEventListeners()
@@ -35,7 +35,7 @@ define(['text!templates/canvas-gui.html', 'js/DragNDrop', 'js/Canvas'], function
 
     this.updateLayout()
 
-    var dragNDrop = new DragNDrop(this.leftCanvas, this.leftCanvas.drawImage)
+    var dragNDrop = new DragNDrop(this.canvas, this.canvas.drawImage)
   }
 
 
@@ -44,19 +44,19 @@ define(['text!templates/canvas-gui.html', 'js/DragNDrop', 'js/Canvas'], function
     var width = window.outerWidth
 
     if(width < 992 && !this.wasSmallLayout){
-      this.leftCanvas.updateSize(310,310)
+      this.canvas.updateSize(310,310)
       this.rightCanvas.updateSize(310,310)
       this.wasSmallLayout = true
       this.wasMediumLayout = this.wasLargeLayout = false
       //console.log("Setting layout to s")
     } else if(width >= 992 && width < 1200 && !this.wasMediumLayout){
-      this.leftCanvas.updateSize(430,430)
+      this.canvas.updateSize(430,430)
       this.rightCanvas.updateSize(430,430)
       this.wasMediumLayout = true
       this.wasSmallLayout = this.wasLargeLayout = false
       //console.log("Setting layout to m")
     } else if(width >= 1200 && !this.wasLargeLayout){
-      this.leftCanvas.updateSize(530,530)
+      this.canvas.updateSize(530,530)
       this.rightCanvas.updateSize(530,530)
       this.wasLargeLayout = true
       this.wasSmallLayout = this.wasMediumLayout = false
