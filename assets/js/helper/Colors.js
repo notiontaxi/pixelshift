@@ -20,7 +20,7 @@ var Colors, module,
 
 
     function Colors(containerIdentifier){    
-
+      this.randomCurrentColorNr = 0
       this.generateColors()
     }
 
@@ -47,6 +47,18 @@ var Colors, module,
 
     Colors.prototype.getColors = function(){
       return this.colors
+    }
+
+    /* r g b values between 1 and 254 */
+    Colors.prototype.getRandomColor = function(){
+      return {  name: 'random'   ,
+                values:{
+                    r: Math.round(Math.random() * 253)+1
+                  , g: Math.round(Math.random() * 253)+1 
+                  , b: Math.round(Math.random() * 253)+1
+                },
+                nr: this.randomCurrentColorNr++
+              }
     }
 
 
