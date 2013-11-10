@@ -85,7 +85,7 @@ var Areas, _ref, module,
           var end = new Date().getTime();
           var time = end - start;
           this.rightCanvas.putImageData(newImg)      
-          $( "#algo-times" ).html("CPU time: "+time+" ms | Max width: "+window.maxWidth);
+          $( "#algo-times" ).html("CPU time: "+time+" ms");
         }.bind(this)
       )   
 
