@@ -286,7 +286,7 @@ define(['js/Histogram', 'js/helper/Colors'], function(Histogram, ColorHelper) {
   }
 
   ImageProcessor.prototype.floodFillSequential = function(imageData, imageWidth, colors){
-    
+    var test = new Array()
     var lookFor = 0;
     var currentLabel = colors.getRandomColor().values
     var collisions = Array()
@@ -335,6 +335,7 @@ define(['js/Histogram', 'js/helper/Colors'], function(Histogram, ColorHelper) {
       upper = i-imageWidth*4
       upperRight = i-imageWidth*4+4
       left = i-4
+      var currentColor = {color: this.getPixelRgb(imageData, i), pos: i}
 
       if(imageData.data[i] === lookFor){
         if(imageData.data[upperLeft] !== 255)
@@ -343,86 +344,165 @@ define(['js/Histogram', 'js/helper/Colors'], function(Histogram, ColorHelper) {
           currentColors.push({color: this.getPixelRgb(imageData, upper), pos: upper})
         if(imageData.data[upperRight] !== 255)
           currentColors.push({color: this.getPixelRgb(imageData, upperRight), pos: upperRight})
-        if(imageData.data[left] !== 255)
+        if(imageData.data[left] !== 255){
           currentColors.push({color: this.getPixelRgb(imageData, left), pos: left})
+        }
 
         if(currentColors.length === 0){
           this.setPixelToRgb(imageData, i, colors.getRandomColor().values) // new label
         }else{
-          this.setPixelToRgb(imageData, i, currentColors[0].color) // get existing color
-          if(currentColors.length > 1)
-            for(var j = 1; j < currentColors.length; j++)
-              if(currentColors[0].color.colorName != currentColors[j].color.colorName)
-                collisions.push({
-                    a: currentColors[j] 
-                  , b: currentColors[0]}
-                  )
-        }
-      }       
+
+          this.setPixelToRgb(imageData, i, currentColors[0].color) // get existing color 
+                  
+          if(currentColors.length > 1){
+            for(var j = 1; j < currentColors.length; j++){
+              if(currentColors[0].color.colorName != currentColors[j].color.colorName){
+                this.addToCollisionSet(collisions, currentColors[0].color.colorName, currentColors[j].color.colorName)
+              }
+            }
+          }
+
+        }       
+      }
     }
-    /*
-    if(collisions.length !== 0){
-      var sets = new Array()
-      var set = new Array()
-      var foundSomething = false
-      var foundA = false
-      var foundB = false
-      set.push(collisions[0].a.color.colorName)
-      set.push(collisions[0].b.color.colorName)
-      sets.push(set)
 
-      // solve colissions
-      for(var i = 1; i < collisions.length; i++){
-        for(var j = 0; j < sets.length; j++){
-          var currentSet = sets[j]
-          if(currentSet.indexOf(collisions[i].b.color.colorName) !== -1){
-            if(currentSet.indexOf(collisions[i].a.color.colorName) === -1){
-              currentSet.push(collisions[i].a.color.colorName)
-              foundSomething = true
-              break
-            }
-          }else if(currentSet.indexOf(collisions[i].a.color.colorName) !== -1){
-            if(currentSet.indexOf(collisions[i].b.color.colorName) === -1){
-              currentSet.push(collisions[i].b.color.colorName)
-              foundSomething = true
-              break
-            }
-          }
+    // make it unique
+    var uniqueCollisions = new Array()
 
-        }
-        if(!foundSomething){
-          var newSet = new Array()
-          newSet.push(collisions[i].a.color.colorName)
-          newSet.push(collisions[i].b.color.colorName)
-          sets.push(newSet)  
-        }else{
-          foundSomething = false
+    for(var key in collisions) {
+      var temp = []
+
+      $.each(collisions[key],function(i,v){
+       if ($.inArray(v, temp) == -1) temp.push(collisions[key][i]);
+      });
+
+      uniqueCollisions[key] = temp
+    }
+
+    var replace = new Array()
+    // solve collisions
+    for (var i = imageWidth*4+4; i < imageData.data.length-4; i+=4){  
+      if(imageData.data[i] !== 255){
+        var color = imageData.data[i] + " " + imageData.data[i+1] + " " + imageData.data[i+2] 
+        this.checkColor(imageData, i, color, uniqueCollisions)
+
+        if(imageData.data[i-4] !== 255 && imageData.data[i-4] !== imageData.data[i]){
+          var colorA = imageData.data[i] + " " + imageData.data[i+1] + " " + imageData.data[i+2] 
+          var colorB = imageData.data[i-4] + " " + imageData.data[i-3] + " " + imageData.data[i-2] 
+          replace[colorA] = colorB
         }
       }
+    }
 
-      var newSets = new Array()
-      newSets.push(sets.shift())
+    for (var i = imageWidth*4+4; i < imageData.data.length-4; i+=4){  
+      if(imageData.data[i] !== 255){
 
-      while(sets.length > 0){
-        var lastInNewSets = newSets[newSets.length-1]
-        for(var i = 0; i < lastInNewSets.length; i++){
-          var lookFor = lastInNewSets[i]
-          for(var j = 0; j < sets.length; j++){
-            if(sets[j].indexOf(lookFor) !== -1){
-              newSets[newSets.length-1] = arrayUnique(sets[j].concat(lastInNewSets))
-              sets.splice(j, 1)
-            }
-          }
+        var color = imageData.data[i] + " " + imageData.data[i+1] + " " + imageData.data[i+2] 
+
+        if(keyInAArray(replace, color) !== -1){
+
+          colors = (replace[color]).split(" ")
+          imageData.data[i]    = colors[0]
+          imageData.data[i+1]  = colors[1]
+          imageData.data[i+2]  = colors[2]
         }
+
       }
-
-
-      console.log(newSets)
-      */
-
+    }
 
   }
+      
 
+  ImageProcessor.prototype.checkColor = function(imageData, position, color, collisions){
+   
+    var colors, pos
+
+    for(var key in collisions){
+
+      pos = inArray(collisions[key], color)
+
+      if(pos !== -1){ 
+        colors = (key).split(" ")
+        imageData.data[position]    = colors[0]
+        imageData.data[position+1]  = colors[1]
+        imageData.data[position+2]  = colors[2]
+      } 
+    }
+  }
+
+
+ 
+
+  ImageProcessor.prototype.addToCollisionSet = function(collisions, colorA, colorB){
+
+    //console.log(colorA + ' | ' + colorB)
+
+    var newEntry = true
+    var indexColorA, indexColorB
+    var index = -1
+    indexColorA = indexColorB = -1
+
+    // is the color already an index?
+    if(keyInAArray(collisions, colorA) !== -1){
+      //console.log("a is a key")
+      // a and be are existing as an index
+      if(keyInAArray(collisions, colorB) !== -1){
+        //console.log("b and a are keys")
+        var newArray = collisions[colorA].concat(collisions[colorB])
+        collisions[colorA] = newArray
+        collisions.splice(colorB, 1)
+      }
+      
+      collisions[colorA].push(colorB)
+      newEntry = false
+    }else if(keyInAArray(collisions, colorB) !== -1){
+      //console.log("only b is a key")
+      collisions[colorB].push(colorA)
+      newEntry = false
+    // is the color already part of a set?
+    }else{
+      for(var key in collisions){
+        index++
+        if(inArray(collisions[key], colorA) !== -1){
+          //console.log("a in array "+key)
+          indexColorA = key
+          newEntry = false
+        }
+        if(inArray(collisions[key], colorB) !== -1){
+          //console.log("b in array "+key)
+          indexColorB = key
+          newEntry = false
+        }
+      }
+
+      if(indexColorA === indexColorB){
+
+      }else if(indexColorA !== -1 && indexColorB !== -1){
+        collisions[indexColorA] = collisions[indexColorA].concat(collisions[indexColorB])
+        collisions[indexColorA].push(indexColorB)
+        collisions.splice(indexColorB, 1)
+      }else if(indexColorA !== -1){
+        collisions[indexColorA].push(colorB)
+      }else if(indexColorB !== -1){
+        collisions[indexColorB].push(colorA)
+      }
+
+    }
+
+    if(newEntry){
+      collisions[colorA] = new Array()
+      collisions[colorA].push(colorB)
+      //console.log("new set "+colorA+" added "+colorB)
+    }
+
+
+    /* 
+      sets.splice(j, 1)
+      if(sets[j].indexOf(lookFor) !== -1)
+      arrayUnique(sets[j].concat(lastInNewSets))
+    */
+
+  }
 
 
 // --------------------------------------

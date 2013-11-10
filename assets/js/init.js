@@ -18,33 +18,41 @@ if(!Function.prototype.bind){
   };    
 }
 
-var indexOf = function(needle) {
-    if(typeof Array.prototype.indexOf === 'function') {
-        indexOf = Array.prototype.indexOf;
-    } else {
-        indexOf = function(needle) {
-            var i = -1, index = -1;
+var inArray = function(array, needle) {
 
-            for(i = 0; i < this.length; i++) {
-                if(this[i] == needle) {
-                    index = i;
-                    break;
-                }
-            }
+  var i = -1, index = -1
 
-            return index;
-        };
-    }
-
-    return indexOf.call(this, needle);
+  for(var i = 0; i < array.length; i++) {
+      if(array[i] == needle) {
+          index = i
+          break
+      }
+  }
+  return index
 };
 
-function arrayUnique(array) {
+var keyInAArray = function(array, needle) {
+
+  var i = -1
+  var index = -1
+
+  for (var key in array) {
+    i++
+    if(key == needle) {
+      index = i
+      break
+    }
+  }
+
+  return index
+};
+
+function aArrayUnique(array) {
     var a = array.concat();
-    for(var i=0; i<a.length; ++i) {
-        for(var j=i+1; j<a.length; ++j) {
-            if(a[i] === a[j])
-                a.splice(j--, 1);
+    for(var keyA in array) {
+        for(var keyB in array) {
+            if(a[keyA] === a[keyB])
+                a.splice(keyB, 1);
         }
     }
 
