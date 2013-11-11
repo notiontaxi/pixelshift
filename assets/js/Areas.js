@@ -30,33 +30,17 @@ var Areas, _ref, module,
     }
 
 
-    Areas.prototype.updateThreshold = function(threshold){
-
-      var imgDataLeft = this.canvas.getImageData()
-
-      // compute threshold automatically, if not set          multiplycation cause input is 0-100
-      threshold = typeof threshold !== 'undefined' ? threshold*2.55 : this.imageProcessor.computeThreshold(imgDataLeft)
-
-      this.rightCanvas.copy(this.canvas, false)
-      this.rightCanvas.putImageData(this.imageProcessor.processThreshold(threshold, imgDataLeft))
-
-      return threshold
-    }
-
-
     Areas.prototype.initializeTools = function(){
-
 
       // Automatic threshold button
       $("#action-flood-stack").click(
         function(event, ui){
-          this.rightCanvas.copy(this.canvas, false)
           window.maxDepth = 0;
           var start = new Date().getTime();
-          var newImg = this.imageProcessor.processFloodFill(this.canvas.getImageData(), this.canvas.getImageWidth(), 'depth')
+          var newImg = this.imageProcessor.processFloodFill(this.canvas.getImageData(), this.canvas.getImageWidth(), 'four')
           var end = new Date().getTime();
           var time = end - start;
-          this.rightCanvas.putImageData(newImg)      
+          this.canvas.putImageData(newImg)      
           $( "#algo-times" ).html("CPU time: "+time+" ms | Max stack: "+window.maxDepth);
         }.bind(this)
       )
@@ -64,30 +48,16 @@ var Areas, _ref, module,
       // Outline button
       $("#action-flood-queue").click(
         function(event, ui){
-          this.rightCanvas.copy(this.canvas, false)
           window.maxWidth = 0;
           var start = new Date().getTime();
-          var newImg = this.imageProcessor.processFloodFill(this.canvas.getImageData(), this.canvas.getImageWidth(), 'breadth')
+          var newImg = this.imageProcessor.processFloodFill(this.canvas.getImageData(), this.canvas.getImageWidth(), 'eight')
           var end = new Date().getTime();
           var time = end - start;
-          this.rightCanvas.putImageData(newImg)      
+          this.canvas.putImageData(newImg)      
           $( "#algo-times" ).html("CPU time: "+time+" ms | Max width: "+window.maxWidth);
         }.bind(this)
       )   
-
-      // Outline button
-      $("#action-flood-sequential").click(
-        function(event, ui){
-          this.rightCanvas.copy(this.canvas, false)
-          window.maxWidth = 0;
-          var start = new Date().getTime();
-          var newImg = this.imageProcessor.processFloodFill(this.canvas.getImageData(), this.canvas.getImageWidth())
-          var end = new Date().getTime();
-          var time = end - start;
-          this.rightCanvas.putImageData(newImg)      
-          $( "#algo-times" ).html("CPU time: "+time+" ms | Max width: "+window.maxWidth);
-        }.bind(this)
-      )   
+ 
 
     }
 

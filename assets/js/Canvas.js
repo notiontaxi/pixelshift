@@ -39,6 +39,8 @@ define([], function() {
       this.oldImageData = this.getImageData()
       this.gotNewImage = true
 
+      this.scaling = 1
+
     }
 
     Canvas.prototype.drawImage = function(img, _this){
@@ -87,13 +89,34 @@ define([], function() {
     }
 
     Canvas.prototype.copy = function(otherCanvas, draw){
-      this.imageHeight = otherCanvas.imageHeight
-      this.imageWidth = otherCanvas.imageWidth
-      this.imageXOffset = otherCanvas.imageXOffset
-      this.imageYOffset = otherCanvas.imageYOffset
 
-      if(draw)
-        this.putImageData(otherCanvas.getImageData(), this.imageXOffset, this.imageYOffset)
+      var scaleX = (this.canvasWidth / otherCanvas.imageWidth).toFixed(4)
+      var scaleY = (this.canvasHeight / otherCanvas.imageHeight).toFixed(4)
+
+      var scale = scaleX < scaleY ? scaleX : scaleY;
+      // do not scale, when original image is scmaller than canvas
+      scale = scale > 1.0 ? 1.0 : scale;
+
+      this.imageHeight  = otherCanvas.imageHeight * scale
+      this.imageWidth   = otherCanvas.imageWidth * scale
+      this.imageXOffset = (this.canvasWidth - this.imageWidth) / 2
+      this.imageYOffset = (this.canvasHeight - this.imageHeight) / 2
+
+      if(draw){
+        // save current context state, to restore changes in scaling later
+        this.getContext().save()
+        var newCanvas = $("<canvas>")
+            .attr("width", otherCanvas.imageWidth)
+            .attr("height", otherCanvas.imageHeight)[0];
+        newCanvas.getContext("2d").putImageData(otherCanvas.getImageData(), 0, 0);
+
+        this.clear()
+        this.scaling = scale        
+        this.getContext().scale(scale, scale)
+        this.getContext().drawImage(newCanvas, this.imageXOffset*1/scale, this.imageYOffset*1/scale)
+
+        this.getContext().restore()
+      }
     }
 
     Canvas.prototype.getElement = function(){
@@ -108,15 +131,21 @@ define([], function() {
       return this.getContext().getImageData(this.imageXOffset,this.imageYOffset,this.imageWidth, this.imageHeight)
     }
 
+     Canvas.prototype.getFullImageData = function(){
+      return this.getContext().getImageData(0,0,this.canvasWidth, this.canvasHeight)
+    }   
+
     Canvas.prototype.putImageData = function(imageData){
       this.clear()
-      this.getContext().putImageData(imageData,this.imageXOffset,this.imageYOffset);
+      this.getContext().putImageData(imageData,this.imageXOffset,this.imageYOffset)
     }
 
     Canvas.prototype.updateSize = function(width, height, func) {
 
-      this.ctx.canvas.width  = width
-      this.ctx.canvas.height = height
+      
+      this.ctx.canvas.width = this.canvasWidth = width
+      this.ctx.canvas.height = this.canvasHeight = height
+
 /*
       $("#canvas-overlay").css({
         'left': this.ctx.canvas.left+'px',

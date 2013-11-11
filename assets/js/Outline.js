@@ -37,8 +37,7 @@ var Outline, _ref, module,
       // compute threshold automatically, if not set          multiplycation cause input is 0-100
       threshold = typeof threshold !== 'undefined' ? threshold*2.55 : this.imageProcessor.computeThreshold(imgDataLeft)
 
-      this.rightCanvas.copy(this.canvas, false)
-      this.rightCanvas.putImageData(this.imageProcessor.processThreshold(threshold, imgDataLeft))
+      this.canvas.putImageData(this.imageProcessor.processThreshold(threshold, imgDataLeft))
 
       return threshold
     }
@@ -73,24 +72,25 @@ var Outline, _ref, module,
       // Outline button
       $("#action-dilation").click(
         function(event, ui){
-          var newImg = this.imageProcessor.processDilation(this.rightCanvas.getImageData(), this.rightCanvas.getImageWidth())
-          this.rightCanvas.putImageData(newImg)
+          var newImg = this.imageProcessor.processDilation(this.canvas.getImageData(), this.canvas.getImageWidth())
+          this.canvas.putImageData(newImg)
+          this.shownCanvas.copy(this.canvas, true)
         }.bind(this)
       )   
 
       // Outline button
       $("#action-erosion").click(
         function(event, ui){
-          var newImg = this.imageProcessor.processErosion(this.rightCanvas.getImageData(), this.rightCanvas.getImageWidth())
-          this.rightCanvas.putImageData(newImg)
+          var newImg = this.imageProcessor.processErosion(this.canvas.getImageData(), this.canvas.getImageWidth())
+          this.canvas.putImageData(newImg)
         }.bind(this)
       )   
 
       // Outline button
       $("#action-outline").click(
         function(event, ui){
-          var newImg = this.imageProcessor.processOutline(this.rightCanvas.getImageData(), this.rightCanvas.getImageData() ,this.rightCanvas.getImageWidth())
-          this.rightCanvas.putImageData(newImg)
+          var newImg = this.imageProcessor.processOutline(this.canvas.getImageData(), this.canvas.getImageData() ,this.canvas.getImageWidth())
+          this.canvas.putImageData(newImg)
         }.bind(this)
       )           
 

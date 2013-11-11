@@ -22,7 +22,7 @@ define(['text!templates/menu-bar.html', 'js/FileProcessor', 'js/ImageProcessor',
     $(menuContainerIdentifier).html($(menuTemplate))
 
     this.canvas = new Canvas(canvasIdentifier)
-    this.rightCanvas = new Canvas(canvasIdentifier2)
+    this.shownCanvas = new Canvas(canvasIdentifier2)
 
 
     this.fileProcessor = new FileProcessor()
@@ -30,6 +30,7 @@ define(['text!templates/menu-bar.html', 'js/FileProcessor', 'js/ImageProcessor',
 
     this.addEventListeners()
     this.initializeTools()
+    this.initializeEditFunctionality()
   }
 
   MenuGui.prototype.addEventListeners = function(){
@@ -54,7 +55,7 @@ define(['text!templates/menu-bar.html', 'js/FileProcessor', 'js/ImageProcessor',
       function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        this.fileProcessor.saveCanvasToDisk(this.rightCanvas.getElement()[0])
+        this.fileProcessor.saveCanvasToDisk(this.shownCanvas.getElement()[0])
     
     }.bind(this))          
 
@@ -72,7 +73,6 @@ define(['text!templates/menu-bar.html', 'js/FileProcessor', 'js/ImageProcessor',
       function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        console.log(this.canvas.getImageData())
         var newImg = this.imageProcessor.processGrayscale(this.canvas.getImageData(), this.canvas.getImageWidth())
         this.canvas.putImageData(newImg)
     }.bind(this))    
@@ -94,6 +94,27 @@ define(['text!templates/menu-bar.html', 'js/FileProcessor', 'js/ImageProcessor',
     }.bind(this))          
 
   }  
+
+  MenuGui.prototype.initializeEditFunctionality = function(){
+
+    $("#action-undo").click(
+      function(event, ui){
+        event.stopPropagation()
+        event.preventDefault()
+        console.log(this.canvas.getImageData())
+        var newImg = this.imageProcessor.processGrayscale(this.canvas.getImageData(), this.canvas.getImageWidth())
+        this.canvas.putImageData(newImg)
+    }.bind(this))    
+
+    $("#action-redo").click(
+      function(event, ui){
+        event.stopPropagation()
+        event.preventDefault()
+        var newImg = this.imageProcessor.processThreshold(this.imageProcessor.computeThreshold(this.canvas.getImageData()) ,this.canvas.getImageData())
+        this.canvas.putImageData(newImg)
+    }.bind(this))          
+
+  }    
 
 // --------------------------------------
     return MenuGui

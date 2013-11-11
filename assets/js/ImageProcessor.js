@@ -226,13 +226,13 @@ define(['js/Histogram', 'js/helper/Colors'], function(Histogram, ColorHelper) {
     var colors = new ColorHelper
     var label
 
-    if(type == "depth"){
+    if(type == "four"){
       for (var i = 0; i < imageData.data.length; i+=4)
         if (imageData.data[i] == 0){
           label = colors.getRandomColor().values
           this.floodFillStack(imageData, imageWidth, i, 0, label)
         }
-      }else if(type == "breadth"){
+      }else if(type == "eight"){
        for (var i = 0; i < imageData.data.length; i+=4)
         if (imageData.data[i] == 0){
           label = colors.getRandomColor().values
@@ -244,26 +244,28 @@ define(['js/Histogram', 'js/helper/Colors'], function(Histogram, ColorHelper) {
     return imageData;
   }
 
+  // regards the for pixels around the curent pixel (upper. lower, left, right) / uses stack
   ImageProcessor.prototype.floodFillStack = function(imageData, imageWidth, position, lookFor, label){
     var s = Array()
     var currPixPos
     var lastPixel = imageData.data.length - 4
     s.push(position)
     while(s.length > 0){
-      currPixPos = s.pop()
+      currPixPos = s.pop() // stack
       if(imageData.data[currPixPos] === lookFor && currPixPos > 0 && currPixPos < lastPixel){
         imageData.data[currPixPos] = label.r
         imageData.data[currPixPos+1] = label.g
         imageData.data[currPixPos+2] = label.b
-        s.push(currPixPos - 4)
-        s.push(currPixPos + 4)
-        s.push(currPixPos - imageWidth*4)
-        s.push(currPixPos + imageWidth*4)
+        s.push(currPixPos - 4) // left
+        s.push(currPixPos + 4) // right
+        s.push(currPixPos - imageWidth*4) // upper
+        s.push(currPixPos + imageWidth*4) // lower
         window.maxDepth = (s.length > window.maxDepth) ? s.length : window.maxDepth
       }
     }
   }
 
+  // regards the eight pixels around the curent pixel / uses queue
   ImageProcessor.prototype.floodFillBreadth = function(imageData, imageWidth, position, lookFor, label){
     var s = Array()
     var replacements = Array()
@@ -271,237 +273,22 @@ define(['js/Histogram', 'js/helper/Colors'], function(Histogram, ColorHelper) {
     var lastPixel = imageData.data.length - 4
     s.push(position)
     while(s.length > 0){
-      currPixPos = s.shift()
+      currPixPos = s.shift() // queue
       if(imageData.data[currPixPos] === lookFor && currPixPos > 0 && currPixPos < lastPixel){
         imageData.data[currPixPos] = label.r
         imageData.data[currPixPos+1] = label.g
         imageData.data[currPixPos+2] = label.b
-        s.push(currPixPos - 4)
-        s.push(currPixPos + 4)
-        s.push(currPixPos - imageWidth*4)
-        s.push(currPixPos + imageWidth*4)
+        s.push(currPixPos - 4) // left
+        s.push(currPixPos + 4) // right
+        s.push(currPixPos - imageWidth*4) // upper
+        s.push(currPixPos + imageWidth*4) // lower
+        s.push(currPixPos - imageWidth*4 - 4) // upper left
+        s.push(currPixPos - imageWidth*4 + 4) // upper right
+        s.push(currPixPos + imageWidth*4 - 4) // lower left
+        s.push(currPixPos + imageWidth*4 + 4) // lower right
         window.maxWidth = (s.length > window.maxWidth) ? s.length : window.maxWidth
       }
     }
-  }
-
-  ImageProcessor.prototype.floodFillSequential = function(imageData, imageWidth, colors){
-    var test = new Array()
-    var lookFor = 0;
-    var currentLabel = colors.getRandomColor().values
-    var collisions = Array()
-    var currentColors = Array()
-    var upperLeft, upper, upperRight, left
-
-    // label first line
-    for (var i = 0; i < imageWidth*4; i+=4){
-      if(imageData.data[i] === lookFor){
-        if(i > 4 && imageData.data[i-4] !== 255){
-          this.setPixelToRgb(imageData,i,this.getPixelRgb(imageData, i-4)) // label from left pixel
-        }else{
-          currentLabel = colors.getRandomColor().values // new label
-          this.setPixelToRgb(imageData, i, currentLabel)
-        }
-      }
-    }
-
-    // label sides
-    for (var i = imageWidth*4; i < imageData.data.length; i+=imageWidth*4){
-      // left side
-      if(imageData.data[i] === lookFor){
-        if(imageData.data[i-imageWidth*4] !== 255){
-          this.setPixelToRgb(imageData,i,this.getPixelRgb(imageData, i-imageWidth*4)) // label from upper pixel
-        }else{
-          currentLabel = colors.getRandomColor().values // new label
-          this.setPixelToRgb(imageData, i, currentLabel)
-        }
-      }
-      // right side
-      var rightPos = i+imageWidth*4-4
-      if(imageData.data[rightPos] === lookFor){
-        if(imageData.data[rightPos-imageWidth*4] !== 255){
-          this.setPixelToRgb(imageData,rightPos,this.getPixelRgb(imageData, rightPos-imageWidth*4)) // label from upper pixel
-        }else{
-          currentLabel = colors.getRandomColor().values // new label
-          this.setPixelToRgb(imageData, rightPos, currentLabel)
-        }
-      }
-    }
-    // all other pixels
-    for (var i = imageWidth*4+4; i < imageData.data.length-4; i+=4){
-
-      currentColors = Array()
-      upperLeft = i-imageWidth*4-4
-      upper = i-imageWidth*4
-      upperRight = i-imageWidth*4+4
-      left = i-4
-      var currentColor = {color: this.getPixelRgb(imageData, i), pos: i}
-
-      if(imageData.data[i] === lookFor){
-        if(imageData.data[upperLeft] !== 255)
-          currentColors.push({color: this.getPixelRgb(imageData, upperLeft), pos: upperLeft})
-        if(imageData.data[upper] !== 255)
-          currentColors.push({color: this.getPixelRgb(imageData, upper), pos: upper})
-        if(imageData.data[upperRight] !== 255)
-          currentColors.push({color: this.getPixelRgb(imageData, upperRight), pos: upperRight})
-        if(imageData.data[left] !== 255){
-          currentColors.push({color: this.getPixelRgb(imageData, left), pos: left})
-        }
-
-        if(currentColors.length === 0){
-          this.setPixelToRgb(imageData, i, colors.getRandomColor().values) // new label
-        }else{
-
-          this.setPixelToRgb(imageData, i, currentColors[0].color) // get existing color 
-                  
-          if(currentColors.length > 1){
-            for(var j = 1; j < currentColors.length; j++){
-              if(currentColors[0].color.colorName != currentColors[j].color.colorName){
-                this.addToCollisionSet(collisions, currentColors[0].color.colorName, currentColors[j].color.colorName)
-              }
-            }
-          }
-
-        }       
-      }
-    }
-
-    // make it unique
-    var uniqueCollisions = new Array()
-
-    for(var key in collisions) {
-      var temp = []
-
-      $.each(collisions[key],function(i,v){
-       if ($.inArray(v, temp) == -1) temp.push(collisions[key][i]);
-      });
-
-      uniqueCollisions[key] = temp
-    }
-
-    var replace = new Array()
-    // solve collisions
-    for (var i = imageWidth*4+4; i < imageData.data.length-4; i+=4){  
-      if(imageData.data[i] !== 255){
-        var color = imageData.data[i] + " " + imageData.data[i+1] + " " + imageData.data[i+2] 
-        this.checkColor(imageData, i, color, uniqueCollisions)
-
-        if(imageData.data[i-4] !== 255 && imageData.data[i-4] !== imageData.data[i]){
-          var colorA = imageData.data[i] + " " + imageData.data[i+1] + " " + imageData.data[i+2] 
-          var colorB = imageData.data[i-4] + " " + imageData.data[i-3] + " " + imageData.data[i-2] 
-          replace[colorA] = colorB
-        }
-      }
-    }
-
-    for (var i = imageWidth*4+4; i < imageData.data.length-4; i+=4){  
-      if(imageData.data[i] !== 255){
-
-        var color = imageData.data[i] + " " + imageData.data[i+1] + " " + imageData.data[i+2] 
-
-        if(keyInAArray(replace, color) !== -1){
-
-          colors = (replace[color]).split(" ")
-          imageData.data[i]    = colors[0]
-          imageData.data[i+1]  = colors[1]
-          imageData.data[i+2]  = colors[2]
-        }
-
-      }
-    }
-
-  }
-      
-
-  ImageProcessor.prototype.checkColor = function(imageData, position, color, collisions){
-   
-    var colors, pos
-
-    for(var key in collisions){
-
-      pos = inArray(collisions[key], color)
-
-      if(pos !== -1){ 
-        colors = (key).split(" ")
-        imageData.data[position]    = colors[0]
-        imageData.data[position+1]  = colors[1]
-        imageData.data[position+2]  = colors[2]
-      } 
-    }
-  }
-
-
- 
-
-  ImageProcessor.prototype.addToCollisionSet = function(collisions, colorA, colorB){
-
-    //console.log(colorA + ' | ' + colorB)
-
-    var newEntry = true
-    var indexColorA, indexColorB
-    var index = -1
-    indexColorA = indexColorB = -1
-
-    // is the color already an index?
-    if(keyInAArray(collisions, colorA) !== -1){
-      //console.log("a is a key")
-      // a and be are existing as an index
-      if(keyInAArray(collisions, colorB) !== -1){
-        //console.log("b and a are keys")
-        var newArray = collisions[colorA].concat(collisions[colorB])
-        collisions[colorA] = newArray
-        collisions.splice(colorB, 1)
-      }
-      
-      collisions[colorA].push(colorB)
-      newEntry = false
-    }else if(keyInAArray(collisions, colorB) !== -1){
-      //console.log("only b is a key")
-      collisions[colorB].push(colorA)
-      newEntry = false
-    // is the color already part of a set?
-    }else{
-      for(var key in collisions){
-        index++
-        if(inArray(collisions[key], colorA) !== -1){
-          //console.log("a in array "+key)
-          indexColorA = key
-          newEntry = false
-        }
-        if(inArray(collisions[key], colorB) !== -1){
-          //console.log("b in array "+key)
-          indexColorB = key
-          newEntry = false
-        }
-      }
-
-      if(indexColorA === indexColorB){
-
-      }else if(indexColorA !== -1 && indexColorB !== -1){
-        collisions[indexColorA] = collisions[indexColorA].concat(collisions[indexColorB])
-        collisions[indexColorA].push(indexColorB)
-        collisions.splice(indexColorB, 1)
-      }else if(indexColorA !== -1){
-        collisions[indexColorA].push(colorB)
-      }else if(indexColorB !== -1){
-        collisions[indexColorB].push(colorA)
-      }
-
-    }
-
-    if(newEntry){
-      collisions[colorA] = new Array()
-      collisions[colorA].push(colorB)
-      //console.log("new set "+colorA+" added "+colorB)
-    }
-
-
-    /* 
-      sets.splice(j, 1)
-      if(sets[j].indexOf(lookFor) !== -1)
-      arrayUnique(sets[j].concat(lastInNewSets))
-    */
-
   }
 
 
