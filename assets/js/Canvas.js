@@ -119,6 +119,16 @@ define([], function() {
       }
     }
 
+    Canvas.prototype.getFullSizeElement = function(){
+      var newCanvas = $("<canvas>")
+        .attr("width", this.imageWidth)
+        .attr("height", this.imageHeight)[0]
+
+      newCanvas.getContext("2d").putImageData(this.getImageData(), 0, 0)
+
+      return newCanvas
+    }
+
     Canvas.prototype.getElement = function(){
       return $('#'+this.id)
     }

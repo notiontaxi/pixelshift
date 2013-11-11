@@ -43,21 +43,14 @@ define(['text!templates/menu-bar.html', 'js/FileProcessor', 'js/ImageProcessor',
         $('input[type="file"]').click()
       }.bind(this))
 
-    $("#save-image-l").click(
+    $("#save-image").click(
       function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        this.fileProcessor.saveCanvasToDisk(this.canvas.getElement()[0])
+        this.fileProcessor.saveCanvasToDisk(this.canvas.getFullSizeElement())
     
     }.bind(this))   
-
-    $("#save-image-r").click(
-      function(event, ui){
-        event.stopPropagation()
-        event.preventDefault()
-        this.fileProcessor.saveCanvasToDisk(this.shownCanvas.getElement()[0])
-    
-    }.bind(this))          
+       
 
     document.getElementById('action-upload').addEventListener('change', 
       function(evt){
