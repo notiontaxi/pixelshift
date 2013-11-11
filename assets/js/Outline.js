@@ -38,6 +38,7 @@ var Outline, _ref, module,
       threshold = typeof threshold !== 'undefined' ? threshold*2.55 : this.imageProcessor.computeThreshold(imgDataLeft)
 
       this.canvas.putImageData(this.imageProcessor.processThreshold(threshold, imgDataLeft))
+      this.shownCanvas.copy(this.canvas)
 
       return threshold
     }
@@ -74,7 +75,6 @@ var Outline, _ref, module,
         function(event, ui){
           var newImg = this.imageProcessor.processDilation(this.canvas.getImageData(), this.canvas.getImageWidth())
           this.canvas.putImageData(newImg)
-          this.shownCanvas.copy(this.canvas, true)
         }.bind(this)
       )   
 

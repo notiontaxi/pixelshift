@@ -24,6 +24,7 @@ define(['text!templates/menu-bar.html', 'js/FileProcessor', 'js/ImageProcessor',
     this.canvas = new Canvas(canvasIdentifier)
     this.shownCanvas = new Canvas(canvasIdentifier2)
 
+    this.canvas.addClone(this.shownCanvas)
 
     this.fileProcessor = new FileProcessor()
     this.imageProcessor = new ImageProcessor()

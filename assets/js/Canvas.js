@@ -41,6 +41,7 @@ define([], function() {
 
       this.scaling = 1
 
+      this.clones = new Array()
     }
 
     Canvas.prototype.drawImage = function(img, _this){
@@ -86,9 +87,10 @@ define([], function() {
       _this.gotNewImage = true
       _this.clear()
       _this.getContext().drawImage(img, _this.imageXOffset, _this.imageYOffset, _this.imageWidth, _this.imageHeight)
+      _this.copyToClones()
     }
 
-    Canvas.prototype.copy = function(otherCanvas, draw){
+    Canvas.prototype.copy = function(otherCanvas, doNotDraw){
 
       var scaleX = (this.canvasWidth / otherCanvas.imageWidth).toFixed(4)
       var scaleY = (this.canvasHeight / otherCanvas.imageHeight).toFixed(4)
@@ -102,7 +104,7 @@ define([], function() {
       this.imageXOffset = (this.canvasWidth - this.imageWidth) / 2
       this.imageYOffset = (this.canvasHeight - this.imageHeight) / 2
 
-      if(draw){
+      if(!doNotDraw){
         // save current context state, to restore changes in scaling later
         this.getContext().save()
         var newCanvas = $("<canvas>")
@@ -116,6 +118,8 @@ define([], function() {
         this.getContext().drawImage(newCanvas, this.imageXOffset*1/scale, this.imageYOffset*1/scale)
 
         this.getContext().restore()
+
+        this.copyToClones()
       }
     }
 
@@ -148,6 +152,7 @@ define([], function() {
     Canvas.prototype.putImageData = function(imageData){
       this.clear()
       this.getContext().putImageData(imageData,this.imageXOffset,this.imageYOffset)
+      this.copyToClones()
     }
 
     Canvas.prototype.updateSize = function(width, height, func) {
@@ -185,6 +190,7 @@ define([], function() {
      Canvas.prototype.clear = function(){
       this.ctx.fillStyle="grey"
       this.ctx.fillRect(0,0, this.ctx.canvas.width, this.ctx.canvas.height)
+      this.copyToClones()
     } 
 
     // DRAWING
@@ -232,6 +238,17 @@ define([], function() {
     Canvas.prototype.getCanvasHeight = function(){
       return this.canvasHeight
     }    
+
+    Canvas.prototype.addClone = function(clone){
+      this.clones.push(clone)
+    }
+
+    Canvas.prototype.copyToClones = function(){
+      if(!!this.clones)
+        for(var c = 0; c < this.clones.length; c++)
+          this.clones[c].copy(this) 
+    }
+    
 
 
 // --------------------------------------

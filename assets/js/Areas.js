@@ -40,7 +40,7 @@ var Areas, _ref, module,
           var newImg = this.imageProcessor.processFloodFill(this.canvas.getImageData(), this.canvas.getImageWidth(), 'four')
           var end = new Date().getTime();
           var time = end - start;
-          this.canvas.putImageData(newImg)      
+          this.canvas.putImageData(newImg)    
           $( "#algo-times" ).html("CPU time: "+time+" ms | Max stack: "+window.maxDepth);
         }.bind(this)
       )
@@ -53,7 +53,7 @@ var Areas, _ref, module,
           var newImg = this.imageProcessor.processFloodFill(this.canvas.getImageData(), this.canvas.getImageWidth(), 'eight')
           var end = new Date().getTime();
           var time = end - start;
-          this.canvas.putImageData(newImg)      
+          this.canvas.putImageData(newImg)   
           $( "#algo-times" ).html("CPU time: "+time+" ms | Max width: "+window.maxWidth);
         }.bind(this)
       )   
