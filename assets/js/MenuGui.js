@@ -95,9 +95,7 @@ define(['text!templates/menu-bar.html', 'js/FileProcessor', 'js/ImageProcessor',
       function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        console.log(this.canvas.getImageData())
-        var newImg = this.imageProcessor.processGrayscale(this.canvas.getImageData(), this.canvas.getImageWidth())
-        this.canvas.putImageData(newImg)
+        this.canvas.undo()
     }.bind(this))    
 
     $("#action-redo").click(

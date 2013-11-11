@@ -28,9 +28,7 @@ define([], function() {
       this.imageXOffset = 0
       this.imageYOffset = 0
 
-      this.gotNewImage = true;
-      
-      this.clear()
+      this.gotNewImage = true
 
       this.ctx.font = "bold 12px sans-serif"
       this.ctx.textAlign = 'center'
@@ -42,6 +40,110 @@ define([], function() {
       this.scaling = 1
 
       this.clones = new Array()
+      this.undoStack = new Array()
+      this.redoStack = new Array()
+
+      this.lastImageData = this.getFullImageData()
+    }
+
+    Canvas.prototype.undo = function(){
+
+      if(this.undoStack.length !== 0){
+
+        var redo = new Array()
+        var changes = this.undoStack.pop()
+        var pos = 0
+        var imageData = this.getFullImageData()
+        console.log("undo ("+changes.length+")")
+
+        var i
+        for(i = 0; i < changes.length; i++){
+          pos = changes[i].position
+
+          var col = {
+                r: imageData[pos]
+              , g: imageData[pos+1]
+              , b: imageData[pos+2]
+              , a: imageData[pos+3]
+              }
+
+          redo.push({
+              position: pos 
+            , color: col
+          })
+
+          imageData[pos]   = 0
+          imageData[pos+1] = 0
+          imageData[pos+2] = 0
+          imageData[pos+3] = 0
+          //console.log(imageData[pos]+" "+changes[i].color.r)
+        }
+        //console.log(imageData)
+        this.putFullImageData(imageData)
+        this.lastImageData = imageData
+        this.redoStack.push(redo)
+
+        //this.copyToClones()
+      }
+
+    }
+
+    Canvas.prototype.redo = function(){
+
+
+    }
+
+    Canvas.prototype.getDiff = function(imageDataNew, imageDataOld){
+      var diff = new Array()
+      var rComp,gComp,bComp,aComp 
+
+      for(var i = 0; i < imageDataNew.data.length; i+=4){
+        rComp = imageDataNew.data[i]   === imageDataOld.data[i]
+        gComp = imageDataNew.data[i+1] === imageDataOld.data[i+1]
+        bComp = imageDataNew.data[i+2] === imageDataOld.data[i+2]
+        aComp = imageDataNew.data[i+3] === imageDataOld.data[i+3]
+
+        //if(!(rComp && gComp && bComp && aComp)){
+
+          var col = {
+                r: imageDataOld.data[i]
+              , g: imageDataOld.data[i+1]
+              , b: imageDataOld.data[i+2]
+              , a: imageDataOld.data[i+3]
+              }
+
+          diff.push({
+              position: i 
+            , color: col
+          })
+        //}
+      }
+
+      return diff
+
+    }
+
+    Canvas.prototype.registerContentModification = function(bla){
+
+      this.copyToClones()
+
+      var diff = this.getDiff(this.getFullImageData(), this.lastImageData)
+
+      if(diff.length > 0){
+        this.undoStack.push(diff)
+        console.log("push diff to undo stack ("+diff.length+")")
+  
+        // avoid big data mass
+        if(this.undoStack.length > 20){
+          this.undoStack.shift()
+          console.log("remove last element in undo stack")
+        }
+
+        // set pointer to current state
+        this.lastImageData = this.getFullImageData()
+      }
+      
+
     }
 
     Canvas.prototype.drawImage = function(img, _this){
@@ -87,10 +189,19 @@ define([], function() {
       _this.gotNewImage = true
       _this.clear()
       _this.getContext().drawImage(img, _this.imageXOffset, _this.imageYOffset, _this.imageWidth, _this.imageHeight)
-      _this.copyToClones()
+      _this.registerContentModification()
     }
 
     Canvas.prototype.copy = function(otherCanvas, doNotDraw){
+
+        this.updateSizeAndContentFrom(otherCanvas)
+
+        if(!doNotDraw)
+          this.registerContentModification()
+      
+    }
+
+    Canvas.prototype.updateSizeAndContentFrom = function(otherCanvas, doNotDraw){
 
       var scaleX = (this.canvasWidth / otherCanvas.imageWidth).toFixed(4)
       var scaleY = (this.canvasHeight / otherCanvas.imageHeight).toFixed(4)
@@ -118,8 +229,6 @@ define([], function() {
         this.getContext().drawImage(newCanvas, this.imageXOffset*1/scale, this.imageYOffset*1/scale)
 
         this.getContext().restore()
-
-        this.copyToClones()
       }
     }
 
@@ -152,8 +261,14 @@ define([], function() {
     Canvas.prototype.putImageData = function(imageData){
       this.clear()
       this.getContext().putImageData(imageData,this.imageXOffset,this.imageYOffset)
-      this.copyToClones()
+      this.registerContentModification()
     }
+
+    Canvas.prototype.putFullImageData = function(imageData){
+      console.log(imageData)
+      this.clear()
+      this.getContext().putImageData(imageData,0,0)
+    }    
 
     Canvas.prototype.updateSize = function(width, height, func) {
 
@@ -190,7 +305,6 @@ define([], function() {
      Canvas.prototype.clear = function(){
       this.ctx.fillStyle="grey"
       this.ctx.fillRect(0,0, this.ctx.canvas.width, this.ctx.canvas.height)
-      this.copyToClones()
     } 
 
     // DRAWING
@@ -246,7 +360,7 @@ define([], function() {
     Canvas.prototype.copyToClones = function(){
       if(!!this.clones)
         for(var c = 0; c < this.clones.length; c++)
-          this.clones[c].copy(this) 
+          this.clones[c].copy(this)
     }
     
 

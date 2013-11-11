@@ -94,10 +94,6 @@ footer{
   margin: 10px;
 }
 
-#canvas-hidden{
-  display: none;
-}
-
 .canvas-container{
   min-height:300px;
 }
@@ -122,7 +118,7 @@ footer{
 }
 
 .hidden{
-  display: none;
+  display: block;
 }
 
 .ui-widget-header{
