@@ -14,7 +14,7 @@ define([], function() {
   Canvas = (function(){
 // --------------------------------------
 
-    function Canvas(id){
+    function Canvas(id, keepChangesForUndo){
       
       this.id = id;
       this.cv = document.getElementById(this.id);
@@ -43,47 +43,30 @@ define([], function() {
       this.undoStack = new Array()
       this.redoStack = new Array()
 
-      this.lastImageData = this.getFullImageData()
+      this.keepChangesForUndo = keepChangesForUndo === true ? true : false
+      this.storeImageInfo()
+    }
+
+    Canvas.prototype.storeImageInfo = function(){
+
+      this.lastImageInfos = new Array()
+      this.lastImageInfos["pixel"] = this.getFullImageData()
+      this.lastImageInfos["size"] = {
+          imageWidth: this.imageWidth
+        , imageHeight: this.imageHeight
+        , imageXOffset: this.imageXOffset
+        , imageYOffset: this.imageYOffset
+      } 
+
     }
 
     Canvas.prototype.undo = function(){
 
       if(this.undoStack.length !== 0){
 
-        var redo = new Array()
-        var changes = this.undoStack.pop()
-        var pos = 0
-        var imageData = this.getFullImageData()
-        console.log("undo ("+changes.length+")")
+        this.redoStack.push(this.revert(this.undoStack.pop()))
 
-        var i
-        for(i = 0; i < changes.length; i++){
-          pos = changes[i].position
-
-          var col = {
-                r: imageData[pos]
-              , g: imageData[pos+1]
-              , b: imageData[pos+2]
-              , a: imageData[pos+3]
-              }
-
-          redo.push({
-              position: pos 
-            , color: col
-          })
-
-          imageData[pos]   = 0
-          imageData[pos+1] = 0
-          imageData[pos+2] = 0
-          imageData[pos+3] = 0
-          //console.log(imageData[pos]+" "+changes[i].color.r)
-        }
-        //console.log(imageData)
-        this.putFullImageData(imageData)
-        this.lastImageData = imageData
-        this.redoStack.push(redo)
-
-        //this.copyToClones()
+        this.copyToClones()
       }
 
     }
@@ -93,9 +76,64 @@ define([], function() {
 
     }
 
-    Canvas.prototype.getDiff = function(imageDataNew, imageDataOld){
+    Canvas.prototype.revert = function(allChanges){
+        var redo = new Array()
+        var redoPixelChanges = new Array()
+        var redoSizeChanges = {
+            imageWidth: this.imageWidth
+          , imageHeight: this.imageHeight
+          , imageXOffset: this.imageXOffset
+          , imageYOffset: this.imageYOffset
+        }         
+
+        var pixelChanges = allChanges["pixel"]
+        var sizeChanges = allChanges["size"]      
+        var pos = 0
+        var imageData = this.getFullImageData()
+        console.log("undo ("+pixelChanges.length+")")
+
+        var i
+        for(i = 0; i < pixelChanges.length; i++){
+          pos = pixelChanges[i].position
+
+          var col = {
+                r: imageData.data[pos]
+              , g: imageData.data[pos+1]
+              , b: imageData.data[pos+2]
+              , a: imageData.data[pos+3]
+              }
+
+          redoPixelChanges.push({
+              position: pos 
+            , color: col
+          })
+
+          imageData.data[pos]   = pixelChanges[i].color.r
+          imageData.data[pos+1] = pixelChanges[i].color.g
+          imageData.data[pos+2] = pixelChanges[i].color.b
+          imageData.data[pos+3] = pixelChanges[i].color.a
+
+        }
+
+        this.imageWidth = sizeChanges.imageWidth
+        this.imageHeight = sizeChanges.imageHeight
+        this.imageXOffset = sizeChanges.imageXOffset
+        this.imageYOffset = sizeChanges.imageYOffset
+
+        this.putFullImageData(imageData)
+
+
+        redo["pixel"] = redoPixelChanges
+        redo["size"] = redoSizeChanges
+
+        return redo
+    }
+
+    Canvas.prototype.getDiff = function(imageDataNew, imageInfosOld){
       var diff = new Array()
+      var allDiff = new Array()
       var rComp,gComp,bComp,aComp 
+      var imageDataOld = imageInfosOld["pixel"]
 
       for(var i = 0; i < imageDataNew.data.length; i+=4){
         rComp = imageDataNew.data[i]   === imageDataOld.data[i]
@@ -103,7 +141,7 @@ define([], function() {
         bComp = imageDataNew.data[i+2] === imageDataOld.data[i+2]
         aComp = imageDataNew.data[i+3] === imageDataOld.data[i+3]
 
-        //if(!(rComp && gComp && bComp && aComp)){
+        if(!(rComp && gComp && bComp && aComp)){
 
           var col = {
                 r: imageDataOld.data[i]
@@ -116,10 +154,13 @@ define([], function() {
               position: i 
             , color: col
           })
-        //}
+        }
       }
 
-      return diff
+      allDiff['pixel'] = diff
+      allDiff['size'] = imageInfosOld["size"]
+
+      return allDiff
 
     }
 
@@ -127,22 +168,23 @@ define([], function() {
 
       this.copyToClones()
 
-      var diff = this.getDiff(this.getFullImageData(), this.lastImageData)
+      if(this.keepChangesForUndo){
+        var diff = this.getDiff(this.getFullImageData(), this.lastImageInfos)
 
-      if(diff.length > 0){
-        this.undoStack.push(diff)
-        console.log("push diff to undo stack ("+diff.length+")")
-  
-        // avoid big data mass
-        if(this.undoStack.length > 20){
-          this.undoStack.shift()
-          console.log("remove last element in undo stack")
+        if(diff['pixel'].length > 0){
+          this.undoStack.push(diff)
+          console.log("push diff to undo stack ("+diff['pixel'].length+")")
+    
+          // avoid big data mass
+          if(this.undoStack.length > 20){
+            this.undoStack.shift()
+            console.log("remove last element in undo stack")
+          }
+
+          // set pointer to current state
+          this.storeImageInfo()
         }
-
-        // set pointer to current state
-        this.lastImageData = this.getFullImageData()
       }
-      
 
     }
 
@@ -265,7 +307,7 @@ define([], function() {
     }
 
     Canvas.prototype.putFullImageData = function(imageData){
-      console.log(imageData)
+      console.log(imageData.data.length)
       this.clear()
       this.getContext().putImageData(imageData,0,0)
     }    

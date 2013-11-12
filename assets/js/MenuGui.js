@@ -21,7 +21,7 @@ define(['text!templates/menu-bar.html', 'js/FileProcessor', 'js/ImageProcessor',
 
     $(menuContainerIdentifier).html($(menuTemplate))
 
-    this.canvas = new Canvas(canvasIdentifier)
+    this.canvas = new Canvas(canvasIdentifier, true)
     this.shownCanvas = new Canvas(canvasIdentifier2)
 
     this.canvas.addClone(this.shownCanvas)
@@ -102,8 +102,7 @@ define(['text!templates/menu-bar.html', 'js/FileProcessor', 'js/ImageProcessor',
       function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        var newImg = this.imageProcessor.processThreshold(this.imageProcessor.computeThreshold(this.canvas.getImageData()) ,this.canvas.getImageData())
-        this.canvas.putImageData(newImg)
+        this.canvas.redo()
     }.bind(this))          
 
   }    
