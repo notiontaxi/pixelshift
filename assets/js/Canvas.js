@@ -61,22 +61,21 @@ define([], function() {
     }
 
     Canvas.prototype.undo = function(){
-
       if(this.undoStack.length !== 0){
-
         this.redoStack.push(this.revert(this.undoStack.pop()))
-
         this.copyToClones()
       }
-
     }
 
     Canvas.prototype.redo = function(){
-
-
+      if(this.redoStack.length !== 0){
+        this.undoStack.push(this.revert(this.redoStack.pop()))
+        this.copyToClones()
+      }
     }
 
     Canvas.prototype.revert = function(allChanges){
+      
         var redo = new Array()
         var redoPixelChanges = new Array()
         var redoSizeChanges = {
