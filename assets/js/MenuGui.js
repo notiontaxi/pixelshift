@@ -48,7 +48,7 @@ define(['text!templates/menu-bar.html', 'js/FileProcessor', 'js/ImageProcessor',
       function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        this.fileProcessor.saveCanvasToDisk(this.canvas.getFullSizeElement())
+        this.fileProcessor.saveCanvasToDisk(this.canvas.getHtmlElementCopy())
     
     }.bind(this))   
        

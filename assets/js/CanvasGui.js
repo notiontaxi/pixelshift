@@ -47,19 +47,19 @@ define(['text!templates/canvas-gui.html', 'js/DragNDrop', 'js/Canvas', 'js/MenuG
       this.shownCanvas.updateSize(330,264)
       this.wasSmallLayout = true
       this.wasMediumLayout = this.wasLargeLayout = false
-      this.shownCanvas.updateSizeAndContentFrom(this.canvas)
+      this.shownCanvas.copy(this.canvas)
       //console.log("Setting layout to s")
     } else if(width >= 992 && width < 1200 && !this.wasMediumLayout){
       this.shownCanvas.updateSize(700,560)
       this.wasMediumLayout = true
       this.wasSmallLayout = this.wasLargeLayout = false
-      this.shownCanvas.updateSizeAndContentFrom(this.canvas)
+      this.shownCanvas.copy(this.canvas)
       //console.log("Setting layout to m")
     } else if(width >= 1200 && !this.wasLargeLayout){
       this.shownCanvas.updateSize(800,640)
       this.wasLargeLayout = true
       this.wasSmallLayout = this.wasMediumLayout = false
-      this.shownCanvas.updateSizeAndContentFrom(this.canvas)
+      this.shownCanvas.copy(this.canvas)
       //console.log("Setting layout to l")
     }
   }
