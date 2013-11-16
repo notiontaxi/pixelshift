@@ -21,15 +21,18 @@ define(['text!templates/menu-bar.html', 'js/FileProcessor', 'js/ImageProcessor',
 
     $(menuContainerIdentifier).html($(menuTemplate))
 
-    this.canvas = new Canvas(canvasIdentifier)
-    this.rightCanvas = new Canvas(canvasIdentifier2)
+    this.canvas = new Canvas(canvasIdentifier, true)
+    this.shownCanvas = new Canvas(canvasIdentifier2)
 
+    this.canvas.addClone(this.shownCanvas)
 
     this.fileProcessor = new FileProcessor()
     this.imageProcessor = new ImageProcessor()
 
     this.addEventListeners()
     this.initializeTools()
+    this.initializeEditFunctionality()
+    this.addKeyBindings()
   }
 
   MenuGui.prototype.addEventListeners = function(){
@@ -42,21 +45,14 @@ define(['text!templates/menu-bar.html', 'js/FileProcessor', 'js/ImageProcessor',
         $('input[type="file"]').click()
       }.bind(this))
 
-    $("#save-image-l").click(
+    $("#save-image").click(
       function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        this.fileProcessor.saveCanvasToDisk(this.canvas.getElement()[0])
+        this.fileProcessor.saveCanvasToDisk(this.canvas.getHtmlElementCopy())
     
     }.bind(this))   
-
-    $("#save-image-r").click(
-      function(event, ui){
-        event.stopPropagation()
-        event.preventDefault()
-        this.fileProcessor.saveCanvasToDisk(this.rightCanvas.getElement()[0])
-    
-    }.bind(this))          
+       
 
     document.getElementById('action-upload').addEventListener('change', 
       function(evt){
@@ -72,7 +68,6 @@ define(['text!templates/menu-bar.html', 'js/FileProcessor', 'js/ImageProcessor',
       function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        console.log(this.canvas.getImageData())
         var newImg = this.imageProcessor.processGrayscale(this.canvas.getImageData(), this.canvas.getImageWidth())
         this.canvas.putImageData(newImg)
     }.bind(this))    
@@ -94,6 +89,51 @@ define(['text!templates/menu-bar.html', 'js/FileProcessor', 'js/ImageProcessor',
     }.bind(this))          
 
   }  
+
+  MenuGui.prototype.initializeEditFunctionality = function(){
+
+    $("#action-undo").click(
+      function(event, ui){
+        event.stopPropagation()
+        event.preventDefault()
+        this.canvas.undo()
+    }.bind(this))    
+
+    $("#action-redo").click(
+      function(event, ui){
+        event.stopPropagation()
+        event.preventDefault()
+        this.canvas.redo()
+    }.bind(this))          
+
+  }    
+
+  MenuGui.prototype.addKeyBindings = function(){
+     Mousetrap.bind('command+z', function(event, ui){
+        event.stopPropagation()
+        event.preventDefault()
+        this.canvas.undo()
+    }.bind(this))  
+
+    Mousetrap.bind('command+y', function(event, ui){
+        event.stopPropagation()
+        event.preventDefault()
+        this.canvas.redo()
+    }.bind(this))  
+
+    Mousetrap.bind('command+o', function(event, ui){
+        event.stopPropagation()
+        event.preventDefault()
+        $('input[type="file"]').click()
+      }.bind(this))
+
+    Mousetrap.bind('command+s', function(event, ui){
+        event.stopPropagation()
+        event.preventDefault()
+        this.fileProcessor.saveCanvasToDisk(this.canvas.getHtmlElementCopy())
+    }.bind(this))
+
+  }
 
 // --------------------------------------
     return MenuGui

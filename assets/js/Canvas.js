@@ -14,7 +14,14 @@ define([], function() {
   Canvas = (function(){
 // --------------------------------------
 
-    function Canvas(id){
+    /**
+    * @constructor
+    * Organizes operations for a canvas elment
+    *
+    * @param {String} id canvas id in DOM
+    * @param {boolean} keepChangesForUndo Changes will be reorded for undo() if true
+    */
+    function Canvas(id, keepChangesForUndo){
       
       this.id = id;
       this.cv = document.getElementById(this.id);
@@ -28,9 +35,7 @@ define([], function() {
       this.imageXOffset = 0
       this.imageYOffset = 0
 
-      this.gotNewImage = true;
-      
-      this.clear()
+      this.gotNewImage = true
 
       this.ctx.font = "bold 12px sans-serif"
       this.ctx.textAlign = 'center'
@@ -39,8 +44,221 @@ define([], function() {
       this.oldImageData = this.getImageData()
       this.gotNewImage = true
 
+      this.scaling = 1
+
+      this.clones = new Array()
+      this.undoStack = new Array()
+      this.redoStack = new Array()
+
+      this.keepChangesForUndo = keepChangesForUndo === true ? true : false
+      this.storeImageInfo()
     }
 
+    /**
+    * records last change for undo()
+    */
+    Canvas.prototype.storeImageInfo = function(){
+
+      console.log("Storing image info")
+
+      this.lastImageInfos = new Array()
+      this.lastImageInfos["pixel"] = this.getFullImageData()
+      this.lastImageInfos["size"] = {
+          imageWidth: this.imageWidth
+        , imageHeight: this.imageHeight
+        , imageXOffset: this.imageXOffset
+        , imageYOffset: this.imageYOffset
+      } 
+
+    }
+
+    /**
+    * Reverts the last image modification
+    * Can be used, when 'keepChangesForUndo' in constructor was set to true
+    */
+    Canvas.prototype.undo = function(){
+      if(this.undoStack.length !== 0){
+        this.redoStack.push(this.revert(this.undoStack.pop()))
+        this.copyToClones()
+      }
+    }
+
+    /**
+    * Reverts the last undo()
+    */
+    Canvas.prototype.redo = function(){
+      if(this.redoStack.length !== 0){
+        this.undoStack.push(this.revert(this.redoStack.pop()))
+        this.copyToClones()
+      }
+    }
+
+    /**
+    * Reverts te passed changes (used by undo() and redo())
+    * @param {Object} The changes (for object details look at storeImageInfo())
+    * @returns {Object} allChanges The changes for reversal
+    */
+    Canvas.prototype.revert = function(allChanges){
+
+        var revert = new Array()
+        var pixelRevets = new Array()
+        var sizeReverts = {
+            imageWidth: this.imageWidth
+          , imageHeight: this.imageHeight
+          , imageXOffset: this.imageXOffset
+          , imageYOffset: this.imageYOffset
+        }         
+
+        var pixelChanges = allChanges["pixel"]
+        var sizeChanges = allChanges["size"]      
+        var pos = 0
+        var imageData = this.getFullImageData()
+        var x = 0
+
+        if(pixelChanges[0] === 'diff'){
+          console.log("undo using diff strategy")
+          pixelRevets.push('diff')
+          for(var i = 1; i < pixelChanges.length; i+=2){
+            pos = pixelChanges[i]
+
+            pixelRevets.push(pos)
+            
+            x=imageData.data[pos]
+            x=x<<8
+            x+=imageData.data[pos+1]
+            x=x<<8
+            x+=imageData.data[pos+2]
+            x=x<<8
+            x+=imageData.data[pos+3]      
+            pixelRevets.push(x)
+
+
+            x = pixelChanges[i+1]
+            imageData.data[pos+3] = x&(255)
+            x=x>>8
+            imageData.data[pos+2] = x&(255)
+            x=x>>8
+            imageData.data[pos+1] = x&(255)
+            x=x>>8
+            imageData.data[pos]   = x&(255)
+          }
+        }else if(pixelChanges[0] === 'ImagaData'){
+            console.log("undo using ImagaData strategy")
+            pixelRevets.push('ImagaData')
+            pixelRevets.push(this.getFullImageData().data)
+            var lastPixels = pixelChanges[1]
+          for(var i = 1; i < lastPixels.length; i++){
+            imageData.data[i] = lastPixels[i]
+          }
+        }
+
+        this.imageWidth = sizeChanges.imageWidth
+        this.imageHeight = sizeChanges.imageHeight
+        this.imageXOffset = sizeChanges.imageXOffset
+        this.imageYOffset = sizeChanges.imageYOffset
+
+        this._putFullImageData(imageData)
+
+        revert["pixel"] = pixelRevets
+        revert["size"] = sizeReverts
+
+        return revert
+    }
+
+    /**
+    * Finds the deviations between the passed ImageData 
+    * @param {ImageData} imageDataNew the new ImageData
+    * @param {ImageData} imageInfosOld the old ImagaData
+    * @returns {Object} Object with differences between the two passed ImageDatas
+    */
+    Canvas.prototype.getDiff = function(imageDataNew, imageInfosOld){
+
+      var diff = new Array()
+      diff.push('diff');
+      var allDiff = new Array()
+      var rComp,gComp,bComp,aComp 
+      var imageDataOld = imageInfosOld["pixel"]
+      var x = 0
+
+      for(var i = 0; i < imageDataNew.data.length; i+=4){
+        rComp = imageDataNew.data[i]   === imageDataOld.data[i]
+        gComp = imageDataNew.data[i+1] === imageDataOld.data[i+1]
+        bComp = imageDataNew.data[i+2] === imageDataOld.data[i+2]
+        aComp = imageDataNew.data[i+3] === imageDataOld.data[i+3]
+
+        if(!(rComp && gComp && bComp && aComp)){
+
+          x=imageDataOld.data[i]
+          x=x<<8
+          x+=imageDataOld.data[i+1]
+          x=x<<8
+          x+=imageDataOld.data[i+2]
+          x=x<<8
+          x+=imageDataOld.data[i+3]
+
+          diff.push(i) // position
+          diff.push(x)   // r,g,b,a
+        }
+      }
+
+      // store the original ImagaData if the changed pixels are to much (for less ram)
+      if(diff.length*4 > imageDataNew.data.length){
+        console.log("store diff using ImagaData strategy")
+        diff.length = 0
+        diff[0] = 'ImagaData'
+        diff[1] = imageDataOld.data
+      }else{
+        console.log("store diff using diff strategy")
+      }
+
+      allDiff['pixel'] = diff
+      allDiff['size'] = imageInfosOld["size"]
+
+      return allDiff
+
+    }
+
+    /**
+    * This method should be called, when there is a change in the image.
+    * The canges will be passed to the clones and recorded for undo()
+    *  -> if 'keepChangesForUndo' in constructor was set to true
+    *
+    */
+    Canvas.prototype.registerContentModification = function(){
+
+      this.copyToClones()
+
+      // empty redo stack
+      this.redoStack.length = 0
+
+      if(this.keepChangesForUndo){
+        var diff = this.getDiff(this.getFullImageData(), this.lastImageInfos)
+
+        if(diff['pixel'].length > 0){
+          this.undoStack.push(diff)
+          console.log("push diff to undo stack ("+diff['pixel'].length+")")
+    
+          // avoid big data mass
+          if(this.undoStack.length > 20){
+            this.undoStack.shift()
+            console.log("remove last element in undo stack")
+          }
+
+          // set pointer to current state
+          this.storeImageInfo()
+        }
+      }
+
+    }
+
+    /**
+    * Draws the passed ImageData into _this canvas
+    *
+    * Set the second parameter, when the metod is passed to a callback
+    * @param {ImageData} img image to draw
+    * @param {canvas} _this The canvas onto the image shall be drawn 
+    *
+    */
     Canvas.prototype.drawImage = function(img, _this){
 
       if(!_this)
@@ -84,18 +302,94 @@ define([], function() {
       _this.gotNewImage = true
       _this.clear()
       _this.getContext().drawImage(img, _this.imageXOffset, _this.imageYOffset, _this.imageWidth, _this.imageHeight)
+      _this.registerContentModification()
     }
 
-    Canvas.prototype.copy = function(otherCanvas, draw){
-      this.imageHeight = otherCanvas.imageHeight
-      this.imageWidth = otherCanvas.imageWidth
-      this.imageXOffset = otherCanvas.imageXOffset
-      this.imageYOffset = otherCanvas.imageYOffset
-
-      if(draw)
-        this.putImageData(otherCanvas.getImageData(), this.imageXOffset, this.imageYOffset)
+    /**
+    * @private
+    * Copies the content (including scales) from the passed canvas to this canvas. 
+    * For internal usage, if u want to copy a canvas use copy()
+    * @param {Canvas} otherCanvas 
+    * @param {boolean} doNotDraw 
+    */
+    Canvas.prototype._copy = function(otherCanvas, doNotDraw){
+        this.copy(otherCanvas)
+        if(!doNotDraw)
+          this.registerContentModification()
     }
 
+    /** 
+    * Updates this canvas ba the properties of the passed canvas
+    * Regarding width, height, offsets (x,y) and pixelinformations
+    *
+    * @param {Canvas} otherCanvas  the canvas this should be updated to
+    * @param {boolean} doNotDraw  true if width, height and offsets shold be set only
+    */
+    Canvas.prototype.copy = function(otherCanvas, doNotDraw){
+
+      var scaleX = (this.canvasWidth / otherCanvas.imageWidth).toFixed(4)
+      var scaleY = (this.canvasHeight / otherCanvas.imageHeight).toFixed(4)
+
+      var scale = scaleX < scaleY ? scaleX : scaleY;
+      // do not scale, when original image is scmaller than canvas
+      scale = scale > 1.0 ? 1.0 : scale;
+
+      this.imageHeight  = otherCanvas.imageHeight * scale
+      this.imageWidth   = otherCanvas.imageWidth * scale
+      this.imageXOffset = (this.canvasWidth - this.imageWidth) / 2
+      this.imageYOffset = (this.canvasHeight - this.imageHeight) / 2
+
+      if(!doNotDraw){
+        // save current context state, to restore changes in scaling later
+        this.getContext().save()
+        var newCanvas = $("<canvas>")
+            .attr("width", otherCanvas.imageWidth)
+            .attr("height", otherCanvas.imageHeight)[0];
+        newCanvas.getContext("2d").putImageData(otherCanvas.getImageData(), 0, 0);
+
+        this.clear()
+        this.scaling = scale        
+        this.getContext().scale(scale, scale)
+        this.getContext().drawImage(newCanvas, this.imageXOffset*1/scale, this.imageYOffset*1/scale)
+
+        this.getContext().restore()
+      }
+    }
+
+    /**
+    * Returns the ImageData of this canvas without the image borders (the pure image)
+    * @returns {ImageData} ImageData without borders
+    */
+    Canvas.prototype.getImageData = function(){
+      return this.getContext().getImageData(this.imageXOffset,this.imageYOffset,this.imageWidth, this.imageHeight)
+    }
+
+    /**
+    * Returns the ImageData of this canvas including the image borders (whole canvas content)
+    * @returns {ImageData} ImageData of this canvas
+    */
+     Canvas.prototype.getFullImageData = function(){
+      return this.getContext().getImageData(0,0,this.canvasWidth, this.canvasHeight)
+    }   
+
+    /**
+    * Returns a copy as a new HTML5 canvas element
+    * @returns {HTML5 Canvas} copy of this canvas
+    */
+    Canvas.prototype.getHtmlElementCopy = function(){
+      var newCanvas = $("<canvas>")
+        .attr("width", this.imageWidth)
+        .attr("height", this.imageHeight)[0]
+
+      newCanvas.getContext("2d").putImageData(this.getImageData(), 0, 0)
+
+      return newCanvas
+    }
+
+    /**
+    * Returns the DOM HTML5 canvas element representation of this canvas
+    * @returns {HTML5 Canvas} representation in DOM of this canvas
+    */
     Canvas.prototype.getElement = function(){
       return $('#'+this.id)
     }
@@ -104,28 +398,34 @@ define([], function() {
       return this.ctx;
     }
 
-    Canvas.prototype.getImageData = function(){
-      return this.getContext().getImageData(this.imageXOffset,this.imageYOffset,this.imageWidth, this.imageHeight)
-    }
 
+    /*
+    * Writes the passed imageData to this canvas, regarding the offsets
+    */
     Canvas.prototype.putImageData = function(imageData){
       this.clear()
-      this.getContext().putImageData(imageData,this.imageXOffset,this.imageYOffset);
+      this.getContext().putImageData(imageData,this.imageXOffset,this.imageYOffset)
+      this.registerContentModification()
     }
 
-    Canvas.prototype.updateSize = function(width, height, func) {
+    /**
+    * @private
+    * Paint over the whole canvas, ignoring the offset. 
+    * @param {ImageData} imageData
+    */
+    Canvas.prototype._putFullImageData = function(imageData){
+      this.clear()
+      this.getContext().putImageData(imageData,0,0)
+    }    
 
-      this.ctx.canvas.width  = width
-      this.ctx.canvas.height = height
-/*
-      $("#canvas-overlay").css({
-        'left': this.ctx.canvas.left+'px',
-        'top': this.ctx.canvas.top+'px'
-      })*/
-      if(!!func)
-        func();
+    Canvas.prototype.updateSize = function(width, height) {    
+      this.ctx.canvas.width = this.canvasWidth = width
+      this.ctx.canvas.height = this.canvasHeight = height
     }
 
+    /*
+    * highlight for dragover
+    */
     Canvas.prototype.highlight = function(onOrOff){
 
       if (onOrOff){
@@ -148,15 +448,26 @@ define([], function() {
       this.ctx.fillRect(0,0, this.ctx.canvas.width, this.ctx.canvas.height)
     } 
 
-    // DRAWING
 
+    /**
+    * Draws a line into the canvas
+    * @param {Object} startPoint Object with x and y coordinate of start point
+    * @param {Object} endPoint Object with x and y coordinate of end point
+    */
     Canvas.prototype.drawLine = function(startPoint, endPoint){
       this.ctx.moveTo(startPoint.x,startPoint.y);
       this.ctx.lineTo(endPoint.x,endPoint.y);
       this.ctx.stroke();
     }
 
-    Canvas.prototype.drawText = function(text, pos, color,rot){
+    /**
+    * Draws a line into the canvas
+    * @param {String} text 
+    * @param {Object} pos Object with x and y coordinate of the center (pivot point)
+    * @param {String} color
+    * @param {float} rot clockwise rotation in radian (45° = Math.PI/4, 90° = Math.PI/2, 180° = Math.PI, a.s.o.) 
+    */
+    Canvas.prototype.drawText = function(text, pos, color, rot){
       this.ctx.font = "bold 12px sans-serif"
       this.ctx.textAlign = 'center'
       this.ctx.textBaseline = 'middle'
@@ -166,11 +477,10 @@ define([], function() {
 
       this.ctx.fillStyle = color;
 
-      // rotate text by -90 degrees
-      if(rot){
+      if(!!rot){
         this.ctx.save()
         this.ctx.translate(pos.x, pos.y)
-        this.ctx.rotate(Math.PI/2)
+        this.ctx.rotate(rot)
         this.ctx.fillText(text, 0, 0)
         this.ctx.restore()
       }
@@ -178,10 +488,16 @@ define([], function() {
         this.ctx.fillText(text, pos.x, pos.y);
     }
 
+    /**
+    * @returns {integer} The width of the image in the canvas (without potential borders)
+    */
     Canvas.prototype.getImageWidth = function(){
       return this.imageWidth
     }
 
+    /**
+    * @returns {integer} The height of the image in the canvas (without potential borders)
+    */
     Canvas.prototype.getImageHeight = function(){
       return this.imageHeight
     }
@@ -193,6 +509,21 @@ define([], function() {
     Canvas.prototype.getCanvasHeight = function(){
       return this.canvasHeight
     }    
+
+    /**
+    * @param {Canvas} adds the passed Canvas to the list of 
+    * clones, which will be updated on every modification of image content
+    */
+    Canvas.prototype.addClone = function(clone){
+      this.clones.push(clone)
+    }
+
+    Canvas.prototype.copyToClones = function(){
+      if(!!this.clones)
+        for(var c = 0; c < this.clones.length; c++)
+          this.clones[c].copy(this)
+    }
+    
 
 
 // --------------------------------------

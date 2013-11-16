@@ -92,11 +92,16 @@ footer{
   border-color: lightgrey;
   border: 1px solid;
   margin: 10px;
-  
 }
 
 .canvas-container{
   min-height:300px;
+}
+
+.center-block {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .container{

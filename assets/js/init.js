@@ -59,6 +59,7 @@ function aArrayUnique(array) {
     return a;
 };
 
+
 __hasProp = {}.hasOwnProperty,
 __extends = function(child, parent) { 
   for (var key in parent) { 
