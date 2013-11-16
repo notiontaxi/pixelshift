@@ -204,6 +204,7 @@ define([], function() {
       // store the original ImagaData if the changed pixels are to much (for less ram)
       if(diff.length*4 > imageDataNew.data.length){
         console.log("store diff using ImagaData strategy")
+        diff.length = 0
         diff[0] = 'ImagaData'
         diff[1] = imageDataOld.data
       }else{

@@ -118,7 +118,7 @@ footer{
 }
 
 .hidden{
-  display: block;
+  display: none;
 }
 
 .ui-widget-header{
