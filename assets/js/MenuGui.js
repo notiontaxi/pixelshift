@@ -32,6 +32,7 @@ define(['text!templates/menu-bar.html', 'js/FileProcessor', 'js/ImageProcessor',
     this.addEventListeners()
     this.initializeTools()
     this.initializeEditFunctionality()
+    this.addKeyBindings()
   }
 
   MenuGui.prototype.addEventListeners = function(){
@@ -106,6 +107,33 @@ define(['text!templates/menu-bar.html', 'js/FileProcessor', 'js/ImageProcessor',
     }.bind(this))          
 
   }    
+
+  MenuGui.prototype.addKeyBindings = function(){
+     Mousetrap.bind('command+z', function(event, ui){
+        event.stopPropagation()
+        event.preventDefault()
+        this.canvas.undo()
+    }.bind(this))  
+
+    Mousetrap.bind('command+y', function(event, ui){
+        event.stopPropagation()
+        event.preventDefault()
+        this.canvas.redo()
+    }.bind(this))  
+
+    Mousetrap.bind('command+o', function(event, ui){
+        event.stopPropagation()
+        event.preventDefault()
+        $('input[type="file"]').click()
+      }.bind(this))
+
+    Mousetrap.bind('command+s', function(event, ui){
+        event.stopPropagation()
+        event.preventDefault()
+        this.fileProcessor.saveCanvasToDisk(this.canvas.getHtmlElementCopy())
+    }.bind(this))
+
+  }
 
 // --------------------------------------
     return MenuGui

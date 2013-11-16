@@ -92,7 +92,7 @@ var Outline, _ref, module,
           var newImg = this.imageProcessor.processOutline(this.canvas.getImageData(), this.canvas.getImageData() ,this.canvas.getImageWidth())
           this.canvas.putImageData(newImg)
         }.bind(this)
-      )           
+      )
 
     }
 
