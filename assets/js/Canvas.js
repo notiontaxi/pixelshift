@@ -59,6 +59,8 @@ define([], function() {
     */
     Canvas.prototype.storeImageInfo = function(){
 
+      console.log("Storing image info")
+
       this.lastImageInfos = new Array()
       this.lastImageInfos["pixel"] = this.getFullImageData()
       this.lastImageInfos["size"] = {
@@ -111,29 +113,43 @@ define([], function() {
         var sizeChanges = allChanges["size"]      
         var pos = 0
         var imageData = this.getFullImageData()
-        console.log("undo ("+pixelChanges.length+")")
+        var x = 0
 
-        var i
-        for(i = 0; i < pixelChanges.length; i++){
-          pos = pixelChanges[i].position
+        if(pixelChanges[0] === 'diff'){
+          console.log("undo using diff strategy")
+          pixelRevets.push('diff')
+          for(var i = 1; i < pixelChanges.length; i+=2){
+            pos = pixelChanges[i]
 
-          var col = {
-                r: imageData.data[pos]
-              , g: imageData.data[pos+1]
-              , b: imageData.data[pos+2]
-              , a: imageData.data[pos+3]
-              }
+            pixelRevets.push(pos)
+            
+            x=imageData.data[pos]
+            x=x<<8
+            x+=imageData.data[pos+1]
+            x=x<<8
+            x+=imageData.data[pos+2]
+            x=x<<8
+            x+=imageData.data[pos+3]      
+            pixelRevets.push(x)
 
-          pixelRevets.push({
-              position: pos 
-            , color: col
-          })
 
-          imageData.data[pos]   = pixelChanges[i].color.r
-          imageData.data[pos+1] = pixelChanges[i].color.g
-          imageData.data[pos+2] = pixelChanges[i].color.b
-          imageData.data[pos+3] = pixelChanges[i].color.a
-
+            x = pixelChanges[i+1]
+            imageData.data[pos+3] = x&(255)
+            x=x>>8
+            imageData.data[pos+2] = x&(255)
+            x=x>>8
+            imageData.data[pos+1] = x&(255)
+            x=x>>8
+            imageData.data[pos]   = x&(255)
+          }
+        }else if(pixelChanges[0] === 'ImagaData'){
+            console.log("undo using ImagaData strategy")
+            pixelRevets.push('ImagaData')
+            pixelRevets.push(this.getFullImageData().data)
+            var lastPixels = pixelChanges[1]
+          for(var i = 1; i < lastPixels.length; i++){
+            imageData.data[i] = lastPixels[i]
+          }
         }
 
         this.imageWidth = sizeChanges.imageWidth
@@ -156,10 +172,13 @@ define([], function() {
     * @returns {Object} Object with differences between the two passed ImageDatas
     */
     Canvas.prototype.getDiff = function(imageDataNew, imageInfosOld){
+
       var diff = new Array()
+      diff.push('diff');
       var allDiff = new Array()
       var rComp,gComp,bComp,aComp 
       var imageDataOld = imageInfosOld["pixel"]
+      var x = 0
 
       for(var i = 0; i < imageDataNew.data.length; i+=4){
         rComp = imageDataNew.data[i]   === imageDataOld.data[i]
@@ -169,18 +188,26 @@ define([], function() {
 
         if(!(rComp && gComp && bComp && aComp)){
 
-          var col = {
-                r: imageDataOld.data[i]
-              , g: imageDataOld.data[i+1]
-              , b: imageDataOld.data[i+2]
-              , a: imageDataOld.data[i+3]
-              }
+          x=imageDataOld.data[i]
+          x=x<<8
+          x+=imageDataOld.data[i+1]
+          x=x<<8
+          x+=imageDataOld.data[i+2]
+          x=x<<8
+          x+=imageDataOld.data[i+3]
 
-          diff.push({
-              position: i 
-            , color: col
-          })
+          diff.push(i) // position
+          diff.push(x)   // r,g,b,a
         }
+      }
+
+      // store the original ImagaData if the changed pixels are to much (for less ram)
+      if(diff.length*4 > imageDataNew.data.length){
+        console.log("store diff using ImagaData strategy")
+        diff[0] = 'ImagaData'
+        diff[1] = imageDataOld.data
+      }else{
+        console.log("store diff using diff strategy")
       }
 
       allDiff['pixel'] = diff
