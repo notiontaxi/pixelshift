@@ -44,7 +44,7 @@ define([], function() {
       this.oldImageData = this.getImageData()
       this.gotNewImage = true
 
-      this.scaling = 1
+      this.currentScale = 1
 
       this.clones = new Array()
       this.undoStack = new Array()
@@ -54,8 +54,15 @@ define([], function() {
       this.storeImageInfo()
     }
 
+
+    Canvas.prototype.scale = function(scale){
+      this.getElement().removeClass("zoom-"+this.currentScale)
+      this.getElement().addClass("zoom-"+scale)
+      this.currentScale = scale
+    }
+
     /**
-    * records last change for undo()
+    * records last change for revert()
     */
     Canvas.prototype.storeImageInfo = function(){
 
@@ -347,8 +354,7 @@ define([], function() {
             .attr("height", otherCanvas.imageHeight)[0];
         newCanvas.getContext("2d").putImageData(otherCanvas.getImageData(), 0, 0);
 
-        this.clear()
-        this.scaling = scale        
+        this.clear()      
         this.getContext().scale(scale, scale)
         this.getContext().drawImage(newCanvas, this.imageXOffset*1/scale, this.imageYOffset*1/scale)
 
@@ -444,7 +450,7 @@ define([], function() {
     }
 
      Canvas.prototype.clear = function(){
-      this.ctx.fillStyle="grey"
+      this.ctx.fillStyle="white"
       this.ctx.fillRect(0,0, this.ctx.canvas.width, this.ctx.canvas.height)
     } 
 

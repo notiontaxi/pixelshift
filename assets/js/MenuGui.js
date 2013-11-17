@@ -32,7 +32,9 @@ define(['text!templates/menu-bar.html', 'js/FileProcessor', 'js/ImageProcessor',
     this.addEventListeners()
     this.initializeTools()
     this.initializeEditFunctionality()
+    this.initializeViewFunctionality()
     this.addKeyBindings()
+    this.makeItDraggable()
   }
 
   MenuGui.prototype.addEventListeners = function(){
@@ -108,6 +110,26 @@ define(['text!templates/menu-bar.html', 'js/FileProcessor', 'js/ImageProcessor',
 
   }    
 
+  MenuGui.prototype.initializeViewFunctionality = function(){
+
+    $("#action-zoom-in").click(
+      function(event, ui){
+        event.stopPropagation()
+        event.preventDefault()
+        this.shownCanvas.scale(2)
+        this.updateDragBoundaries()
+    }.bind(this))    
+
+    $("#action-zoom-out").click(
+      function(event, ui){
+        event.stopPropagation()
+        event.preventDefault()
+        this.shownCanvas.scale(1)
+        this.updateDragBoundaries()
+    }.bind(this))          
+
+  }    
+
   MenuGui.prototype.addKeyBindings = function(){
      Mousetrap.bind('command+z', function(event, ui){
         event.stopPropagation()
@@ -134,6 +156,51 @@ define(['text!templates/menu-bar.html', 'js/FileProcessor', 'js/ImageProcessor',
     }.bind(this))
 
   }
+
+  MenuGui.prototype.makeItDraggable = function(){
+    $( "#canvas-shown" ).draggable({ containment: this.getUpdatedDragBoundaries()})
+  }
+
+  MenuGui.prototype.updateDragBoundaries = function(){
+      $( "#canvas-shown" ).draggable({ containment: this.getUpdatedDragBoundaries()})
+  }
+
+  MenuGui.prototype.getUpdatedDragBoundaries = function(){
+
+    var boundaries = new Array()
+
+    if(this.shownCanvas.currentScale !== 1){
+      
+      console.log(this.shownCanvas.canvasHeight * this.shownCanvas.currentScale)
+      boundaries.push(
+        - this.shownCanvas.canvasWidth * this.shownCanvas.currentScale
+        + $( "#canvas-shown" ).parent().width()
+        + $( "#canvas-shown" ).parent().offset().left 
+      )
+      boundaries.push(
+        - this.shownCanvas.canvasHeight * this.shownCanvas.currentScale
+        + $( "#canvas-shown" ).parent().height() 
+        + $( "#canvas-shown" ).parent().offset().top
+      )
+      boundaries.push(
+        $( "#canvas-shown" ).parent().offset().left       
+      )
+      boundaries.push(
+          $( "#canvas-shown" ).parent().offset().top
+      )
+      console.log(boundaries)
+    }else{
+      boundaries.push($( "#canvas-shown" ).parent().offset().left  )
+      boundaries.push($( "#canvas-shown" ).parent().offset().top)
+      boundaries.push(        - this.shownCanvas.canvasWidth * this.shownCanvas.currentScale
+        + $( "#canvas-shown" ).parent().width()
+        + $( "#canvas-shown" ).parent().offset().left )
+      boundaries.push($( "#canvas-shown" ).parent().offset().top)
+    }
+      return boundaries
+  }
+
+ 
 
 // --------------------------------------
     return MenuGui

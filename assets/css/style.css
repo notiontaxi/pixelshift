@@ -124,3 +124,18 @@ footer{
 .ui-widget-header{
   background: grey;
 }
+
+#dragg-container{
+  overflow: hidden;
+}
+
+.zoom-2{
+  transform: scale(2,2);
+  -ms-transform: scale(2,2); /* IE 9 */
+  -webkit-transform: scale(2,2); /* Safari and Chrome */
+}
+.zoom-4{
+  transform: scale(4,4);
+  -ms-transform: scale(4,4); /* IE 9 */
+  -webkit-transform: scale(4,4); /* Safari and Chrome */
+}

@@ -73,6 +73,8 @@ define(['text!templates/canvas-gui.html', 'js/DragNDrop', 'js/Canvas', 'js/MenuG
 
   }
 
+
+
 // --------------------------------------
     return CanvasGui
   })()
