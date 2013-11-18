@@ -1,4 +1,4 @@
-# Image Processing
+# [Pixelshift](http://notiontaxi.github.io/pixelshift)
 
-This repository contains projects of the course **Image Processing**, which is a part of the study program "International Media Informatics" (Master) at the HTW Berlin.<br>
+An online image processing tool
 
