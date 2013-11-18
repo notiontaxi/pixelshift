@@ -124,7 +124,7 @@ define(['text!templates/menu-bar.html', 'js/FileProcessor', 'js/ImageProcessor',
       function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        this.shownCanvas.zoomIn()
+        this.shownCanvas.zoomOut()
         this.updateDragBoundaries()
     }.bind(this))   
 
@@ -200,7 +200,7 @@ define(['text!templates/menu-bar.html', 'js/FileProcessor', 'js/ImageProcessor',
 
     if(this.shownCanvas.currentScale !== 1){
       
-      console.log(this.shownCanvas.canvasHeight * this.shownCanvas.currentScale)
+      //console.log(this.shownCanvas.canvasHeight * this.shownCanvas.currentScale)
       boundaries.push(
         - this.shownCanvas.canvasWidth * this.shownCanvas.currentScale
         + $( "#canvas-shown" ).parent().width()
@@ -217,7 +217,7 @@ define(['text!templates/menu-bar.html', 'js/FileProcessor', 'js/ImageProcessor',
       boundaries.push(
           $( "#canvas-shown" ).parent().offset().top
       )
-      console.log(boundaries)
+      //console.log(boundaries)
     }else{
       // put max upper left and min lower right position for the left upper edge to one position (not movable)
       boundaries.push($( "#canvas-shown" ).parent().offset().left)

@@ -97,6 +97,7 @@ footer{
 .canvas-wrap{
   width: 800px;
   height: 640px;
+  border: 1px solid lightgrey;
 }
 
 canvas, img {

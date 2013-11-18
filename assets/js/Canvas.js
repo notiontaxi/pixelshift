@@ -80,8 +80,10 @@ define([], function() {
     }
 
     Canvas.prototype.zoomOut = function(){
-      if(this.currentScale > 1)
+      if(this.currentScale > 1.25)
         this.scale(this.currentScale - .25)
+      else if(this.currentScale === 1.25)
+        this.zoomReset()
     }
 
     Canvas.prototype.zoomReset = function(){
@@ -96,7 +98,7 @@ define([], function() {
     */
     Canvas.prototype.storeImageInfo = function(){
 
-      console.log("Storing image info")
+      //console.log("Storing image info")
 
       this.lastImageInfos = new Array()
       this.lastImageInfos["pixel"] = this.getFullImageData()
@@ -240,12 +242,12 @@ define([], function() {
 
       // store the original ImagaData if the changed pixels are to much (for less ram)
       if(diff.length*4 > imageDataNew.data.length){
-        console.log("store diff using ImagaData strategy")
+        //console.log("store diff using ImagaData strategy")
         diff.length = 0
         diff[0] = 'ImagaData'
         diff[1] = imageDataOld.data
       }else{
-        console.log("store diff using diff strategy")
+        //console.log("store diff using diff strategy")
       }
 
       allDiff['pixel'] = diff
@@ -273,7 +275,7 @@ define([], function() {
 
         if(diff['pixel'].length > 0){
           this.undoStack.push(diff)
-          console.log("push diff to undo stack ("+diff['pixel'].length+")")
+          //console.log("push diff to undo stack ("+diff['pixel'].length+")")
     
           // avoid big data mass
           if(this.undoStack.length > 20){
@@ -480,7 +482,7 @@ define([], function() {
     }
 
      Canvas.prototype.clear = function(){
-      this.ctx.fillStyle="white"
+      this.ctx.fillStyle="grey"
       this.ctx.fillRect(0,0, this.ctx.canvas.width, this.ctx.canvas.height)
     } 
 
