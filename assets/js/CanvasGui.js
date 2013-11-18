@@ -35,7 +35,7 @@ define(['text!templates/canvas-gui.html', 'js/DragNDrop', 'js/Canvas', 'js/MenuG
 
     this.updateLayout()
 
-    var dragNDrop = new DragNDrop(this.shownCanvas, this.canvas.drawImage)
+    var dragNDrop = new DragNDrop(this.shownCanvas, this.canvas.drawImage, this.canvas)
   }
 
 
