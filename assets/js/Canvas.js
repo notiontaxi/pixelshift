@@ -27,6 +27,8 @@ define([], function() {
       this.cv = document.getElementById(this.id);
       this.ctx = this.cv.getContext('2d');
 
+      // TESTing 
+      this.ctx.webkitImageSmoothingEnabled = false
 
       this.canvasHeight = this.cv.height 
       this.canvasWidth = this.cv.width
@@ -54,12 +56,40 @@ define([], function() {
       this.storeImageInfo()
     }
 
+    /**
+    * Scales the canvas via CSS 
+    *
+    * @param {number} scaleAmount
+    */
+    Canvas.prototype.scale = function(scaleAmount){
 
-    Canvas.prototype.scale = function(scale){
-      this.getElement().removeClass("zoom-"+this.currentScale)
-      this.getElement().addClass("zoom-"+scale)
-      this.currentScale = scale
+      var scales = {
+          'transform':          "scale("  +scaleAmount+ "," +scaleAmount+ ")"
+        , '-ms-transform':      "scale("  +scaleAmount+ "," +scaleAmount+ ")"
+        , '-webkit-transform':  "scale("  +scaleAmount+ "," +scaleAmount+ ")"
+      }
+
+      this.getElement().css(scales)
+
+      this.currentScale = scaleAmount
     }
+
+    Canvas.prototype.zoomIn = function(){
+      if(this.currentScale < 50)
+        this.scale(this.currentScale + .25)
+    }
+
+    Canvas.prototype.zoomOut = function(){
+      if(this.currentScale > 1)
+        this.scale(this.currentScale - .25)
+    }
+
+    Canvas.prototype.zoomReset = function(){
+      if(this.currentScale !== 1){
+        this.scale(1)
+        this.getElement().css({'left': '0px', 'top': '0px'})
+      }
+    }        
 
     /**
     * records last change for revert()

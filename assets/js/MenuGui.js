@@ -116,7 +116,7 @@ define(['text!templates/menu-bar.html', 'js/FileProcessor', 'js/ImageProcessor',
       function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        this.shownCanvas.scale(2)
+        this.shownCanvas.zoomIn()
         this.updateDragBoundaries()
     }.bind(this))    
 
@@ -124,9 +124,17 @@ define(['text!templates/menu-bar.html', 'js/FileProcessor', 'js/ImageProcessor',
       function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        this.shownCanvas.scale(1)
+        this.shownCanvas.zoomIn()
         this.updateDragBoundaries()
-    }.bind(this))          
+    }.bind(this))   
+
+    $("#action-zoom-reset").click(
+      function(event, ui){
+        event.stopPropagation()
+        event.preventDefault()
+        this.shownCanvas.zoomReset()
+        this.updateDragBoundaries()
+    }.bind(this))              
 
   }    
 
@@ -155,6 +163,27 @@ define(['text!templates/menu-bar.html', 'js/FileProcessor', 'js/ImageProcessor',
         this.fileProcessor.saveCanvasToDisk(this.canvas.getHtmlElementCopy())
     }.bind(this))
 
+    Mousetrap.bind('+', function(event, ui){
+        event.stopPropagation()
+        event.preventDefault()
+        this.shownCanvas.zoomIn()
+        this.updateDragBoundaries()
+    }.bind(this))
+
+    Mousetrap.bind('-', function(event, ui){
+        event.stopPropagation()
+        event.preventDefault()
+        this.shownCanvas.zoomOut()
+        this.updateDragBoundaries()
+    }.bind(this))
+
+    Mousetrap.bind('command+0', function(event, ui){
+        event.stopPropagation()
+        event.preventDefault()
+        this.shownCanvas.zoomReset()
+        this.updateDragBoundaries()
+    }.bind(this))            
+
   }
 
   MenuGui.prototype.makeItDraggable = function(){
@@ -162,7 +191,7 @@ define(['text!templates/menu-bar.html', 'js/FileProcessor', 'js/ImageProcessor',
   }
 
   MenuGui.prototype.updateDragBoundaries = function(){
-      $( "#canvas-shown" ).draggable({ containment: this.getUpdatedDragBoundaries()})
+    $( "#canvas-shown" ).draggable({ containment: this.getUpdatedDragBoundaries()})
   }
 
   MenuGui.prototype.getUpdatedDragBoundaries = function(){
@@ -190,11 +219,10 @@ define(['text!templates/menu-bar.html', 'js/FileProcessor', 'js/ImageProcessor',
       )
       console.log(boundaries)
     }else{
-      boundaries.push($( "#canvas-shown" ).parent().offset().left  )
+      // put max upper left and min lower right position for the left upper edge to one position (not movable)
+      boundaries.push($( "#canvas-shown" ).parent().offset().left)
       boundaries.push($( "#canvas-shown" ).parent().offset().top)
-      boundaries.push(        - this.shownCanvas.canvasWidth * this.shownCanvas.currentScale
-        + $( "#canvas-shown" ).parent().width()
-        + $( "#canvas-shown" ).parent().offset().left )
+      boundaries.push($( "#canvas-shown" ).parent().offset().left)
       boundaries.push($( "#canvas-shown" ).parent().offset().top)
     }
       return boundaries

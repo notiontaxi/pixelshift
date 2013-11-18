@@ -94,6 +94,20 @@ footer{
   margin: 10px;
 }
 
+.canvas-wrap{
+  width: 800px;
+  height: 640px;
+}
+
+canvas, img {
+    image-rendering: optimizeSpeed;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: optimize-contrast;
+    -ms-interpolation-mode: nearest-neighbor;
+}
+
+
 .canvas-container{
   min-height:300px;
 }
@@ -129,13 +143,27 @@ footer{
   overflow: hidden;
 }
 
+.zoom-.25{
+  transform: scale(0.25,0.25);
+  -ms-transform: scale(0.25,0.25); 
+  -webkit-transform: scale(0.25,0.25); 
+}
+.zoom-.5{
+  transform: scale(0.5,0.5);
+  -ms-transform: scale(0.5,0.5); 
+  -webkit-transform: scale(0.5,0.5); 
+}
 .zoom-2{
   transform: scale(2,2);
-  -ms-transform: scale(2,2); /* IE 9 */
-  -webkit-transform: scale(2,2); /* Safari and Chrome */
+  -ms-transform: scale(2,2); 
+  -webkit-transform: scale(2,2); 
+}
+.zoom-3{
+  transform: scale(3,3);
+  -ms-transform: scale(3,3); 
+  -webkit-transform: scale(3,3); 
 }
 .zoom-4{
   transform: scale(4,4);
-  -ms-transform: scale(4,4); /* IE 9 */
-  -webkit-transform: scale(4,4); /* Safari and Chrome */
+  -ms-transform: scale(4,4); 
 }
