@@ -1,6 +1,8 @@
 body {
   padding-top: 60px;
   padding-bottom: 40px;
+  background-color: #333333;
+  color: lightgrey;
 }
 
 
@@ -10,17 +12,7 @@ body {
   display:none;
 }
 
-.controls{
-  background-color: lightblue;
-  color: #333333;
-  border-radius: 4px;
-  font-size: 12pt;
-  margin: 5px;
 
-  min-height: 60px;
-  padding: 10px 5px 10px 5px;
-
-}
 
 .slider-set{
   border-width: 1px;
@@ -37,7 +29,7 @@ body {
 }
 
 .content-container{
-  background-color: grey;
+  background-color: #888;
   border-radius: 4px;
   margin: 5px;
   padding: 10px;
@@ -73,6 +65,13 @@ footer{
 .menu-bar{
   background-color: lightcyan;
   background-image: none;
+
+}
+
+.menu-bar a, 
+.menu-bar .caret{
+  color: black;
+  border-top-color: black;
 }
 
 .menu-bar{
@@ -85,6 +84,32 @@ footer{
 
 .menu-name{
   color: grey;
+}
+
+.controls{
+  background-color: lightblue;
+  color: #333333;
+  font-size: 12pt;
+  margin: 0px 5px 0px 5px;
+
+  padding: 5px 5px 10px 5px;
+
+
+
+  -webkit-border-bottom-right-radius: 5px;
+  -webkit-border-bottom-left-radius: 5px;
+  -moz-border-radius-bottomright: 5px;
+  -moz-border-radius-bottomleft: 5px;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+
+  border: 1px solid lightgrey;
+
+  display: none;
+}
+
+.navbar-inverse{
+background-image: black;
 }
 
 .canvas{
@@ -109,8 +134,8 @@ canvas, img {
 }
 
 
-.canvas-container{
-  min-height:300px;
+#canvas-container{
+  margin-top: 20px;
 }
 
 .center-block {

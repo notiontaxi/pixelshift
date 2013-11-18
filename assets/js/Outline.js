@@ -14,7 +14,7 @@ var Outline, _ref, module,
 
   module = function() {}
   Outline = (function(_super){
-    __extends(Outline, CanvasGui);
+  __extends(Outline, CanvasGui)
 // --------------------------------------
 
 
@@ -22,13 +22,35 @@ var Outline, _ref, module,
     function Outline(containerIdentifier){    
 
       // render templates
-      $(containerIdentifier).html($(contentTemplate))
-
-      Outline.__super__.constructor("#canvas-container")
+      $(containerIdentifier).append($(contentTemplate))
 
       this.initializeTools()
+      this.appendToMenuBar()
     }
 
+    Outline.prototype.appendToMenuBar = function(){
+      var li = $('<li/>')
+
+      var a = $('<a/>', 
+            {
+                href: '#'
+              , text: 'Outline'
+              , id: 'action-menu-outline'
+            }
+          ).appendTo(li)
+
+      li.appendTo('.image-actions-list')
+
+      this.addMenuBarAction()
+    }
+
+    Outline.prototype.addMenuBarAction = function(){
+      $("#action-menu-outline").click(
+      function(event, ui){
+
+        $(".outline-controls").slideToggle()
+      })
+    }
 
     Outline.prototype.updateThreshold = function(threshold){
 

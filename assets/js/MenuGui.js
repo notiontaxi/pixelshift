@@ -28,7 +28,7 @@ define(['text!templates/menu-bar.html', 'js/FileProcessor', 'js/ImageProcessor',
 
     this.fileProcessor = new FileProcessor()
     this.imageProcessor = new ImageProcessor()
-
+    console.log("menu")
     this.addEventListeners()
     this.initializeTools()
     this.initializeEditFunctionality()
@@ -42,15 +42,11 @@ define(['text!templates/menu-bar.html', 'js/FileProcessor', 'js/ImageProcessor',
     // Outline button
     $("#upload-image").click(
       function(event, ui){
-        event.stopPropagation()
-        event.preventDefault()
         $('input[type="file"]').click()
       }.bind(this))
 
     $("#save-image").click(
       function(event, ui){
-        event.stopPropagation()
-        event.preventDefault()
         this.fileProcessor.saveCanvasToDisk(this.canvas.getHtmlElementCopy())
     
     }.bind(this))   
@@ -68,24 +64,18 @@ define(['text!templates/menu-bar.html', 'js/FileProcessor', 'js/ImageProcessor',
 
     $("#action-grayscale").click(
       function(event, ui){
-        event.stopPropagation()
-        event.preventDefault()
         var newImg = this.imageProcessor.processGrayscale(this.canvas.getImageData(), this.canvas.getImageWidth())
         this.canvas.putImageData(newImg)
     }.bind(this))    
 
     $("#action-bitmap").click(
       function(event, ui){
-        event.stopPropagation()
-        event.preventDefault()
         var newImg = this.imageProcessor.processThreshold(this.imageProcessor.computeThreshold(this.canvas.getImageData()) ,this.canvas.getImageData())
         this.canvas.putImageData(newImg)
     }.bind(this))  
 
     $("#action-invert").click(
       function(event, ui){
-        event.stopPropagation()
-        event.preventDefault()
         var newImg = this.imageProcessor.processInvertColors(this.canvas.getImageData(), this.canvas.getImageWidth())
         this.canvas.putImageData(newImg)
     }.bind(this))          
@@ -96,15 +86,11 @@ define(['text!templates/menu-bar.html', 'js/FileProcessor', 'js/ImageProcessor',
 
     $("#action-undo").click(
       function(event, ui){
-        event.stopPropagation()
-        event.preventDefault()
         this.canvas.undo()
     }.bind(this))    
 
     $("#action-redo").click(
       function(event, ui){
-        event.stopPropagation()
-        event.preventDefault()
         this.canvas.redo()
     }.bind(this))          
 
@@ -114,24 +100,18 @@ define(['text!templates/menu-bar.html', 'js/FileProcessor', 'js/ImageProcessor',
 
     $("#action-zoom-in").click(
       function(event, ui){
-        event.stopPropagation()
-        event.preventDefault()
         this.shownCanvas.zoomIn()
         this.updateDragBoundaries()
     }.bind(this))    
 
     $("#action-zoom-out").click(
       function(event, ui){
-        event.stopPropagation()
-        event.preventDefault()
         this.shownCanvas.zoomOut()
         this.updateDragBoundaries()
     }.bind(this))   
 
     $("#action-zoom-reset").click(
       function(event, ui){
-        event.stopPropagation()
-        event.preventDefault()
         this.shownCanvas.zoomReset()
         this.updateDragBoundaries()
     }.bind(this))              

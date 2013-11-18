@@ -22,13 +22,35 @@ var Areas, _ref, module,
     function Areas(containerIdentifier){    
 
       // render templates
-      $(containerIdentifier).html($(contentTemplate))
-
-      Areas.__super__.constructor("#canvas-container")
+      $(containerIdentifier).append($(contentTemplate))
 
       this.initializeTools()
+      this.appendToMenuBar()
     }
 
+    Areas.prototype.appendToMenuBar = function(){
+      var li = $('<li/>')
+
+      var a = $('<a/>', 
+            {
+                href: '#'
+              , text: 'Floodfill'
+              , id: 'action-menu-floodfill'
+            }
+          ).appendTo(li)
+
+      li.appendTo('.image-actions-list')
+
+      this.addMenuBarAction()
+    }
+
+    Areas.prototype.addMenuBarAction = function(){
+      $("#action-menu-floodfill").click(
+      function(event, ui){
+
+        $(".floodfill-controls").slideToggle()
+      })
+    }
 
     Areas.prototype.initializeTools = function(){
 
