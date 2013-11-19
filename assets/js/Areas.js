@@ -50,6 +50,14 @@ var Areas, _ref, module,
 
         $(".floodfill-controls").slideToggle()
       })
+
+      $(".floodfill-controls").click(function(){
+        $(this).slideToggle()
+      }).children().click(function(e) {
+        return false; // prevent childs to do this action
+      });
+
+
     }
 
     Areas.prototype.initializeTools = function(){

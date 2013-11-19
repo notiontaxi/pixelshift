@@ -47,9 +47,14 @@ var Outline, _ref, module,
     Outline.prototype.addMenuBarAction = function(){
       $("#action-menu-outline").click(
       function(event, ui){
-
         $(".outline-controls").slideToggle()
       })
+
+      $(".outline-controls").click(function(){
+        $(this).slideToggle()
+      }).children().click(function(e) {
+        return false; // prevent childs to do this action
+      });
     }
 
     Outline.prototype.updateThreshold = function(threshold){
