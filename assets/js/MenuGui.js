@@ -28,7 +28,7 @@ define(['text!templates/menu-bar.html', 'js/FileProcessor', 'js/ImageProcessor',
 
     this.fileProcessor = new FileProcessor()
     this.imageProcessor = new ImageProcessor()
-    console.log("menu")
+
     this.addEventListeners()
     this.initializeTools()
     this.initializeEditFunctionality()

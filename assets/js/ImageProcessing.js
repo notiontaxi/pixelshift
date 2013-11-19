@@ -19,8 +19,7 @@ var ImageProcessing, _ref, module,
 
 
 
-    function ImageProcessing(containerIdentifier){    
-      console.log("image-processor, motherfucker")
+    function ImageProcessing(containerIdentifier){   
       // render templates
       $(containerIdentifier).html($(contentTemplate))
 

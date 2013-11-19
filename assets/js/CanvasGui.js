@@ -23,8 +23,11 @@ define(['text!templates/canvas-gui.html', 'js/DragNDrop', 'js/Canvas', 'js/MenuG
 
     CanvasGui.__super__.constructor("#menu-container","canvas-hidden", "canvas-shown")
 
+    this.canvasWrap = $("#dragg-container")
+
     this.initialize()
     this.addEventListeners()
+    
   }
 
 
@@ -45,18 +48,21 @@ define(['text!templates/canvas-gui.html', 'js/DragNDrop', 'js/Canvas', 'js/MenuG
 
     if(width < 992 && !this.wasSmallLayout){
       this.shownCanvas.updateSize(330,264)
+      this.canvasWrap.css({"width":"330px", "height":"264px"})
       this.wasSmallLayout = true
       this.wasMediumLayout = this.wasLargeLayout = false
       this.shownCanvas.copy(this.canvas)
       //console.log("Setting layout to s")
     } else if(width >= 992 && width < 1200 && !this.wasMediumLayout){
       this.shownCanvas.updateSize(700,560)
+      this.canvasWrap.css({"width":"700px", "height":"560px"})
       this.wasMediumLayout = true
       this.wasSmallLayout = this.wasLargeLayout = false
       this.shownCanvas.copy(this.canvas)
       //console.log("Setting layout to m")
     } else if(width >= 1200 && !this.wasLargeLayout){
       this.shownCanvas.updateSize(800,640)
+      this.canvasWrap.css({"width":"800px", "height":"640px"})
       this.wasLargeLayout = true
       this.wasSmallLayout = this.wasMediumLayout = false
       this.shownCanvas.copy(this.canvas)
