@@ -3,6 +3,8 @@ body {
   padding-bottom: 40px;
   background-color: #888888;
   color: lightgrey;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
 }
 #canvas-overlay-left,
 #canvas-overlay-right {
