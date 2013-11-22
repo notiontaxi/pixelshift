@@ -7,7 +7,7 @@ https://github.com/notiontaxi
 
 "use strict"
 
-define(['text!templates/menu-bar.html', 'js/FileProcessor', 'js/ImageProcessor', 'js/Canvas'], function(menuTemplate, FileProcessor, ImageProcessor, Canvas) {
+define(['text!templates/menu-bar.html', 'text!templates/menu-bar-small-device.html', 'js/FileProcessor', 'js/ImageProcessor', 'js/Canvas'], function(menuTemplate, menuTemplateSmallDevice,FileProcessor, ImageProcessor, Canvas) {
 
   var MenuGui, _ref, module;
   module = function() {}
@@ -19,7 +19,12 @@ define(['text!templates/menu-bar.html', 'js/FileProcessor', 'js/ImageProcessor',
   // tell wehre the menu should be rendered and where i can find the canvas
   function MenuGui(menuContainerIdentifier, canvasIdentifier, canvasIdentifier2){
 
+    this.menuContainerIdentifier = menuContainerIdentifier
     $(menuContainerIdentifier).html($(menuTemplate))
+    $(this.menuContainerIdentifier).append($(menuTemplateSmallDevice))
+    $(this.menuContainerIdentifier+" .small-device").hide()
+
+    this.wasBigMenu = true
 
     this.canvas = new Canvas(canvasIdentifier, true)
     this.shownCanvas = new Canvas(canvasIdentifier2)
@@ -35,6 +40,24 @@ define(['text!templates/menu-bar.html', 'js/FileProcessor', 'js/ImageProcessor',
     this.initializeViewFunctionality()
     this.addKeyBindings()
     this.makeItDraggable()
+    this.initColorPickerModal()
+  }
+
+  MenuGui.prototype.toggleMenu = function(){
+    if(this.wasBigMenu){
+      $(this.menuContainerIdentifier+" .big-device").hide()
+      $(this.menuContainerIdentifier+" .small-device").show()
+    }
+    else{
+      $(this.menuContainerIdentifier+" .big-device").show()
+      $(this.menuContainerIdentifier+" .small-device").hide()
+    }
+
+    this.wasBigMenu = !this.wasBigMenu 
+  }
+
+  MenuGui.prototype.initColorPickerModal = function(){
+
   }
 
   MenuGui.prototype.addEventListeners = function(){
