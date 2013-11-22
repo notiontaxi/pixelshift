@@ -83,6 +83,31 @@ footer {
   border: 1px solid #aaaaaa;
   display: none;
 }
+.hidden {
+  display: none;
+}
+.menu-element-sd {
+  padding-left: 0px;
+}
+.menu-element-sd li {
+  padding: 5,3,5,3;
+  clear: both;
+  line-height: 1.428571429;
+  white-space: nowrap;
+  text-decoration: none;
+  list-style: none;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+.menu-element-sd li button {
+  font-size: 12px;
+}
+.menu-small-device {
+  padding-right: 5px;
+  padding-left: 20px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
 .navbar-inverse {
   background-image: black;
 }

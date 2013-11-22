@@ -40,37 +40,70 @@ define(['text!templates/menu-bar.html', 'text!templates/menu-bar-small-device.ht
     this.initializeViewFunctionality()
     this.addKeyBindings()
     this.makeItDraggable()
-    this.initColorPickerModal()
+    this.initializeSmallDevicesMenu()
   }
 
   MenuGui.prototype.toggleMenu = function(){
     if(this.wasBigMenu){
       $(this.menuContainerIdentifier+" .big-device").hide()
-      $(this.menuContainerIdentifier+" .small-device").show()
+      $(this.menuContainerIdentifier+" .menu-small-device").show()
     }
     else{
       $(this.menuContainerIdentifier+" .big-device").show()
-      $(this.menuContainerIdentifier+" .small-device").hide()
+      $(this.menuContainerIdentifier+" .menu-small-device").hide()
     }
 
     this.wasBigMenu = !this.wasBigMenu 
   }
 
-  MenuGui.prototype.initColorPickerModal = function(){
+  MenuGui.prototype.initializeSmallDevicesMenu = function(){
 
+    $("#file-actions-list-sd-btn").click(
+      function(event, ui){
+        event.stopPropagation()
+        event.preventDefault()
+        $('.file-actions-list-sd').slideToggle()
+      }.bind(this))
+    $('.file-actions-list-sd').hide()
+
+    $("#image-actions-list-sd-btn").click(
+      function(event, ui){
+        event.stopPropagation()
+        event.preventDefault()
+        $('.image-actions-list-sd').slideToggle()
+      }.bind(this))
+    $('.image-actions-list-sd').hide()
+
+    $("#edit-actions-list-sd-btn").click(
+      function(event, ui){
+        event.stopPropagation()
+        event.preventDefault()
+        $('.edit-actions-list-sd').slideToggle()
+      }.bind(this))
+    $('.edit-actions-list-sd').hide()
+
+    $("#view-actions-list-sd-btn").click(
+      function(event, ui){
+        event.stopPropagation()
+        event.preventDefault()
+        $('.view-actions-list-sd').slideToggle()
+      }.bind(this))
+    $('.view-actions-list-sd').hide()        
+
+    $('.menu-small-device').hide()
   }
 
   MenuGui.prototype.addEventListeners = function(){
 
     // Outline button
-    $("#upload-image").click(
+    $(".action-upload-image").click(
       function(event, ui){
         event.stopPropagation()
         event.preventDefault()
         $('input[type="file"]').click()
       }.bind(this))
 
-    $("#save-image").click(
+    $(".action-save-image").click(
       function(event, ui){
         event.stopPropagation()
         event.preventDefault()
@@ -78,18 +111,16 @@ define(['text!templates/menu-bar.html', 'text!templates/menu-bar-small-device.ht
     
     }.bind(this))   
        
-
     document.getElementById('action-upload').addEventListener('change', 
       function(evt){
         var file = evt.target.files[0] // FileList object
         this.fileProcessor.loadFileFromFilesystem(URL.createObjectURL(file), this.canvas.drawImage, this.canvas)
       }.bind(this), false);
-
   }
 
   MenuGui.prototype.initializeTools = function(){
 
-    $("#action-grayscale").click(
+    $(".action-grayscale").click(
       function(event, ui){
         event.stopPropagation()
         event.preventDefault()
@@ -97,7 +128,7 @@ define(['text!templates/menu-bar.html', 'text!templates/menu-bar-small-device.ht
         this.canvas.putImageData(newImg)
     }.bind(this))    
 
-    $("#action-bitmap").click(
+    $(".action-bitmap").click(
       function(event, ui){
         event.stopPropagation()
         event.preventDefault()
@@ -105,7 +136,7 @@ define(['text!templates/menu-bar.html', 'text!templates/menu-bar-small-device.ht
         this.canvas.putImageData(newImg)
     }.bind(this))  
 
-    $("#action-invert").click(
+    $(".action-invert").click(
       function(event, ui){
         event.stopPropagation()
         event.preventDefault()
@@ -117,14 +148,14 @@ define(['text!templates/menu-bar.html', 'text!templates/menu-bar-small-device.ht
 
   MenuGui.prototype.initializeEditFunctionality = function(){
 
-    $("#action-undo").click(
+    $(".action-undo").click(
       function(event, ui){
         event.stopPropagation()
         event.preventDefault()
         this.canvas.undo()
     }.bind(this))    
 
-    $("#action-redo").click(
+    $(".action-redo").click(
       function(event, ui){
         event.stopPropagation()
         event.preventDefault()
@@ -135,7 +166,7 @@ define(['text!templates/menu-bar.html', 'text!templates/menu-bar-small-device.ht
 
   MenuGui.prototype.initializeViewFunctionality = function(){
 
-    $("#action-zoom-in").click(
+    $(".action-zoom-in").click(
       function(event, ui){
         event.stopPropagation()
         event.preventDefault()
@@ -143,7 +174,7 @@ define(['text!templates/menu-bar.html', 'text!templates/menu-bar-small-device.ht
         this.updateDragBoundaries()
     }.bind(this))    
 
-    $("#action-zoom-out").click(
+    $(".action-zoom-out").click(
       function(event, ui){
         event.stopPropagation()
         event.preventDefault()
@@ -151,7 +182,7 @@ define(['text!templates/menu-bar.html', 'text!templates/menu-bar-small-device.ht
         this.updateDragBoundaries()
     }.bind(this))   
 
-    $("#action-zoom-reset").click(
+    $(".action-zoom-reset").click(
       function(event, ui){
         event.stopPropagation()
         event.preventDefault()
