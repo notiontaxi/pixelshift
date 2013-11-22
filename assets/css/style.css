@@ -1,10 +1,8 @@
 body {
   padding-top: 60px;
   padding-bottom: 40px;
-  background-color: #888888;
+  background-color: #333333;
   color: lightgrey;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
 }
 #canvas-overlay-left,
 #canvas-overlay-right {
@@ -24,7 +22,7 @@ body {
   min-height: 35px;
 }
 .content-container {
-  background-color: ;
+  background-color: #888888;
   border-radius: 4px;
   margin: 5px;
   padding: 10px;
