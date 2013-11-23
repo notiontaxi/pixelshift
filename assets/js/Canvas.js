@@ -31,11 +31,20 @@ define([], function() {
       this.ctx.webkitImageSmoothingEnabled = false
 
       this.canvasHeight = this.cv.height 
+      this.halfCanvasHeight = this.canvasHeight/2
       this.canvasWidth = this.cv.width
+      this.halfCanvasWidth = this.canvasWidth/2
       this.imageHeight = this.cv.height 
       this.imageWidth = this.cv.width
       this.imageXOffset = 0
       this.imageYOffset = 0
+
+      this.visibleArea = {
+          x1: 0
+        , y1: 0
+        , x2: this.canvasWidth        
+        , y2: this.canvasHeight
+      }
 
       this.gotNewImage = true
 
@@ -47,6 +56,8 @@ define([], function() {
       this.gotNewImage = true
 
       this.currentScale = 1
+      this.positionX = 0
+      this.positionY = 0
 
       this.clones = new Array()
       this.undoStack = new Array()
@@ -76,13 +87,13 @@ define([], function() {
 
     Canvas.prototype.zoomIn = function(){
       if(this.currentScale < 50)
-        this.scale(this.currentScale + .25)
+        this.scale(this.currentScale + 1)
     }
 
     Canvas.prototype.zoomOut = function(){
-      if(this.currentScale > 1.25)
-        this.scale(this.currentScale - .25)
-      else if(this.currentScale === 1.25)
+      if(this.currentScale > 1.00)
+        this.scale(this.currentScale - 1)
+      else if(this.currentScale === 1.00)
         this.zoomReset()
     }
 
@@ -90,8 +101,54 @@ define([], function() {
       if(this.currentScale !== 1){
         this.scale(1)
         this.getElement().css({'left': '0px', 'top': '0px'})
+        this.positionX = 0
+        this.positionY = 0
       }
     }        
+
+    Canvas.prototype.moveCanvas = function(direction){
+
+      var canvas = this.getElement()
+      var pixelPerMove = 10*this.currentScale
+
+      switch(direction){
+        case "up":
+          this.positionY-=pixelPerMove
+          this.getElement().css({'top': this.positionY+"px"})
+          break
+        case "down":
+          this.positionY+=pixelPerMove
+          this.getElement().css({'top': this.positionY+"px"})
+          break
+        case "left":
+          this.positionX-=pixelPerMove
+          this.getElement().css({'left': this.positionX+"px"})
+          break
+        case "right":
+          this.positionX+=pixelPerMove
+          this.getElement().css({'left': this.positionX+"px"})
+          break
+      }
+
+      this.computeVisibleArea()
+      console.log(this.visibleArea)
+    }
+
+
+    Canvas.prototype.computeVisibleArea = function(){
+
+      console.log("x "+this.positionX)
+      console.log("y "+this.positionY)
+
+      var halfW = (this.halfCanvasWidth / this.currentScale) 
+      var halfH = (this.halfCanvasHeight / this.currentScale)
+
+      this.visibleArea.x1 = (halfW * (this.currentScale -1) - this.positionX/this.currentScale) 
+      this.visibleArea.y1 = (halfH * (this.currentScale -1) - this.positionY/this.currentScale) 
+
+      this.visibleArea.x2 = this.visibleArea.x1 + halfW*2
+      this.visibleArea.y2 = this.visibleArea.y1 + halfH*2
+    }
 
     /**
     * records last change for revert()

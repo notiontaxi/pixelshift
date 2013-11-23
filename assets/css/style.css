@@ -117,6 +117,9 @@ footer {
   border: 1px solid;
   margin: 10px;
 }
+.relative {
+  position: relative;
+}
 .canvas-wrap {
   width: 800px;
   height: 640px;

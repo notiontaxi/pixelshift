@@ -39,7 +39,7 @@ define(['text!templates/menu-bar.html', 'text!templates/menu-bar-small-device.ht
     this.initializeEditFunctionality()
     this.initializeViewFunctionality()
     this.addKeyBindings()
-    this.makeItDraggable()
+    //this.makeItDraggable()
     this.initializeSmallDevicesMenu()
   }
 
@@ -221,24 +221,48 @@ define(['text!templates/menu-bar.html', 'text!templates/menu-bar-small-device.ht
         event.stopPropagation()
         event.preventDefault()
         this.shownCanvas.zoomIn()
-        this.updateDragBoundaries()
+        //this.updateDragBoundaries()
     }.bind(this))
 
     Mousetrap.bind('-', function(event, ui){
         event.stopPropagation()
         event.preventDefault()
         this.shownCanvas.zoomOut()
-        this.updateDragBoundaries()
+        //this.updateDragBoundaries()
     }.bind(this))
 
     Mousetrap.bind('command+0', function(event, ui){
         event.stopPropagation()
         event.preventDefault()
         this.shownCanvas.zoomReset()
-        this.updateDragBoundaries()
-    }.bind(this))            
+        //this.updateDragBoundaries()
+    }.bind(this))    
 
+    Mousetrap.bind('up', function(event, ui){
+        event.stopPropagation()
+        event.preventDefault()
+        this.shownCanvas.moveCanvas("up")
+    }.bind(this))     
+
+    Mousetrap.bind('down', function(event, ui){
+        event.stopPropagation()
+        event.preventDefault()
+        this.shownCanvas.moveCanvas("down")
+    }.bind(this))  
+
+    Mousetrap.bind('left', function(event, ui){
+        event.stopPropagation()
+        event.preventDefault()
+        this.shownCanvas.moveCanvas("left")
+    }.bind(this))      
+
+    Mousetrap.bind('right', function(event, ui){
+        event.stopPropagation()
+        event.preventDefault()
+        this.shownCanvas.moveCanvas("right")
+    }.bind(this))  
   }
+
 
   MenuGui.prototype.makeItDraggable = function(){
     $( "#canvas-shown" ).draggable({ containment: this.getUpdatedDragBoundaries()})
