@@ -65,94 +65,211 @@ define([], function() {
 
       this.keepChangesForUndo = keepChangesForUndo === true ? true : false
       this.storeImageInfo()
+
+      this.parent = null
     }
 
-    /**
-    * Scales the canvas via CSS 
-    *
-    * @param {number} scaleAmount
-    */
-    Canvas.prototype.scale = function(scaleAmount){
-
-      this.computeVisibleArea()
-
-
-
-
-      this.currentScale = scaleAmount
+    Canvas.prototype.setParent = function(parent){
+      this.parent = parent
     }
+
 
     Canvas.prototype.zoomIn = function(){
-      if(this.currentScale < 50)
-        this.scale(this.currentScale + 1)
+      if(this.currentScale < 50){
+        switch(this.currentScale){
+          case 1:
+            this.currentScale = 2
+            break
+          case 2:
+            this.currentScale = 4
+            break
+          case 4:
+            this.currentScale = 5
+            break
+          case 5:
+            this.currentScale = 8
+            break
+          case 8:
+            this.currentScale = 10
+            break                 
+          case 10:
+            this.currentScale = 16
+            break                 
+          case 16:
+            this.currentScale = 20
+            break              
+        }
+        this.draw()
+      }
     }
 
     Canvas.prototype.zoomOut = function(){
-      if(this.currentScale > 1.00)
-        this.scale(this.currentScale - 1)
-      else if(this.currentScale === 1.00)
-        this.zoomReset()
+      
+      if(this.currentScale > 1.00){
+        switch(this.currentScale){
+          case 20:
+            this.currentScale = 16
+            break
+          case 16:
+            this.currentScale = 10
+            break
+          case 10:
+            this.currentScale = 8
+            break
+          case 8:
+            this.currentScale = 5
+            break
+          case 5:
+            this.currentScale = 4
+            break                 
+          case 4:
+            this.currentScale = 2
+            break                 
+          case 2:
+            this.currentScale = 1
+            break              
+        }
+        console.log(this.currentScale)
+        if(this.currentScale < 2)
+          this.zoomReset()
+        else
+          this.draw()
+      }
+
     }
 
     Canvas.prototype.zoomReset = function(){
-      if(this.currentScale !== 1){
-        this.scale(1)
-        this.getElement().css({'left': '0px', 'top': '0px'})
         this.positionX = 0
         this.positionY = 0
-      }
+        this.currentScale = 1
+        this.parent.copyToClones()
     }
 
     Canvas.prototype.moveCanvas = function(direction){
 
-      var canvas = this.getElement()
-      var pixelPerMove = 10*this.currentScale
+      if(this.currentScale !== 1){
+        var canvas = this.getElement()
+        var pixelPerMove = 10*this.currentScale
 
-      switch(direction){
-        case "up":
-          this.positionY-=pixelPerMove
-          this.getElement().css({'top': this.positionY+"px"})
-          break
-        case "down":
-          this.positionY+=pixelPerMove
-          this.getElement().css({'top': this.positionY+"px"})
-          break
-        case "left":
-          this.positionX-=pixelPerMove
-          this.getElement().css({'left': this.positionX+"px"})
-          break
-        case "right":
-          this.positionX+=pixelPerMove
-          this.getElement().css({'left': this.positionX+"px"})
-          break
+        switch(direction){
+          case "up":
+            this.positionY+=pixelPerMove
+            this.getElement().css({'top': this.positionY+"px"})
+            break
+          case "down":
+            this.positionY-=pixelPerMove
+            this.getElement().css({'top': this.positionY+"px"})
+            break
+          case "left":
+            this.positionX+=pixelPerMove
+            this.getElement().css({'left': this.positionX+"px"})
+            break
+          case "right":
+            this.positionX-=pixelPerMove
+            this.getElement().css({'left': this.positionX+"px"})
+            break
+        }
+      
+        this.draw()
       }
-
-      this.computeVisibleArea()
-      console.log(this.visibleArea)
     }
 
 
     Canvas.prototype.computeVisibleArea = function(){
 
-      console.log("x "+this.positionX)
-      console.log("y "+this.positionY)
-
       var halfW = (this.halfCanvasWidth / this.currentScale) 
       var halfH = (this.halfCanvasHeight / this.currentScale)
 
-      this.visibleArea.x1 = (halfW * (this.currentScale -1) - this.positionX/this.currentScale) 
-      this.visibleArea.y1 = (halfH * (this.currentScale -1) - this.positionY/this.currentScale) 
+      this.visibleArea.x1 = Math.round((halfW * (this.currentScale -1) - this.positionX/this.currentScale))
+      this.visibleArea.y1 = Math.round((halfH * (this.currentScale -1) - this.positionY/this.currentScale))
 
-      this.visibleArea.x2 = this.visibleArea.x1 + halfW*2
-      this.visibleArea.y2 = this.visibleArea.y1 + halfH*2
+      this.visibleArea.x2 = Math.floor(this.visibleArea.x1 + halfW*2)
+      this.visibleArea.y2 = Math.floor(this.visibleArea.y1 + halfH*2)
+
+      this.offsetOnEndOfRow = (this.canvasWidth - ((this.visibleArea.x2 - this.visibleArea.x1) * this.currentScale)) % this.currentScale
+      console.log(this.offsetOnEndOfRow)
     }
 
-    Canvas.prototype.getAreaPixels = function(){
+    /**
+    * Updates the visible area depending on scale
+    *
+    */
+    Canvas.prototype.draw = function(){
 
+      
+      this.computeVisibleArea()
+      var area = this.parent.getAreaPixels(this.visibleArea)
+      this.setAreaPixels(area)      
+
+      this.copyToClones(true)
     }
 
-    Canvas.prototype.setAreaPixels = function(){
+    Canvas.prototype.getAreaPixels = function(visibleArea){
 
+      var allPixels = this.getFullImageData()
+      var pixels = Array()
+
+      // i.e (800*160*4 + 200*4) = 512800 = 200th pixel in row 160
+      var start = this.canvasWidth * 4 * visibleArea.y1  + visibleArea.x1 * 4
+      // i.e. (800*4*480 + 600*4) = 1538400 = 600th pixek in row 480
+      var end   = this.canvasWidth * 4 * (visibleArea.y2-1) + visibleArea.x2 * 4
+      var rowLength = (visibleArea.x2 - visibleArea.x1) * 4
+      var rowIncrement = this.canvasWidth * 4
+      var i, j
+
+      var pixel = 0
+      var rows = 0
+      var width = 0
+
+      for(i = start; i < end; i+=rowIncrement){
+        for(j = i; j < i + rowLength; j++){
+          pixels.push(allPixels.data[j])
+          width++
+        }
+        rows++
+      }
+
+      return {
+          pixels: pixels
+        , height: rows
+        , width: width/rows/4
+      }
+    }
+
+    Canvas.prototype.setAreaPixels = function(area){
+      var allPixels = this.getFullImageData()
+
+      var pixelJumpWidth = 4*this.currentScale
+
+      var i, j
+      var r = 1
+      var k = 0
+
+      for(i = 0; i < area.pixels.length; i+=4){
+        for(j = 0; j < this.currentScale; j++){
+          allPixels.data[k ] = area.pixels[i]
+          allPixels.data[k +1] = area.pixels[i+1]
+          allPixels.data[k +2] = area.pixels[i+2]
+          allPixels.data[k +3] = area.pixels[i+3]
+          k+=4
+        }
+
+        // end of row
+        if(i % (area.width * 4 + 4) == 0){
+          if(r < this.currentScale){
+            i -= area.width * 4
+            r++
+          }
+          else{
+            r = 1
+          }
+
+          i += this.offsetOnEndOfRow * 4
+        }
+
+      }
+
+      this._putFullImageData(allPixels)
     }
 
     /**
@@ -457,6 +574,45 @@ define([], function() {
       this.copyToClones()
     }
 
+
+    /** 
+    * Updates this canvas by the centent of the passed canvas
+    * Regarding width, height and pixelinformations
+    *
+    * @param {Canvas} otherCanvas  the canvas this should be updated to
+    * @param {boolean} doNotDraw  true if width, height and offsets shold be set only
+    */
+    Canvas.prototype.fullCopy = function(otherCanvas, doNotDraw){
+
+      var scaleX = (this.canvasWidth / otherCanvas.canvasWidth).toFixed(4)
+      var scaleY = (this.canvasHeight / otherCanvas.canvasHeight).toFixed(4)
+
+      var scale = scaleX < scaleY ? scaleX : scaleY;
+      // do not scale, when original image is scmaller than canvas
+      scale = scale > 1.0 ? 1.0 : scale;
+
+      this.imageHeight  = otherCanvas.canvasHeight * scale
+      this.imageWidth   = otherCanvas.canvasWidth * scale
+
+      if(!doNotDraw){
+        // save current context state, to restore changes in scaling later
+        this.getContext().save()
+        var newCanvas = $("<canvas>")
+            .attr("width", otherCanvas.canvasWidth)
+            .attr("height", otherCanvas.canvasHeight)[0];
+        newCanvas.getContext("2d").putImageData(otherCanvas.getFullImageData(), 0, 0);
+
+        this.clear()      
+        this.getContext().scale(scale, scale)
+        this.getContext().drawImage(newCanvas, 0, 0)
+
+        this.getContext().restore()
+      }
+      this.copyToClones()
+    }
+
+
+
     /**
     * Returns the ImageData of this canvas without the image borders (the pure image)
     * @returns {ImageData} ImageData without borders
@@ -619,10 +775,13 @@ define([], function() {
       this.clones.push(clone)
     }
 
-    Canvas.prototype.copyToClones = function(){
+    Canvas.prototype.copyToClones = function(full){
       if(!!this.clones)
         for(var c = 0; c < this.clones.length; c++)
-          this.clones[c].copy(this)
+          if(full)
+            this.clones[c].fullCopy(this)
+          else 
+            this.clones[c].copy(this)
     }
     
 

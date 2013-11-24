@@ -33,6 +33,8 @@ define(['text!templates/menu-bar.html', 'text!templates/menu-bar-small-device.ht
     this.canvasOrigin.addClone(this.canvasStage)
     this.canvasStage.addClone(this.canvasShown)
 
+    this.canvasStage.setParent(this.canvasOrigin)
+
     this.fileProcessor = new FileProcessor()
     this.imageProcessor = new ImageProcessor()
 
@@ -172,21 +174,21 @@ define(['text!templates/menu-bar.html', 'text!templates/menu-bar-small-device.ht
       function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        this.canvasOrigin.zoomIn()
+        this.canvasStage.zoomIn()
     }.bind(this))    
 
     $(".action-zoom-out").click(
       function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        this.canvasOrigin.zoomOut()
+        this.canvasStage.zoomOut()
     }.bind(this))   
 
     $(".action-zoom-reset").click(
       function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        this.canvasOrigin.zoomReset()
+        this.canvasStage.zoomReset()
     }.bind(this))              
 
   }    
@@ -219,43 +221,43 @@ define(['text!templates/menu-bar.html', 'text!templates/menu-bar-small-device.ht
     Mousetrap.bind('+', function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        this.canvasShown.zoomIn()
+        this.canvasStage.zoomIn()
     }.bind(this))
 
     Mousetrap.bind('-', function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        this.canvasShown.zoomOut()
+        this.canvasStage.zoomOut()
     }.bind(this))
 
     Mousetrap.bind('command+0', function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        this.canvasShown.zoomReset()
+        this.canvasStage.zoomReset()
     }.bind(this))    
 
     Mousetrap.bind('up', function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        this.canvasShown.moveCanvas("up")
+        this.canvasStage.moveCanvas("up")
     }.bind(this))     
 
     Mousetrap.bind('down', function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        this.canvasShown.moveCanvas("down")
+        this.canvasStage.moveCanvas("down")
     }.bind(this))  
 
     Mousetrap.bind('left', function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        this.canvasShown.moveCanvas("left")
+        this.canvasStage.moveCanvas("left")
     }.bind(this))      
 
     Mousetrap.bind('right', function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        this.canvasShown.moveCanvas("right")
+        this.canvasStage.moveCanvas("right")
     }.bind(this))  
   }
 
