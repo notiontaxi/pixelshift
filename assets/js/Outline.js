@@ -59,13 +59,13 @@ var Outline, _ref, module,
 
     Outline.prototype.updateThreshold = function(threshold){
 
-      var imgDataLeft = this.canvas.getImageData()
+      var imgDataLeft = this.canvasOrigin.getImageData()
 
       // compute threshold automatically, if not set          multiplycation cause input is 0-100
       threshold = typeof threshold !== 'undefined' ? threshold*2.55 : this.imageProcessor.computeThreshold(imgDataLeft)
 
-      this.canvas.putImageData(this.imageProcessor.processThreshold(threshold, imgDataLeft))
-      this.shownCanvas.copy(this.canvas)
+      this.canvasOrigin.putImageData(this.imageProcessor.processThreshold(threshold, imgDataLeft))
+      this.canvasShown.copy(this.canvasOrigin)
 
       return threshold
     }
@@ -100,24 +100,24 @@ var Outline, _ref, module,
       // Outline button
       $("#action-dilation").click(
         function(event, ui){
-          var newImg = this.imageProcessor.processDilation(this.canvas.getImageData(), this.canvas.getImageWidth())
-          this.canvas.putImageData(newImg)
+          var newImg = this.imageProcessor.processDilation(this.canvasOrigin.getImageData(), this.canvasOrigin.getImageWidth())
+          this.canvasOrigin.putImageData(newImg)
         }.bind(this)
       )   
 
       // Outline button
       $("#action-erosion").click(
         function(event, ui){
-          var newImg = this.imageProcessor.processErosion(this.canvas.getImageData(), this.canvas.getImageWidth())
-          this.canvas.putImageData(newImg)
+          var newImg = this.imageProcessor.processErosion(this.canvasOrigin.getImageData(), this.canvasOrigin.getImageWidth())
+          this.canvasOrigin.putImageData(newImg)
         }.bind(this)
       )   
 
       // Outline button
       $("#action-outline").click(
         function(event, ui){
-          var newImg = this.imageProcessor.processOutline(this.canvas.getImageData(), this.canvas.getImageData() ,this.canvas.getImageWidth())
-          this.canvas.putImageData(newImg)
+          var newImg = this.imageProcessor.processOutline(this.canvasOrigin.getImageData(), this.canvasOrigin.getImageData() ,this.canvasOrigin.getImageWidth())
+          this.canvasOrigin.putImageData(newImg)
         }.bind(this)
       )
 

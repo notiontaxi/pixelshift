@@ -17,7 +17,7 @@ define(['text!templates/menu-bar.html', 'text!templates/menu-bar-small-device.ht
 
 
   // tell wehre the menu should be rendered and where i can find the canvas
-  function MenuGui(menuContainerIdentifier, canvasIdentifier, canvasIdentifier2){
+  function MenuGui(menuContainerIdentifier, canvasOriginIdentifier, canvasStageIdentifier, canvasShownIdentifier){
 
     this.menuContainerIdentifier = menuContainerIdentifier
     $(menuContainerIdentifier).html($(menuTemplate))
@@ -26,10 +26,12 @@ define(['text!templates/menu-bar.html', 'text!templates/menu-bar-small-device.ht
 
     this.wasBigMenu = true
 
-    this.canvas = new Canvas(canvasIdentifier, true)
-    this.shownCanvas = new Canvas(canvasIdentifier2)
+    this.canvasOrigin = new Canvas(canvasOriginIdentifier, true)
+    this.canvasStage = new Canvas(canvasStageIdentifier)
+    this.canvasShown = new Canvas(canvasShownIdentifier)
 
-    this.canvas.addClone(this.shownCanvas)
+    this.canvasOrigin.addClone(this.canvasStage)
+    this.canvasStage.addClone(this.canvasShown)
 
     this.fileProcessor = new FileProcessor()
     this.imageProcessor = new ImageProcessor()
@@ -107,14 +109,14 @@ define(['text!templates/menu-bar.html', 'text!templates/menu-bar-small-device.ht
       function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        this.fileProcessor.saveCanvasToDisk(this.canvas.getHtmlElementCopy())
+        this.fileProcessor.saveCanvasToDisk(this.canvasOrigin.getHtmlElementCopy())
     
     }.bind(this))   
        
     document.getElementById('action-upload').addEventListener('change', 
       function(evt){
         var file = evt.target.files[0] // FileList object
-        this.fileProcessor.loadFileFromFilesystem(URL.createObjectURL(file), this.canvas.drawImage, this.canvas)
+        this.fileProcessor.loadFileFromFilesystem(URL.createObjectURL(file), this.canvasOrigin.drawImage, this.canvasOrigin)
       }.bind(this), false);
   }
 
@@ -124,24 +126,24 @@ define(['text!templates/menu-bar.html', 'text!templates/menu-bar-small-device.ht
       function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        var newImg = this.imageProcessor.processGrayscale(this.canvas.getImageData(), this.canvas.getImageWidth())
-        this.canvas.putImageData(newImg)
+        var newImg = this.imageProcessor.processGrayscale(this.canvasOrigin.getImageData(), this.canvasOrigin.getImageWidth())
+        this.canvasOrigin.putImageData(newImg)
     }.bind(this))    
 
     $(".action-bitmap").click(
       function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        var newImg = this.imageProcessor.processThreshold(this.imageProcessor.computeThreshold(this.canvas.getImageData()) ,this.canvas.getImageData())
-        this.canvas.putImageData(newImg)
+        var newImg = this.imageProcessor.processThreshold(this.imageProcessor.computeThreshold(this.canvasOrigin.getImageData()) ,this.canvasOrigin.getImageData())
+        this.canvasOrigin.putImageData(newImg)
     }.bind(this))  
 
     $(".action-invert").click(
       function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        var newImg = this.imageProcessor.processInvertColors(this.canvas.getImageData(), this.canvas.getImageWidth())
-        this.canvas.putImageData(newImg)
+        var newImg = this.imageProcessor.processInvertColors(this.canvasOrigin.getImageData(), this.canvasOrigin.getImageWidth())
+        this.canvasOrigin.putImageData(newImg)
     }.bind(this))          
 
   }  
@@ -152,14 +154,14 @@ define(['text!templates/menu-bar.html', 'text!templates/menu-bar-small-device.ht
       function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        this.canvas.undo()
+        this.canvasOrigin.undo()
     }.bind(this))    
 
     $(".action-redo").click(
       function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        this.canvas.redo()
+        this.canvasOrigin.redo()
     }.bind(this))          
 
   }    
@@ -170,24 +172,21 @@ define(['text!templates/menu-bar.html', 'text!templates/menu-bar-small-device.ht
       function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        this.shownCanvas.zoomIn()
-        this.updateDragBoundaries()
+        this.canvasOrigin.zoomIn()
     }.bind(this))    
 
     $(".action-zoom-out").click(
       function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        this.shownCanvas.zoomOut()
-        this.updateDragBoundaries()
+        this.canvasOrigin.zoomOut()
     }.bind(this))   
 
     $(".action-zoom-reset").click(
       function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        this.shownCanvas.zoomReset()
-        this.updateDragBoundaries()
+        this.canvasOrigin.zoomReset()
     }.bind(this))              
 
   }    
@@ -196,13 +195,13 @@ define(['text!templates/menu-bar.html', 'text!templates/menu-bar-small-device.ht
      Mousetrap.bind('command+z', function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        this.canvas.undo()
+        this.canvasOrigin.undo()
     }.bind(this))  
 
     Mousetrap.bind('command+y', function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        this.canvas.redo()
+        this.canvasOrigin.redo()
     }.bind(this))  
 
     Mousetrap.bind('command+o', function(event, ui){
@@ -214,78 +213,76 @@ define(['text!templates/menu-bar.html', 'text!templates/menu-bar-small-device.ht
     Mousetrap.bind('command+s', function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        this.fileProcessor.saveCanvasToDisk(this.canvas.getHtmlElementCopy())
+        this.fileProcessor.saveCanvasToDisk(this.canvasOrigin.getHtmlElementCopy())
     }.bind(this))
 
     Mousetrap.bind('+', function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        this.shownCanvas.zoomIn()
-        //this.updateDragBoundaries()
+        this.canvasShown.zoomIn()
     }.bind(this))
 
     Mousetrap.bind('-', function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        this.shownCanvas.zoomOut()
-        //this.updateDragBoundaries()
+        this.canvasShown.zoomOut()
     }.bind(this))
 
     Mousetrap.bind('command+0', function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        this.shownCanvas.zoomReset()
-        //this.updateDragBoundaries()
+        this.canvasShown.zoomReset()
     }.bind(this))    
 
     Mousetrap.bind('up', function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        this.shownCanvas.moveCanvas("up")
+        this.canvasShown.moveCanvas("up")
     }.bind(this))     
 
     Mousetrap.bind('down', function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        this.shownCanvas.moveCanvas("down")
+        this.canvasShown.moveCanvas("down")
     }.bind(this))  
 
     Mousetrap.bind('left', function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        this.shownCanvas.moveCanvas("left")
+        this.canvasShown.moveCanvas("left")
     }.bind(this))      
 
     Mousetrap.bind('right', function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        this.shownCanvas.moveCanvas("right")
+        this.canvasShown.moveCanvas("right")
     }.bind(this))  
   }
 
 
+  /*DEPRECATED*/
   MenuGui.prototype.makeItDraggable = function(){
     $( "#canvas-shown" ).draggable({ containment: this.getUpdatedDragBoundaries()})
   }
-
+  /*DEPRECATED*/
   MenuGui.prototype.updateDragBoundaries = function(){
     $( "#canvas-shown" ).draggable({ containment: this.getUpdatedDragBoundaries()})
   }
-
+  /*DEPRECATED*/
   MenuGui.prototype.getUpdatedDragBoundaries = function(){
 
     var boundaries = new Array()
 
-    if(this.shownCanvas.currentScale !== 1){
+    if(this.canvasShown.currentScale !== 1){
       
-      //console.log(this.shownCanvas.canvasHeight * this.shownCanvas.currentScale)
+      //console.log(this.canvasShown.canvasHeight * this.canvasShown.currentScale)
       boundaries.push(
-        - this.shownCanvas.canvasWidth * this.shownCanvas.currentScale
+        - this.canvasShown.canvasWidth * this.canvasShown.currentScale
         + $( "#canvas-shown" ).parent().width()
         + $( "#canvas-shown" ).parent().offset().left 
       )
       boundaries.push(
-        - this.shownCanvas.canvasHeight * this.shownCanvas.currentScale
+        - this.canvasShown.canvasHeight * this.canvasShown.currentScale
         + $( "#canvas-shown" ).parent().height() 
         + $( "#canvas-shown" ).parent().offset().top
       )

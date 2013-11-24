@@ -85,10 +85,10 @@ var Areas, _ref, module,
         function(event, ui){
           window.maxDepth = 0;
           var start = new Date().getTime();
-          var newImg = this.imageProcessor.processFloodFill(this.canvas.getImageData(), this.canvas.getImageWidth(), 'four')
+          var newImg = this.imageProcessor.processFloodFill(this.canvasOrigin.getImageData(), this.canvasOrigin.getImageWidth(), 'four')
           var end = new Date().getTime();
           var time = end - start;
-          this.canvas.putImageData(newImg)    
+          this.canvasOrigin.putImageData(newImg)    
           $( "#algo-times" ).html("CPU time: "+time+" ms | Max stack: "+window.maxDepth);
         }.bind(this)
       )
@@ -98,7 +98,7 @@ var Areas, _ref, module,
         function(event, ui){
           window.maxWidth = 0;
           var start = new Date().getTime();
-          var newImg = this.imageProcessor.processFloodFill(this.canvas.getImageData(), this.canvas.getImageWidth(), 'eight')
+          var newImg = this.imageProcessor.processFloodFill(this.canvasOrigin.getImageData(), this.canvasOrigin.getImageWidth(), 'eight')
           var end = new Date().getTime();
           var time = end - start;
      

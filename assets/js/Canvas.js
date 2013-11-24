@@ -74,13 +74,10 @@ define([], function() {
     */
     Canvas.prototype.scale = function(scaleAmount){
 
-      var scales = {
-          'transform':          "scale("  +scaleAmount+ "," +scaleAmount+ ")"
-        , '-ms-transform':      "scale("  +scaleAmount+ "," +scaleAmount+ ")"
-        , '-webkit-transform':  "scale("  +scaleAmount+ "," +scaleAmount+ ")"
-      }
+      this.computeVisibleArea()
 
-      this.getElement().css(scales)
+
+
 
       this.currentScale = scaleAmount
     }
@@ -104,7 +101,7 @@ define([], function() {
         this.positionX = 0
         this.positionY = 0
       }
-    }        
+    }
 
     Canvas.prototype.moveCanvas = function(direction){
 
@@ -148,6 +145,14 @@ define([], function() {
 
       this.visibleArea.x2 = this.visibleArea.x1 + halfW*2
       this.visibleArea.y2 = this.visibleArea.y1 + halfH*2
+    }
+
+    Canvas.prototype.getAreaPixels = function(){
+
+    }
+
+    Canvas.prototype.setAreaPixels = function(){
+
     }
 
     /**
@@ -415,7 +420,7 @@ define([], function() {
     }
 
     /** 
-    * Updates this canvas ba the properties of the passed canvas
+    * Updates this canvas by the centent of the passed canvas
     * Regarding width, height, offsets (x,y) and pixelinformations
     *
     * @param {Canvas} otherCanvas  the canvas this should be updated to
@@ -449,6 +454,7 @@ define([], function() {
 
         this.getContext().restore()
       }
+      this.copyToClones()
     }
 
     /**
@@ -513,7 +519,7 @@ define([], function() {
       this.getContext().putImageData(imageData,0,0)
     }    
 
-    Canvas.prototype.updateSize = function(width, height) {    
+    Canvas.prototype.updateSize = function(width, height) {  
       this.ctx.canvas.width = this.canvasWidth = width
       this.ctx.canvas.height = this.canvasHeight = height
     }
