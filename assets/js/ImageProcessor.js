@@ -137,6 +137,9 @@ define(['js/Histogram', 'js/helper/Colors', 'js/Path'], function(Histogram, Colo
     var outside = true
     var foundInner = false
 
+    var inner = 0
+    var outer = 0
+
     var whiteToBlack = false
     var blackToGreen = false
     var greenToBlack = false
@@ -151,15 +154,29 @@ define(['js/Histogram', 'js/helper/Colors', 'js/Path'], function(Histogram, Colo
 
       newLine = (i%(imageWidth*4) == 0)
       if(newLine){
-        last = 2
-        outside = true
-        foundInner = false
-        console.log(i)
-        whiteToBlack = false
-        blackToGreen = false
-        greenToBlack = false
-        whiteToGreen = false   
-        blackToWhite = false     
+        // first one is black of known path
+        if(imageData.data[i] == 0 && imageData.data[i-imageWidth*4] == 253){         
+          outside = false
+          foundInner = false
+          console.log('first one is black at '+i%imageWidth)
+          whiteToBlack = false
+          blackToGreen = false
+          greenToBlack = true
+          whiteToGreen = true   
+          blackToWhite = false 
+          last = 3
+        }else{
+          outside = true
+          foundInner = false
+          console.log(i)
+          whiteToBlack = false
+          blackToGreen = false
+          greenToBlack = false
+          whiteToGreen = false   
+          blackToWhite = false
+          last = 2 
+        }
+    
       }
 
       if(imageData.data[i] == 0 && last == 2){
@@ -189,11 +206,12 @@ define(['js/Histogram', 'js/helper/Colors', 'js/Path'], function(Histogram, Colo
 
 
       if(imageData.data[i] == 0 && outside){
-
+        console.log('start outer')
         var path = new Path(true, imageData, imageWidth)
         path.findPath(i)
         outside = false
         greenToBlack = true
+        outer++
 
         var edges = path.getEdges()
         for(var e = 0; e < edges.length; e++){
@@ -208,6 +226,7 @@ define(['js/Histogram', 'js/helper/Colors', 'js/Path'], function(Histogram, Colo
         path.findPath(i)
         console.log('finished inner')
         blackToGreen = true
+        inner++
         var edges = path.getEdges()
         for(var e = 0; e < edges.length; e++){
           imageData.data[edges[e].pixelFilled]    = 252
@@ -249,7 +268,8 @@ define(['js/Histogram', 'js/helper/Colors', 'js/Path'], function(Histogram, Colo
     imageData.data[24*45 + 19*4+1] = 0
     imageData.data[24*45 + 19*4+2] = 0    
     */
-    console.log(paths.length)
+    console.log()
+    $("#path-count").html("Found "+inner+" inner paths and "+outer+" outer paths.")
 
     return imageData
   }
