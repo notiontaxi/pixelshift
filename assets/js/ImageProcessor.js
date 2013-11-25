@@ -148,12 +148,12 @@ define(['js/Histogram', 'js/helper/Colors', 'js/Path'], function(Histogram, Colo
 
     for (var i = 0; i < imageData.data.length; i+=4) {
 
-      newLine = (i%imageWidth*4 == 4)
+      newLine = (i%(imageWidth*4) == 0)
       if(newLine){
         last = 2
         outside = true
         foundInner = false
-
+        console.log(i)
         whiteToBlack = false
         blackToGreen = false
         greenToBlack = false
@@ -190,7 +190,6 @@ define(['js/Histogram', 'js/helper/Colors', 'js/Path'], function(Histogram, Colo
         outside = false
         greenToBlack = true
 
-
         var edges = path.getEdges()
         for(var e = 0; e < edges.length; e++){
           //imageData.data[edges[e].pixelFilled+1] = 255
@@ -203,7 +202,7 @@ define(['js/Histogram', 'js/helper/Colors', 'js/Path'], function(Histogram, Colo
         console.log('start inner')
         path.findPath(i)
         console.log('finished inner')
-
+        blackToGreen = true
         var edges = path.getEdges()
         for(var e = 0; e < edges.length; e++){
           imageData.data[edges[e].pixelFilled+1]    = 253
@@ -222,9 +221,27 @@ define(['js/Histogram', 'js/helper/Colors', 'js/Path'], function(Histogram, Colo
         last = 3
       }
 
+      if(i == (24*45 + 19*4)){
+        console.log('last '+last)
+        console.log('outside '+outside)
+        console.log('foundInner '+foundInner)
+        console.log('whiteToBlack '+whiteToBlack)
+        console.log('blackToGreen '+blackToGreen)
+        console.log('greenToBlack '+greenToBlack)
+        console.log('whiteToGreen '+whiteToGreen)       
+      }
 
     }  
 
+    /*
+    imageData.data[24*45 + 19*4] = 255
+    imageData.data[24*45 + 19*4+1] = 0
+    imageData.data[24*45 + 19*4+2] = 0
+
+    imageData.data[20] = 255
+    imageData.data[24*45 + 19*4+1] = 0
+    imageData.data[24*45 + 19*4+2] = 0    
+    */
     console.log(paths.length)
 
     return imageData
