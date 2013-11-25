@@ -7,7 +7,7 @@ https://github.com/notiontaxi
 
 "use strict"
 
-define(['js/Histogram', 'js/helper/Colors'], function(Histogram, ColorHelper) {
+define(['js/Histogram', 'js/helper/Colors', 'js/Path'], function(Histogram, ColorHelper, Path) {
 
   var ImageProcessor, module;
   module = function() {}
@@ -128,6 +128,106 @@ define(['js/Histogram', 'js/helper/Colors'], function(Histogram, ColorHelper) {
     }    
 
     return originalImageData
+  }
+
+
+  ImageProcessor.prototype.processPathFinding = function(imageData, imageWidth){
+
+    var paths = Array()
+    var outside = true
+    var foundInner = false
+
+    var whiteToBlack = false
+    var blackToGreen = false
+    var greenToBlack = false
+    var whiteToGreen = false
+
+    var newPath  = false
+    var newLine  = true
+    var last = 1 // 1 = black, 2 = white, 3 = green 
+
+    for (var i = 0; i < imageData.data.length; i+=4) {
+
+      newLine = (i%imageWidth*4 == 4)
+      if(newLine){
+        last = 2
+        outside = true
+        foundInner = false
+
+        whiteToBlack = false
+        blackToGreen = false
+        greenToBlack = false
+        whiteToGreen = false        
+      }
+
+      if(imageData.data[i] == 0 && last == 2){
+        whiteToBlack = true
+      }
+
+
+      if(imageData.data[i] == 253 && last == 2){
+        whiteToGreen = true
+      }   
+
+
+      if(imageData.data[i] == 253 && last == 1){
+        blackToGreen = true
+      }
+      if(imageData.data[i] == 0 && last == 3){
+        greenToBlack = true
+        if(whiteToGreen)
+          outside = false
+      } 
+      if(imageData.data[i] == 255 && last == 3 && blackToGreen){
+        outside = true
+      }             
+
+
+      if(imageData.data[i] == 0 && outside){
+
+        var path = new Path(true, imageData, imageWidth)
+        path.findPath(i)
+        outside = false
+        greenToBlack = true
+
+
+        var edges = path.getEdges()
+        for(var e = 0; e < edges.length; e++){
+          //imageData.data[edges[e].pixelFilled+1] = 255
+          imageData.data[edges[e].pixelEmpty]    = 253
+        }
+        newPath = true
+        paths.push(path)
+      }else if(imageData.data[i] == 255 && !outside && !foundInner){
+        var path = new Path(false, imageData, imageWidth)
+        console.log('start inner')
+        path.findPath(i)
+        console.log('finished inner')
+
+        var edges = path.getEdges()
+        for(var e = 0; e < edges.length; e++){
+          imageData.data[edges[e].pixelFilled+1]    = 253
+        }
+
+        paths.push(path) 
+        foundInner = true  
+      }
+
+
+      if(imageData.data[i] == 0){
+        last = 1
+      }else if(imageData.data[i] == 255){
+        last = 2
+      }else if(imageData.data[i] == 253){
+        last = 3
+      }
+
+
+    }  
+
+    console.log(paths.length)
+
+    return imageData
   }
 
 

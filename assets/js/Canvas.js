@@ -186,8 +186,8 @@ define([], function() {
       this.visibleArea.x2 = Math.floor(this.visibleArea.x1 + halfW*2)
       this.visibleArea.y2 = Math.floor(this.visibleArea.y1 + halfH*2)
 
-      this.offsetOnEndOfRow = (this.canvasWidth - ((this.visibleArea.x2 - this.visibleArea.x1) * this.currentScale)) % this.currentScale
-      console.log(this.offsetOnEndOfRow)
+      //this.offsetOnEndOfRow = (this.canvasWidth - ((this.visibleArea.x2 - this.visibleArea.x1) * this.currentScale)) % this.currentScale
+      //console.log(this.offsetOnEndOfRow)
     }
 
     /**
@@ -200,8 +200,93 @@ define([], function() {
       this.computeVisibleArea()
       var area = this.parent.getAreaPixels(this.visibleArea)
       this.setAreaPixels(area)      
+      this.drawGrid()
+      this.drawColoredGrid()
 
       this.copyToClones(true)
+    }
+
+
+    Canvas.prototype.drawColoredGrid = function(){
+
+      var data = this.getFullImageData()
+
+      for(var i = 0; i < data.data.length; i+=4){
+          // im grid
+          if(data.data[i] == 200){
+            if(data.data[i+4] == 253 ||
+               data.data[i-4] == 253 ||
+               data.data[i-this.canvasWidth*4] == 253 ||
+               data.data[i+this.canvasWidth*4] == 253){
+
+                data.data[i] = 0
+                data.data[i+1] = 201
+                data.data[i+2] = 255  
+
+            }if(data.data[i+4+1] == 253 ||
+               data.data[i-4+1] == 253 ||
+               data.data[i-this.canvasWidth*4+1] == 253 ||
+               data.data[i+this.canvasWidth*4+1] == 253){
+
+                data.data[i] = 255
+                data.data[i+1] = 50
+                data.data[i+2] = 0  
+            }
+          }
+      }
+
+      for(var i = 0; i < data.data.length; i+=4){
+          // im grid
+          if(data.data[i+1] == 50 || data.data[i+1] == 201){
+            if(data.data[i+4] != 0 &&
+               data.data[i-4] != 0 &&
+               data.data[i-this.canvasWidth*4] != 0 &&
+               data.data[i+this.canvasWidth*4] != 0){
+
+                data.data[i] = 200
+                data.data[i+1] = 200
+                data.data[i+2] = 200  
+
+            }if(data.data[i+4+1] != 0 &&
+               data.data[i-4+1] != 0 &&
+               data.data[i-this.canvasWidth*4+1] != 0 &&
+               data.data[i+this.canvasWidth*4+1] != 0){
+
+                data.data[i] = 200
+                data.data[i+1] = 200
+                data.data[i+2] = 200  
+            }
+          }
+          else if(data.data[i] == 253 || data.data[i+1] == 253) {
+
+                data.data[i] = 180
+                data.data[i+1] = 180
+                data.data[i+2] = 180  
+          }
+      }
+
+      this._putFullImageData(data)
+    }
+
+    Canvas.prototype.drawGrid = function(){
+      var data = this.getFullImageData()
+
+      for(var i = 4*this.currentScale; i < data.data.length; i+= 4*this.currentScale){
+            data.data[i] = 200
+            data.data[i+1] = 200
+            data.data[i+2] = 200           
+      }
+
+      for(var i = 0; i < data.data.length; i += 4*this.currentScale*this.canvasWidth){
+        for(var j = 0; j < this.canvasWidth*4; j+=4 ){
+            data.data[i+j] = 200
+            data.data[i+j+1] = 200
+            data.data[i+j+2] = 200           
+        }
+      }
+
+
+      this._putFullImageData(data)
     }
 
     Canvas.prototype.getAreaPixels = function(visibleArea){
@@ -209,7 +294,7 @@ define([], function() {
       var allPixels = this.getFullImageData()
       var pixels = Array()
 
-      // i.e (800*160*4 + 200*4) = 512800 = 200th pixel in row 160
+      // i.e (800*160*4 + 200*4) = 520000 = 200th pixel in row 160
       var start = this.canvasWidth * 4 * visibleArea.y1  + visibleArea.x1 * 4
       // i.e. (800*4*480 + 600*4) = 1538400 = 600th pixek in row 480
       var end   = this.canvasWidth * 4 * (visibleArea.y2-1) + visibleArea.x2 * 4
@@ -255,7 +340,7 @@ define([], function() {
         }
 
         // end of row
-        if(i % (area.width * 4 + 4) == 0){
+        if(i % (area.width * 4) == 0 && i != 0){
           if(r < this.currentScale){
             i -= area.width * 4
             r++
@@ -264,7 +349,7 @@ define([], function() {
             r = 1
           }
 
-          i += this.offsetOnEndOfRow * 4
+          //i += this.offsetOnEndOfRow * 4
         }
 
       }
