@@ -141,6 +141,7 @@ define(['js/Histogram', 'js/helper/Colors', 'js/Path'], function(Histogram, Colo
     var blackToGreen = false
     var greenToBlack = false
     var whiteToGreen = false
+    var blackToWhite = false  
 
     var newPath  = false
     var newLine  = true
@@ -157,7 +158,8 @@ define(['js/Histogram', 'js/helper/Colors', 'js/Path'], function(Histogram, Colo
         whiteToBlack = false
         blackToGreen = false
         greenToBlack = false
-        whiteToGreen = false        
+        whiteToGreen = false   
+        blackToWhite = false     
       }
 
       if(imageData.data[i] == 0 && last == 2){
@@ -165,12 +167,15 @@ define(['js/Histogram', 'js/helper/Colors', 'js/Path'], function(Histogram, Colo
       }
 
 
-      if(imageData.data[i] == 253 && last == 2){
+      if((imageData.data[i] == 252 || imageData.data[i] == 253) && last == 2){
         whiteToGreen = true
       }   
 
+      if(imageData.data[i] == 255 && last == 1){
+        blackToWhite = true
+      }   
 
-      if(imageData.data[i] == 253 && last == 1){
+      if((imageData.data[i] == 252 || imageData.data[i] == 253) && last == 1){
         blackToGreen = true
       }
       if(imageData.data[i] == 0 && last == 3){
@@ -197,7 +202,7 @@ define(['js/Histogram', 'js/helper/Colors', 'js/Path'], function(Histogram, Colo
         }
         newPath = true
         paths.push(path)
-      }else if(imageData.data[i] == 255 && !outside && !foundInner){
+      }else if(imageData.data[i] == 255 && !outside && !foundInner && blackToWhite){
         var path = new Path(false, imageData, imageWidth)
         console.log('start inner')
         path.findPath(i)
@@ -205,7 +210,7 @@ define(['js/Histogram', 'js/helper/Colors', 'js/Path'], function(Histogram, Colo
         blackToGreen = true
         var edges = path.getEdges()
         for(var e = 0; e < edges.length; e++){
-          imageData.data[edges[e].pixelFilled+1]    = 253
+          imageData.data[edges[e].pixelFilled]    = 252
         }
 
         paths.push(path) 
@@ -217,10 +222,11 @@ define(['js/Histogram', 'js/helper/Colors', 'js/Path'], function(Histogram, Colo
         last = 1
       }else if(imageData.data[i] == 255){
         last = 2
-      }else if(imageData.data[i] == 253){
+      }else if(imageData.data[i] == 252 || imageData.data[i] == 253){
         last = 3
       }
 
+      /*
       if(i == (24*45 + 19*4)){
         console.log('last '+last)
         console.log('outside '+outside)
@@ -230,6 +236,7 @@ define(['js/Histogram', 'js/helper/Colors', 'js/Path'], function(Histogram, Colo
         console.log('greenToBlack '+greenToBlack)
         console.log('whiteToGreen '+whiteToGreen)       
       }
+      */
 
     }  
 

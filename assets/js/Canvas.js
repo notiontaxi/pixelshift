@@ -223,10 +223,10 @@ define([], function() {
                 data.data[i+1] = 201
                 data.data[i+2] = 255  
 
-            }if(data.data[i+4+1] == 253 ||
-               data.data[i-4+1] == 253 ||
-               data.data[i-this.canvasWidth*4+1] == 253 ||
-               data.data[i+this.canvasWidth*4+1] == 253){
+            }if(data.data[i+4] == 252 ||
+               data.data[i-4] == 252 ||
+               data.data[i-this.canvasWidth*4] == 252 ||
+               data.data[i+this.canvasWidth*4] == 252){
 
                 data.data[i] = 255
                 data.data[i+1] = 50
@@ -257,7 +257,7 @@ define([], function() {
                 data.data[i+2] = 200  
             }
           }
-          else if(data.data[i] == 253 || data.data[i+1] == 253) {
+          else if(data.data[i] == 253 ||  data.data[i] == 252) {
 
                 data.data[i] = 180
                 data.data[i+1] = 180
