@@ -48,7 +48,9 @@ var Areas, _ref, module,
     Areas.prototype.addMenuBarAction = function(){
       $("#action-menu-floodfill").click(
       function(event, ui){
-
+        event.stopPropagation()
+        event.preventDefault()
+        $(".dropdown").removeClass("open")
         $(".floodfill-controls").slideToggle()
       })
 

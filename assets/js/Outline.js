@@ -47,6 +47,9 @@ var Outline, _ref, module,
     Outline.prototype.addMenuBarAction = function(){
       $("#action-menu-outline").click(
       function(event, ui){
+        event.stopPropagation()
+        event.preventDefault()
+        $(".dropdown").removeClass("open")
         $(".outline-controls").slideToggle()
       })
 

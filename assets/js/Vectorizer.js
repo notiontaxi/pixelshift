@@ -48,6 +48,9 @@ var Vectorizer, _ref, module,
     Vectorizer.prototype.addMenuBarAction = function(){
       $("#action-menu-vectorizer").click(
       function(event, ui){
+        event.stopPropagation()
+        event.preventDefault()
+        $(".dropdown").removeClass("open")
         $(".vectorizer-controls").slideToggle()
       })
 
