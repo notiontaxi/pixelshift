@@ -71,7 +71,6 @@ var Vectorizer, _ref, module,
         function(event, ui){
           var newImg = this.imageProcessor.processPathFinding(this.canvasOrigin.getImageData(), this.canvasOrigin.getImageWidth())
           this.canvasOrigin.putImageData(newImg)
-          this.canvasStage.zoomIn()
         }.bind(this)
       )
 

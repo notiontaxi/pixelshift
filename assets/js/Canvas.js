@@ -76,28 +76,31 @@ define([], function() {
 
     Canvas.prototype.zoomIn = function(){
       if(this.currentScale < 50){
+        
         switch(this.currentScale){
-          case 1:
-            this.currentScale = 2
-            break
-          case 2:
-            this.currentScale = 4
-            break
-          case 4:
-            this.currentScale = 5
-            break
-          case 5:
-            this.currentScale = 8
-            break
           case 8:
             this.currentScale = 10
-            break                 
+            break
           case 10:
             this.currentScale = 16
-            break                 
+            break
           case 16:
             this.currentScale = 20
-            break              
+            break
+          case 20:
+            this.currentScale = 25
+            break                 
+          case 25:
+            this.currentScale = 32
+            break                 
+          case 32:
+            this.currentScale = 40
+            break
+          case 40:
+            this.currentScale = 50
+            break   
+          default:
+            this.currentScale++           
         }
         this.draw()
       }
@@ -106,30 +109,33 @@ define([], function() {
     Canvas.prototype.zoomOut = function(){
       
       if(this.currentScale > 1.00){
+        
         switch(this.currentScale){
+          case 50:
+            this.currentScale = 40
+            break
+          case 40:
+            this.currentScale = 32
+            break
+          case 32:
+            this.currentScale = 25
+            break
+          case 25:
+            this.currentScale = 20
+            break
           case 20:
             this.currentScale = 16
-            break
+            break                 
           case 16:
             this.currentScale = 10
-            break
+            break                 
           case 10:
             this.currentScale = 8
             break
-          case 8:
-            this.currentScale = 5
-            break
-          case 5:
-            this.currentScale = 4
-            break                 
-          case 4:
-            this.currentScale = 2
-            break                 
-          case 2:
-            this.currentScale = 1
-            break              
+          default: 
+            this.currentScale--              
         }
-        console.log(this.currentScale)
+        
         if(this.currentScale < 2)
           this.zoomReset()
         else
@@ -186,7 +192,10 @@ define([], function() {
       this.visibleArea.x2 = Math.floor(this.visibleArea.x1 + halfW*2)
       this.visibleArea.y2 = Math.floor(this.visibleArea.y1 + halfH*2)
 
-      //this.offsetOnEndOfRow = (this.canvasWidth - ((this.visibleArea.x2 - this.visibleArea.x1) * this.currentScale)) % this.currentScale
+      this.offsetOnEndOfRow = (this.visibleArea.x2 - this.visibleArea.x1) % this.currentScale
+      console.log("offset "+this.offsetOnEndOfRow)
+      console.log("scale: "+this.currentScale)
+      //this.visibleArea.x2 -= this.offsetOnEndOfRow
       //console.log(this.offsetOnEndOfRow)
     }
 
@@ -271,17 +280,23 @@ define([], function() {
     Canvas.prototype.drawGrid = function(){
       var data = this.getFullImageData()
 
+      // vertical
       for(var i = 4*this.currentScale; i < data.data.length; i+= 4*this.currentScale){
-            data.data[i] = 200
-            data.data[i+1] = 200
-            data.data[i+2] = 200           
+        data.data[i] = 200
+        data.data[i+1] = 200
+        data.data[i+2] = 200
+
+        if(i%(this.canvasWidth*4) == 0)
+          if(this.offsetOnEndOfRow != 0 && this.currentScale < 8)
+            i += 8
       }
 
+      // horizontal
       for(var i = 0; i < data.data.length; i += 4*this.currentScale*this.canvasWidth){
         for(var j = 0; j < this.canvasWidth*4; j+=4 ){
-            data.data[i+j] = 200
-            data.data[i+j+1] = 200
-            data.data[i+j+2] = 200           
+          data.data[i+j] = 200
+          data.data[i+j+1] = 200
+          data.data[i+j+2] = 200           
         }
       }
 
@@ -326,12 +341,12 @@ define([], function() {
 
       var pixelJumpWidth = 4*this.currentScale
 
-      var i, j
-      var r = 1
+      var i, columnRepeat
+      var rowRepeat = 1
       var k = 0
 
       for(i = 0; i < area.pixels.length; i+=4){
-        for(j = 0; j < this.currentScale; j++){
+        for(columnRepeat = 0; columnRepeat < this.currentScale; columnRepeat++){
           allPixels.data[k ] = area.pixels[i]
           allPixels.data[k +1] = area.pixels[i+1]
           allPixels.data[k +2] = area.pixels[i+2]
@@ -339,17 +354,19 @@ define([], function() {
           k+=4
         }
 
-        // end of row
-        if(i % (area.width * 4) == 0 && i != 0){
-          if(r < this.currentScale){
-            i -= area.width * 4
-            r++
+        // end of row: repeat row "scale" times
+        if(i % (area.width * 4) == 0 && i > this.currentScale){
+          if(rowRepeat < this.currentScale){
+            //jump back one row
+            i -= area.width * 4 
+            rowRepeat++
           }
           else{
-            r = 1
+            rowRepeat = 1
           }
-
-          //i += this.offsetOnEndOfRow * 4
+          // jump the offset pixels (caused by zoom) each line
+          if(this.offsetOnEndOfRow != 0 && this.currentScale < 8)
+            k += 8
         }
 
       }
