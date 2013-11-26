@@ -156,25 +156,36 @@ define([], function() {
       if(this.currentScale !== 1){
         var canvas = this.getElement()
         var pixelPerMove = 10*this.currentScale
-
+        console.log(this.canvasWidth/2*(this.currentScale-1))
         switch(direction){
           case "up":
+          if(this.positionY < (this.canvasHeight/2*(this.currentScale-1))){
             this.positionY+=pixelPerMove
             this.getElement().css({'top': this.positionY+"px"})
+          }
             break
           case "down":
-            this.positionY-=pixelPerMove
-            this.getElement().css({'top': this.positionY+"px"})
+            if(this.positionY > -(this.canvasHeight/2*(this.currentScale-1))){
+              this.positionY-=pixelPerMove
+              this.getElement().css({'top': this.positionY+"px"})
+            }
             break
           case "left":
+          if(this.positionX < (this.canvasWidth/2*(this.currentScale-1))){
             this.positionX+=pixelPerMove
             this.getElement().css({'left': this.positionX+"px"})
+          }
             break
           case "right":
+          if(this.positionX > -(this.canvasWidth/2*(this.currentScale-1))){
             this.positionX-=pixelPerMove
             this.getElement().css({'left': this.positionX+"px"})
+          }
             break
         }
+
+        console.log(this.positionX)
+        console.log(this.positionY)  
       
         this.draw()
       }
@@ -193,10 +204,6 @@ define([], function() {
       this.visibleArea.y2 = Math.floor(this.visibleArea.y1 + halfH*2)
 
       this.offsetOnEndOfRow = (this.visibleArea.x2 - this.visibleArea.x1) % this.currentScale
-      console.log("offset "+this.offsetOnEndOfRow)
-      console.log("scale: "+this.currentScale)
-      //this.visibleArea.x2 -= this.offsetOnEndOfRow
-      //console.log(this.offsetOnEndOfRow)
     }
 
     /**
@@ -286,6 +293,7 @@ define([], function() {
         data.data[i+1] = 200
         data.data[i+2] = 200
 
+        // jump on end of line (avoid zoom bugs)
         if(i%(this.canvasWidth*4) == 0)
           if(this.offsetOnEndOfRow != 0 && this.currentScale < 8)
             i += 8
