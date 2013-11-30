@@ -7,7 +7,7 @@ https://github.com/notiontaxi
 
 "use strict"
 
-define(['text!templates/image-processing.html','js/Outline', 'js/Areas','js/Vectorizer','js/CanvasGui'], function(contentTemplate, Outline, Areas, Vectorizer, CanvasGui) {
+define(['text!templates/image-processing.html','js/Outline', 'js/Areas','js/VectorizerView','js/CanvasGui'], function(contentTemplate, Outline, Areas, Vectorizer, CanvasGui) {
 
 var ImageProcessing, _ref, module,
 

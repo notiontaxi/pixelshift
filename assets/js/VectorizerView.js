@@ -9,17 +9,17 @@ https://github.com/notiontaxi
 
 define(['text!templates/task-vectorizer.html', 'js/ImageProcessor', 'js/CanvasGui'], function(contentTemplate, ImageProcessor, CanvasGui) {
 
-var Vectorizer, _ref, module,
+var VectorizerView, _ref, module,
 
 
   module = function() {}
-  Vectorizer = (function(_super){
-    __extends(Vectorizer, CanvasGui);
+  VectorizerView = (function(_super){
+    __extends(VectorizerView, CanvasGui);
 // --------------------------------------
 
 
 
-    function Vectorizer(containerIdentifier){    
+    function VectorizerView(containerIdentifier){    
 
       // render templates
       $(containerIdentifier).append($(contentTemplate))
@@ -29,7 +29,7 @@ var Vectorizer, _ref, module,
 
     }
 
-    Vectorizer.prototype.appendToMenuBar = function(){
+    VectorizerView.prototype.appendToMenuBar = function(){
       var li = $('<li/>')
 
       var a = $('<a/>', 
@@ -45,7 +45,7 @@ var Vectorizer, _ref, module,
       this.addMenuBarAction()
     }
 
-    Vectorizer.prototype.addMenuBarAction = function(){
+    VectorizerView.prototype.addMenuBarAction = function(){
       $("#action-menu-vectorizer").click(
       function(event, ui){
         event.stopPropagation()
@@ -64,13 +64,14 @@ var Vectorizer, _ref, module,
     }
 
 
-    Vectorizer.prototype.initializeTools = function(){
+    VectorizerView.prototype.initializeTools = function(){
 
       // Automatic threshold button
       $("#action-show-paths").click(
         function(event, ui){
-          var newImg = this.imageProcessor.processPathFinding(this.canvasOrigin.getImageData(), this.canvasOrigin.getImageWidth())
-          this.canvasOrigin.putImageData(newImg)
+          var result = this.imageProcessor.processPathFinding(this.canvasOrigin.getImageData(), this.canvasOrigin.getImageWidth())
+          $("#path-count").html(result.message)
+          this.canvasOrigin.putImageData(result.imageData)
         }.bind(this)
       )
 
@@ -78,7 +79,7 @@ var Vectorizer, _ref, module,
 
 
 // --------------------------------------
-    return Vectorizer
+    return VectorizerView
   })()
-  return module.exports = Vectorizer
+  return module.exports = VectorizerView
 })

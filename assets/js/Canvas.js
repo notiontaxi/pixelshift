@@ -66,6 +66,10 @@ define([], function() {
       this.keepChangesForUndo = keepChangesForUndo === true ? true : false
       this.storeImageInfo()
 
+      this.alphaGrid = true
+      this.coloredGrid = false
+      this.gridZoomLevel = 3
+
       this.parent = null
     }
 
@@ -167,71 +171,77 @@ define([], function() {
       
       this.computeVisibleArea()
       var area = this.parent.getAreaPixels(this.visibleArea)
-      this.setAreaPixels(area) 
-      if(this.currentScale > 3)     
-        this.drawGrid()
-      //this.drawColoredGrid()
+      this.setAreaPixels(area)
+
+      if(this.currentScale >= this.gridZoomLevel  && this.drawGrid){
+        if(this.coloredGrid)
+          this.drawColoredGrid()
+        else if(this.alphaGrid)
+          this.drawGrid()
+      }     
 
       this.copyToClones(true)
     }
 
 
     Canvas.prototype.drawColoredGrid = function(){
-
       var data = this.getFullImageData()
 
-      for(var i = 0; i < data.data.length; i+=4){
-          // im grid
-          if(data.data[i] == 200){
-            if(data.data[i+4] == 253 ||
-               data.data[i-4] == 253 ||
-               data.data[i-this.canvasWidth*4] == 253 ||
-               data.data[i+this.canvasWidth*4] == 253){
+      // number of horizontal lines in y direction 
+      var xLines = Math.floor(this.canvasWidth  / this.currentScale)
+      // number of vertical lines in x direction
+      var yLines = Math.floor(this.canvasHeight / this.currentScale)
+      var pos = 0
 
-                data.data[i] = 0
-                data.data[i+1] = 201
-                data.data[i+2] = 255  
+      var jumpY = this.canvasWidth*4*this.currentScale
+      var jumpX = this.currentScale*4
 
-            }if(data.data[i+4] == 252 ||
-               data.data[i-4] == 252 ||
-               data.data[i-this.canvasWidth*4] == 252 ||
-               data.data[i+this.canvasWidth*4] == 252){
-
-                data.data[i] = 255
-                data.data[i+1] = 50
-                data.data[i+2] = 0  
-            }
+      // horizontal
+      for(var xL = 0; xL <= yLines; xL++){
+        for(var w = 0; w < this.canvasWidth*4; w+=4){
+          // lines * jump length per line + curren pixel position 
+          pos = xL*jumpY + w
+         
+          if((data.data[pos] == 252 && data.data[pos-this.canvasWidth*4] ==   0) ||
+             (data.data[pos] ==   0 && data.data[pos-this.canvasWidth*4] == 252)){
+            data.data[pos] = 255
+            data.data[pos+1] = 0
+            data.data[pos+2] = 0
+            data.data[pos+3] = 255
+          }else if((data.data[pos] == 253 && data.data[pos-this.canvasWidth*4] ==   0) ||
+                   (data.data[pos] ==   0 && data.data[pos-this.canvasWidth*4] == 253)){
+            data.data[pos] = 0
+            data.data[pos+1] = 255
+            data.data[pos+2] = 0
+            data.data[pos+3] = 255
+          }else{
+            data.data[pos+3] -= 100
           }
+          
+        }
       }
-
-      for(var i = 0; i < data.data.length; i+=4){
-          // im grid
-          if(data.data[i+1] == 50 || data.data[i+1] == 201){
-            if(data.data[i+4] != 0 &&
-               data.data[i-4] != 0 &&
-               data.data[i-this.canvasWidth*4] != 0 &&
-               data.data[i+this.canvasWidth*4] != 0){
-
-                data.data[i] = 200
-                data.data[i+1] = 200
-                data.data[i+2] = 200  
-
-            }if(data.data[i+4+1] != 0 &&
-               data.data[i-4+1] != 0 &&
-               data.data[i-this.canvasWidth*4+1] != 0 &&
-               data.data[i+this.canvasWidth*4+1] != 0){
-
-                data.data[i] = 200
-                data.data[i+1] = 200
-                data.data[i+2] = 200  
-            }
-          }
-          else if(data.data[i] == 253 ||  data.data[i] == 252) {
-
-                data.data[i] = 180
-                data.data[i+1] = 180
-                data.data[i+2] = 180  
-          }
+      
+      // vertical
+      for(var h = 0; h < this.canvasHeight*4; h++){
+        for(var yL = 0; yL <= xLines; yL++){
+          // current height * width + current vertical line number * jump length depending on scale
+          pos = h*this.canvasWidth*4 + yL*jumpX
+          if((data.data[pos] == 252 && data.data[pos-4] ==   0) ||
+             (data.data[pos] ==   0 && data.data[pos-4] == 252)){
+            data.data[pos] = 255
+            data.data[pos+1] = 0
+            data.data[pos+2] = 0
+            data.data[pos+3] = 255
+          }else if((data.data[pos] == 253 && data.data[pos-4] ==   0) ||
+                   (data.data[pos] ==   0 && data.data[pos-4] == 253)){
+            data.data[pos] = 0
+            data.data[pos+1] = 255
+            data.data[pos+2] = 0
+            data.data[pos+3] = 255
+          }else{
+            data.data[pos+3] -= 100
+          }       
+        }
       }
 
       this._putFullImageData(data)
@@ -268,9 +278,6 @@ define([], function() {
           data.data[pos+3] -= 100         
         }
       }
-      
-      console.log("xLines: "+xLines)
-      console.log("yLines: "+yLines)
 
       this._putFullImageData(data)
     }

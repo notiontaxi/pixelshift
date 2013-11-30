@@ -7,7 +7,7 @@ https://github.com/notiontaxi
 
 "use strict"
 
-define(['js/Edge'], function(Edge) {
+define(['js/vectorizer/Edge'], function(Edge) {
 
 var Path, _ref, module,
 

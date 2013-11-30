@@ -7,7 +7,7 @@ https://github.com/notiontaxi
 
 "use strict"
 
-define(['js/Histogram', 'js/helper/Colors', 'js/Path'], function(Histogram, ColorHelper, Path) {
+define(['js/Histogram', 'js/helper/Colors', 'js/vectorizer/Vectorizer'], function(Histogram, ColorHelper, Vectorizer) {
 
   var ImageProcessor, module;
   module = function() {}
@@ -133,145 +133,10 @@ define(['js/Histogram', 'js/helper/Colors', 'js/Path'], function(Histogram, Colo
 
   ImageProcessor.prototype.processPathFinding = function(imageData, imageWidth){
 
-    var paths = Array()
-    var outside = true
-    var foundInner = false
+    var vec = new Vectorizer()
+    var pathFindingResult = vec.processPathFinding(imageData, imageWidth)
 
-    var inner = 0
-    var outer = 0
-
-    var whiteToBlack = false
-    var blackToGreen = false
-    var greenToBlack = false
-    var whiteToGreen = false
-    var blackToWhite = false  
-
-    var newPath  = false
-    var newLine  = true
-    var last = 1 // 1 = black, 2 = white, 3 = green 
-
-    for (var i = 0; i < imageData.data.length; i+=4) {
-
-      newLine = (i%(imageWidth*4) == 0)
-      if(newLine){
-        // first one is black of known path
-        if(imageData.data[i] == 0 && imageData.data[i-imageWidth*4] == 253){         
-          outside = false
-          foundInner = false
-          //console.log('first one is black at '+i%imageWidth)
-          whiteToBlack = false
-          blackToGreen = false
-          greenToBlack = true
-          whiteToGreen = true   
-          blackToWhite = false 
-          last = 3
-        }else{
-          outside = true
-          foundInner = false
-          //console.log(i)
-          whiteToBlack = false
-          blackToGreen = false
-          greenToBlack = false
-          whiteToGreen = false   
-          blackToWhite = false
-          last = 2 
-        }
-    
-      }
-
-      if(imageData.data[i] == 0 && last == 2){
-        whiteToBlack = true
-      }
-
-
-      if((imageData.data[i] == 252 || imageData.data[i] == 253) && last == 2){
-        whiteToGreen = true
-      }   
-
-      if(imageData.data[i] == 255 && last == 1){
-        blackToWhite = true
-      }   
-
-      if((imageData.data[i] == 252 || imageData.data[i] == 253) && last == 1){
-        blackToGreen = true
-      }
-      if(imageData.data[i] == 0 && last == 3){
-        greenToBlack = true
-        if(whiteToGreen)
-          outside = false
-      } 
-      if(imageData.data[i] == 255 && last == 3 && blackToGreen){
-        outside = true
-      }             
-
-
-      if(imageData.data[i] == 0 && outside){
-        //console.log('start outer')
-        var path = new Path(true, imageData, imageWidth)
-        path.findPath(i)
-        outside = false
-        greenToBlack = true
-        outer++
-
-        var edges = path.getEdges()
-        for(var e = 0; e < edges.length; e++){
-          //imageData.data[edges[e].pixelFilled+1] = 255
-          imageData.data[edges[e].pixelEmpty]    = 253
-        }
-        newPath = true
-        paths.push(path)
-      }else if(imageData.data[i] == 255 && !outside && !foundInner && blackToWhite){
-        var path = new Path(false, imageData, imageWidth)
-        //console.log('start inner')
-        path.findPath(i)
-        //console.log('finished inner')
-        blackToGreen = true
-        inner++
-        var edges = path.getEdges()
-        for(var e = 0; e < edges.length; e++){
-          imageData.data[edges[e].pixelFilled]    = 252
-        }
-
-        paths.push(path) 
-        foundInner = true  
-      }
-
-
-      if(imageData.data[i] == 0){
-        last = 1
-      }else if(imageData.data[i] == 255){
-        last = 2
-      }else if(imageData.data[i] == 252 || imageData.data[i] == 253){
-        last = 3
-      }
-
-      /*
-      if(i == (24*45 + 19*4)){
-        console.log('last '+last)
-        console.log('outside '+outside)
-        console.log('foundInner '+foundInner)
-        console.log('whiteToBlack '+whiteToBlack)
-        console.log('blackToGreen '+blackToGreen)
-        console.log('greenToBlack '+greenToBlack)
-        console.log('whiteToGreen '+whiteToGreen)       
-      }
-      */
-
-    }  
-
-    /*
-    imageData.data[24*45 + 19*4] = 255
-    imageData.data[24*45 + 19*4+1] = 0
-    imageData.data[24*45 + 19*4+2] = 0
-
-    imageData.data[20] = 255
-    imageData.data[24*45 + 19*4+1] = 0
-    imageData.data[24*45 + 19*4+2] = 0    
-    */
-    console.log()
-    $("#path-count").html("Found "+inner+" inner and "+outer+" outer paths.")
-
-    return imageData
+    return pathFindingResult
   }
 
 
