@@ -7,7 +7,7 @@ https://github.com/notiontaxi
 
 "use strict"
 
-define(['text!templates/image-processing.html','js/Outline', 'js/Areas','js/VectorizerView','js/CanvasGui'], function(contentTemplate, Outline, Areas, Vectorizer, CanvasGui) {
+define(['text!templates/image-processing.html','js/OutlineTask', 'js/AreasTask','js/VectorizerTask','js/CanvasGui'], function(contentTemplate, OutlineTask, AreasTask, VectorizerTask, CanvasGui) {
 
 var ImageProcessing, _ref, module,
 
@@ -25,10 +25,17 @@ var ImageProcessing, _ref, module,
 
       ImageProcessing.__super__.constructor("#canvas-container")
       
-      new Outline(".controls-wrapper")
-      new Areas(".controls-wrapper")
-      new Vectorizer(".controls-wrapper")
+
+      this.addTask(new OutlineTask(".controls-wrapper", this.canvasOrigin, this.canvasShown, this.imageProcessor))
+      this.addTask(new AreasTask(".controls-wrapper", this.canvasOrigin, this.canvasShown, this.imageProcessor))
+      this.addTask(new VectorizerTask(".controls-wrapper", this.canvasOrigin, this.canvasShown, this.imageProcessor))
+
     }
+
+    ImageProcessing.prototype.addTask = function(task){
+      task.initializeTools()
+      task.appendToMenuBar()
+    } 
 
 
 
