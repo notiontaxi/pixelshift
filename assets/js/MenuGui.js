@@ -104,6 +104,7 @@ define(['text!templates/menu-bar.html', 'text!templates/menu-bar-small-device.ht
       function(event, ui){
         event.stopPropagation()
         event.preventDefault()
+        this.canvasStage.zoomReset()
         $('input[type="file"]').click()
       }.bind(this))
 
@@ -260,52 +261,6 @@ define(['text!templates/menu-bar.html', 'text!templates/menu-bar-small-device.ht
         this.canvasStage.moveCanvas("right")
     }.bind(this))  
   }
-
-
-  /*DEPRECATED*/
-  MenuGui.prototype.makeItDraggable = function(){
-    $( "#canvas-shown" ).draggable({ containment: this.getUpdatedDragBoundaries()})
-  }
-  /*DEPRECATED*/
-  MenuGui.prototype.updateDragBoundaries = function(){
-    $( "#canvas-shown" ).draggable({ containment: this.getUpdatedDragBoundaries()})
-  }
-  /*DEPRECATED*/
-  MenuGui.prototype.getUpdatedDragBoundaries = function(){
-
-    var boundaries = new Array()
-
-    if(this.canvasShown.currentScale !== 1){
-      
-      //console.log(this.canvasShown.canvasHeight * this.canvasShown.currentScale)
-      boundaries.push(
-        - this.canvasShown.canvasWidth * this.canvasShown.currentScale
-        + $( "#canvas-shown" ).parent().width()
-        + $( "#canvas-shown" ).parent().offset().left 
-      )
-      boundaries.push(
-        - this.canvasShown.canvasHeight * this.canvasShown.currentScale
-        + $( "#canvas-shown" ).parent().height() 
-        + $( "#canvas-shown" ).parent().offset().top
-      )
-      boundaries.push(
-        $( "#canvas-shown" ).parent().offset().left       
-      )
-      boundaries.push(
-          $( "#canvas-shown" ).parent().offset().top
-      )
-      //console.log(boundaries)
-    }else{
-      // put max upper left and min lower right position for the left upper edge to one position (not movable)
-      boundaries.push($( "#canvas-shown" ).parent().offset().left)
-      boundaries.push($( "#canvas-shown" ).parent().offset().top)
-      boundaries.push($( "#canvas-shown" ).parent().offset().left)
-      boundaries.push($( "#canvas-shown" ).parent().offset().top)
-    }
-      return boundaries
-  }
-
- 
 
 // --------------------------------------
     return MenuGui

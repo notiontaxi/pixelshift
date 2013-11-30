@@ -76,32 +76,7 @@ define([], function() {
 
     Canvas.prototype.zoomIn = function(){
       if(this.currentScale < 50){
-        
-        switch(this.currentScale){
-          case 8:
-            this.currentScale = 10
-            break
-          case 10:
-            this.currentScale = 16
-            break
-          case 16:
-            this.currentScale = 20
-            break
-          case 20:
-            this.currentScale = 25
-            break                 
-          case 25:
-            this.currentScale = 32
-            break                 
-          case 32:
-            this.currentScale = 40
-            break
-          case 40:
-            this.currentScale = 50
-            break   
-          default:
-            this.currentScale++           
-        }
+            this.currentScale++
         this.draw()
       }
     }
@@ -109,33 +84,7 @@ define([], function() {
     Canvas.prototype.zoomOut = function(){
       
       if(this.currentScale > 1.00){
-        
-        switch(this.currentScale){
-          case 50:
-            this.currentScale = 40
-            break
-          case 40:
-            this.currentScale = 32
-            break
-          case 32:
-            this.currentScale = 25
-            break
-          case 25:
-            this.currentScale = 20
-            break
-          case 20:
-            this.currentScale = 16
-            break                 
-          case 16:
-            this.currentScale = 10
-            break                 
-          case 10:
-            this.currentScale = 8
-            break
-          default: 
-            this.currentScale--              
-        }
-        
+            this.currentScale--                  
         if(this.currentScale < 2)
           this.zoomReset()
         else
@@ -151,12 +100,15 @@ define([], function() {
         this.parent.copyToClones()
     }
 
+    /**
+    * Moves the zoomed canvas (till the edge is reached)
+    */
     Canvas.prototype.moveCanvas = function(direction){
 
       if(this.currentScale !== 1){
         var canvas = this.getElement()
         var pixelPerMove = 10*this.currentScale
-        console.log(this.canvasWidth/2*(this.currentScale-1))
+
         switch(direction){
           case "up":
           if(this.positionY < (this.canvasHeight/2*(this.currentScale-1))){
@@ -204,6 +156,7 @@ define([], function() {
       this.visibleArea.y2 = Math.floor(this.visibleArea.y1 + halfH*2)
 
       this.offsetOnEndOfRow = (this.visibleArea.x2 - this.visibleArea.x1) % this.currentScale
+      this.offsetOnEndOfLines = (this.visibleArea.y2 - this.visibleArea.y1) % this.currentScale
     }
 
     /**
@@ -211,13 +164,13 @@ define([], function() {
     *
     */
     Canvas.prototype.draw = function(){
-
       
       this.computeVisibleArea()
       var area = this.parent.getAreaPixels(this.visibleArea)
-      this.setAreaPixels(area)      
-      this.drawGrid()
-      this.drawColoredGrid()
+      this.setAreaPixels(area) 
+      if(this.currentScale > 3)     
+        this.drawGrid()
+      //this.drawColoredGrid()
 
       this.copyToClones(true)
     }
@@ -287,27 +240,37 @@ define([], function() {
     Canvas.prototype.drawGrid = function(){
       var data = this.getFullImageData()
 
-      // vertical
-      for(var i = 4*this.currentScale; i < data.data.length; i+= 4*this.currentScale){
-        data.data[i] = 200
-        data.data[i+1] = 200
-        data.data[i+2] = 200
+      // number of horizontal lines in y direction 
+      var xLines = Math.floor(this.canvasWidth  / this.currentScale)
+      // number of vertical lines in x direction
+      var yLines = Math.floor(this.canvasHeight / this.currentScale)
+      var pos = 0
 
-        // jump on end of line (avoid zoom bugs)
-        if(i%(this.canvasWidth*4) == 0)
-          if(this.offsetOnEndOfRow != 0 && this.currentScale < 8)
-            i += 8
-      }
+      var jumpY = this.canvasWidth*4*this.currentScale
+      var jumpX = this.currentScale*4
 
       // horizontal
-      for(var i = 0; i < data.data.length; i += 4*this.currentScale*this.canvasWidth){
-        for(var j = 0; j < this.canvasWidth*4; j+=4 ){
-          data.data[i+j] = 200
-          data.data[i+j+1] = 200
-          data.data[i+j+2] = 200           
+      for(var xL = 0; xL <= yLines; xL++){
+        for(var w = 0; w < this.canvasWidth*4; w+=4){
+          // lines * jump length per line + curren pixel position 
+          pos = xL*jumpY + w
+          // reduce alpha
+          data.data[pos+3] -= 100
         }
       }
-
+      
+      // vertical
+      for(var h = 0; h < this.canvasHeight*4; h++){
+        for(var yL = 0; yL <= xLines; yL++){
+          // current height * width + current vertical line number * jump length depending on scale
+          pos = h*this.canvasWidth*4 + yL*jumpX
+          // reduce alpha
+          data.data[pos+3] -= 100         
+        }
+      }
+      
+      console.log("xLines: "+xLines)
+      console.log("yLines: "+yLines)
 
       this._putFullImageData(data)
     }
@@ -345,40 +308,43 @@ define([], function() {
     }
 
     Canvas.prototype.setAreaPixels = function(area){
+
+      this.clear()
       var allPixels = this.getFullImageData()
+      
+      // number of horizontal pixels in y direction 
+      var xPixelAmount = area.width
+      // number of vertical pixels in x direction
+      var yPixelAmount = area.height
 
-      var pixelJumpWidth = 4*this.currentScale
+      var jumpY = this.canvasWidth*4*this.currentScale
+      var jumpX = this.currentScale*4      
+      var positionSource = 0
+      var positionDestination = 0
 
-      var i, columnRepeat
-      var rowRepeat = 1
-      var k = 0
+      var yP, yRepeat, xP, xRepeat, currentY, currentX, currentYRepeat, currentXRepeat
 
-      for(i = 0; i < area.pixels.length; i+=4){
-        for(columnRepeat = 0; columnRepeat < this.currentScale; columnRepeat++){
-          allPixels.data[k ] = area.pixels[i]
-          allPixels.data[k +1] = area.pixels[i+1]
-          allPixels.data[k +2] = area.pixels[i+2]
-          allPixels.data[k +3] = area.pixels[i+3]
-          k+=4
-        }
+      for(yP = 0; yP < yPixelAmount; yP++){
+        currentY = yP*this.canvasWidth*4*this.currentScale
+        for(yRepeat = 0; yRepeat < this.currentScale; yRepeat++){
+          currentYRepeat = yRepeat*this.canvasWidth*4
+          for(xP = 0; xP < xPixelAmount; xP++){
+            currentX = xP*this.currentScale*4
+            for(xRepeat = 0; xRepeat < this.currentScale; xRepeat++){
+              currentXRepeat = xRepeat*4
+              positionSource = yP*xPixelAmount*4 + xP*4
+              positionDestination = currentY + currentYRepeat + currentX + currentXRepeat
 
-        // end of row: repeat row "scale" times
-        if(i % (area.width * 4) == 0 && i > this.currentScale){
-          if(rowRepeat < this.currentScale){
-            //jump back one row
-            i -= area.width * 4 
-            rowRepeat++
+              allPixels.data[positionDestination] = area.pixels[positionSource]
+              allPixels.data[positionDestination+1] = area.pixels[positionSource+1]
+              allPixels.data[positionDestination+2] = area.pixels[positionSource+2]
+              allPixels.data[positionDestination+3] = area.pixels[positionSource+3]
+
+            }
           }
-          else{
-            rowRepeat = 1
-          }
-          // jump the offset pixels (caused by zoom) each line
-          if(this.offsetOnEndOfRow != 0 && this.currentScale < 8)
-            k += 8
         }
-
       }
-
+  
       this._putFullImageData(allPixels)
     }
 
