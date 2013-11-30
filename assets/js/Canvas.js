@@ -139,9 +139,6 @@ define([], function() {
           }
             break
         }
-
-        console.log(this.positionX)
-        console.log(this.positionY)  
       
         this.draw()
       }

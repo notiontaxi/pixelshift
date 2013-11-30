@@ -19,9 +19,7 @@ if(!Function.prototype.bind){
 }
 
 var inArray = function(array, needle) {
-
   var i = -1, index = -1
-
   for(var i = 0; i < array.length; i++) {
       if(array[i] == needle) {
           index = i
@@ -32,7 +30,6 @@ var inArray = function(array, needle) {
 };
 
 var keyInAArray = function(array, needle) {
-
   var i = -1
   var index = -1
 
