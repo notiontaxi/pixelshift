@@ -111,7 +111,7 @@ define([], function() {
 
       if(this.currentScale !== 1){
         var canvas = this.getElement()
-        var pixelPerMove = 10*this.currentScale
+        var pixelPerMove = 10//this.currentScale
 
         switch(direction){
           case "up":
@@ -150,14 +150,24 @@ define([], function() {
       var halfW = (this.halfCanvasWidth / this.currentScale) 
       var halfH = (this.halfCanvasHeight / this.currentScale)
 
-      this.visibleArea.x1 = Math.round((halfW * (this.currentScale -1) - this.positionX/this.currentScale))
-      this.visibleArea.y1 = Math.round((halfH * (this.currentScale -1) - this.positionY/this.currentScale))
+      var before = this.visibleArea.x2 - this.visibleArea.x1 
+      var lessPix = before/2
+
+      this.visibleArea.x1 = this.positionX
+      this.visibleArea.y1 = this.positionY
 
       this.visibleArea.x2 = Math.floor(this.visibleArea.x1 + halfW*2)
       this.visibleArea.y2 = Math.floor(this.visibleArea.y1 + halfH*2)
 
       this.offsetOnEndOfRow = (this.visibleArea.x2 - this.visibleArea.x1) % this.currentScale
       this.offsetOnEndOfLines = (this.visibleArea.y2 - this.visibleArea.y1) % this.currentScale
+
+      var after = this.visibleArea.x2 - this.visibleArea.x1 
+
+      console.log("before: "+before)
+      console.log("after: "+after)
+      console.log("diff: "+(before-after))
+      console.log("magic: "+lessPix)
     }
 
     /**
