@@ -48,6 +48,8 @@ define([], function() {
       this.oldVisibleWidth = 800
       this.oldVisibleHeight = 640      
 
+      this.pixelPerMove = 50
+
       this.gotNewImage = true
 
       this.ctx.font = "bold 12px sans-serif"
@@ -80,7 +82,11 @@ define([], function() {
 
     Canvas.prototype.zoomIn = function(){
       if(this.currentScale < 50){
-            this.currentScale++
+        this.currentScale++
+
+        if(this.pixelPerMove  > 4)
+          this.pixelPerMove -= 4
+
         this.draw()
       }
     }
@@ -88,6 +94,9 @@ define([], function() {
     Canvas.prototype.zoomOut = function(){
       if(this.currentScale > 1.00){
         this.currentScale-- 
+
+        if(this.pixelPerMove < 50)
+          this.pixelPerMove += 4
 
         if(this.currentScale === 1.00)
           this.zoomReset()
@@ -112,30 +121,29 @@ define([], function() {
 
       if(this.currentScale !== 1){
         var canvas = this.getElement()
-        var pixelPerMove = 10//this.currentScale
-
+        console.log(this.pixelPerMove)
         switch(direction){
           case "up":
             if(this.visibleArea.y1 > 0){
-              this.visibleArea.y1-=pixelPerMove
+              this.visibleArea.y1-=this.pixelPerMove
               this.draw()
             }
             break
           case "down":
             if(this.visibleArea.y2 < this.canvasHeight){
-              this.visibleArea.y1+=pixelPerMove
+              this.visibleArea.y1+=this.pixelPerMove
               this.draw()
             }
             break
           case "left":
             if(this.visibleArea.x1 > 0){
-              this.visibleArea.x1-=pixelPerMove
+              this.visibleArea.x1-=this.pixelPerMove
               this.draw()
             }
             break
           case "right":
           if(this.visibleArea.x2 < this.canvasWidth){
-            this.visibleArea.x1+=pixelPerMove
+            this.visibleArea.x1+=this.pixelPerMove
             this.draw()
           }
             break
