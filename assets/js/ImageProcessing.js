@@ -26,9 +26,9 @@ var ImageProcessing, _ref, module,
       ImageProcessing.__super__.constructor("#canvas-container")
       
 
-      this.addTask(new OutlineTask(".controls-wrapper", this.canvasOrigin, this.canvasShown, this.imageProcessor))
-      this.addTask(new AreasTask(".controls-wrapper", this.canvasOrigin, this.canvasShown, this.imageProcessor))
-      this.addTask(new VectorizerTask(".controls-wrapper", this.canvasOrigin, this.canvasShown, this.imageProcessor))
+      this.addTask(new OutlineTask(".controls-wrapper", this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor))
+      this.addTask(new AreasTask(".controls-wrapper", this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor))
+      this.addTask(new VectorizerTask(".controls-wrapper", this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor))
 
     }
 

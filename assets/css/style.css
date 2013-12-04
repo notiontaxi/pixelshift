@@ -13,6 +13,11 @@ body {
 .left {
   float: left;
 }
+.clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
+}
 .slider-set {
   border-width: 1px;
   border-style: solid;
@@ -40,11 +45,25 @@ footer {
   margin-top: 5px;
   margin-bottom: 5px;
 }
+.inline-button {
+  margin: 0px;
+  padding: 0px;
+}
 .btn-200 {
   width: 200px;
 }
+.color-ok {
+  background-color: #3cdd68;
+}
+.color-nok {
+  background-color: #f0002a;
+}
+.color-neutral {
+  background-color: #aaaaaa;
+}
 .my-slider {
   margin-top: 5px;
+  margin-bottom: 5px;
 }
 .menu-sign {
   color: black;

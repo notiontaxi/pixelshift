@@ -19,9 +19,10 @@ var ImageProcessingTask, _ref, module,
 
 
 
-    function ImageProcessingTask(canvasOrigin, canvasShown, imageProcessor){
+    function ImageProcessingTask(canvasOrigin, canvasStage, canvasShown, imageProcessor){
 
-      this.canvasOrigin = canvasOrigin    
+      this.canvasOrigin = canvasOrigin  
+      this.canvasStage = canvasStage
       this.canvasShown = canvasShown
       this.imageProcessor = imageProcessor
 

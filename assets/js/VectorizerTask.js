@@ -19,9 +19,9 @@ var VectorizerTask, _ref, module,
 
 
 
-    function VectorizerTask(containerIdentifier,canvasOrigin,canvasShown,imageProcessor){    
+    function VectorizerTask(containerIdentifier,canvasOrigin, canvasStage, canvasShown,imageProcessor){    
 
-      VectorizerTask.__super__.constructor(canvasOrigin, canvasShown, imageProcessor)
+      VectorizerTask.__super__.constructor(canvasOrigin, canvasStage, canvasShown, imageProcessor)
       // render templates
       $(containerIdentifier).append($(contentTemplate))
     }

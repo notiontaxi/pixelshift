@@ -18,9 +18,9 @@ var OutlineTask, _ref, module,
 // --------------------------------------
 
 
-    function OutlineTask(containerIdentifier,canvasOrigin,canvasShown,imageProcessor){
+    function OutlineTask(containerIdentifier, canvasOrigin, canvasStage, canvasShown,imageProcessor){
 
-      OutlineTask.__super__.constructor(canvasOrigin, canvasShown, imageProcessor)
+      OutlineTask.__super__.constructor(canvasOrigin, canvasStage ,canvasShown, imageProcessor)
 
       // render templates
       $(containerIdentifier).append($(contentTemplate))
@@ -32,10 +32,13 @@ var OutlineTask, _ref, module,
       var imgDataLeft = this.canvasOrigin.getImageData()
 
       // compute threshold automatically, if not set          multiplycation cause input is 0-100
-      threshold = typeof threshold !== 'undefined' ? threshold*2.55 : this.imageProcessor.computeThreshold(imgDataLeft)
-
-      this.canvasOrigin.putImageData(this.imageProcessor.processThreshold(threshold, imgDataLeft))
-      this.canvasShown.copy(this.canvasOrigin)
+      if(typeof threshold === 'undefined'){
+        threshold = this.imageProcessor.computeThreshold(imgDataLeft)
+        this.canvasOrigin.putImageData(this.imageProcessor.processThreshold(threshold, imgDataLeft))
+      }else{
+        threshold*2.55
+        this.canvasStage.putImageData(this.imageProcessor.processThreshold(threshold, imgDataLeft))
+      }
 
       return threshold
     }
@@ -119,6 +122,18 @@ var OutlineTask, _ref, module,
         function(event, ui){
           var newImg = this.imageProcessor.processOutline(this.canvasOrigin.getImageData(), this.canvasOrigin.getImageData() ,this.canvasOrigin.getImageWidth())
           this.canvasOrigin.putImageData(newImg)
+        }.bind(this)
+      )
+
+      $("#threshold-ok").click(
+        function(event, ui){
+          this.canvasOrigin.putImageData(this.canvasStage.getImageData())
+        }.bind(this)
+      )
+
+      $("#threshold-nok").click(
+        function(event, ui){
+          this.canvasOrigin.copyToClones()
         }.bind(this)
       )
 

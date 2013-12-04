@@ -19,9 +19,9 @@ var AreasTask, _ref, module,
 
 
 
-    function AreasTask(containerIdentifier,canvasOrigin,canvasShown,imageProcessor){   
+    function AreasTask(containerIdentifier,canvasOrigin,canvasStage,canvasShown,imageProcessor){   
 
-      AreasTask.__super__.constructor(canvasOrigin, canvasShown, imageProcessor)
+      AreasTask.__super__.constructor(canvasOrigin, canvasStage, canvasShown, imageProcessor)
       // render templates
       $(containerIdentifier).append($(contentTemplate))
 
