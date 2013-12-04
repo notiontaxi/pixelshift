@@ -3,6 +3,7 @@
 @lightGrey: #aaaaaa;
 @lightGreen: #3cdd68;
 @lightRed: #f0002a;
+@minWidth: 370px;
 
 body {
   padding-top: 60px;
@@ -28,9 +29,7 @@ body {
 }
 
 .slider-set{
-  border-width: 1px;
-  border-style: solid;
-  border-color: grey;
+  .solid-border(grey);
   padding: 5px;
   border-radius: 4px;
 
@@ -49,7 +48,7 @@ body {
   color: @lightGrey;
   font-size: 14pt;
 
-  min-width: 345px;
+  min-width: @minWidth;
 }
 
 footer{
@@ -240,3 +239,80 @@ canvas, img {
 #dragg-container{
   overflow: hidden;
 }
+
+.modalbox-overlay{
+  background: rgba(0,0,0,0.6);
+  height: 100%;
+  left: 0;
+  top: 0;
+
+  position: fixed;
+  
+  width: 100%;
+  z-index: 1000;
+}
+
+#modalbox-wrapper{
+
+  left: 20%;
+  top:10%;
+  z-index: 1001;
+  overflow: hidden;
+
+  position: fixed;
+  top: 300px;
+  left: 50%;
+
+  width: 250px;
+
+  margin-top: -200px;
+  margin-left: -125px;
+
+  .rounded-corners(5px);
+  .solid-border(black);
+
+  .header{
+    font-size: 150%;
+    color: @darkGrey;
+    background-color: lightblue;
+    .padding(5px, 5px, 20px, 20px)
+    .text{
+      float: left;
+    }
+  }
+  .content{
+    padding: 20px;
+    color: white;
+    background-color: @lightGrey;
+  }
+  .form-item{
+    padding-top: 20px;
+  }
+
+}
+
+.close-button{
+  float: right;
+}
+
+.rounded-corners (@radius: 5px) {
+  -webkit-border-radius: @radius;
+  -moz-border-radius: @radius;
+  -ms-border-radius: @radius;
+  -o-border-radius: @radius;
+  border-radius: @radius;
+}
+
+.padding(@top, @bottom, @left, @right){
+  padding-top: @top;
+  padding-bottom: @bottom;
+  padding-left: @left;
+  padding-right: @right;   
+}
+
+.solid-border(@color){
+  border-width: 1px;
+  border-style: solid;
+  border-color: @color;  
+}
+

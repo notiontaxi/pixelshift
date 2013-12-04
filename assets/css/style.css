@@ -21,7 +21,7 @@ body {
 .slider-set {
   border-width: 1px;
   border-style: solid;
-  border-color: grey;
+  border-color: #808080;
   padding: 5px;
   border-radius: 4px;
   margin-top: 5px;
@@ -36,7 +36,7 @@ body {
   padding: 10px;
   color: #aaaaaa;
   font-size: 14pt;
-  min-width: 345px;
+  min-width: 370px;
 }
 footer {
   margin: 10px;
@@ -176,4 +176,52 @@ img {
 }
 #dragg-container {
   overflow: hidden;
+}
+.modalbox-overlay {
+  background: rgba(0, 0, 0, 0.6);
+  height: 100%;
+  left: 0;
+  top: 0;
+  position: fixed;
+  width: 100%;
+  z-index: 1000;
+}
+#modalbox-wrapper {
+  left: 20%;
+  top: 10%;
+  z-index: 1001;
+  overflow: hidden;
+  position: fixed;
+  top: 300px;
+  left: 50%;
+  width: 250px;
+  margin-top: -200px;
+  margin-left: -125px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #000000;
+}
+#modalbox-wrapper .header {
+  font-size: 150%;
+  color: #333333;
+  background-color: lightblue;
+}
+#modalbox-wrapper .header .padding(5px, 5px, 20px, 20px) .text {
+  float: left;
+}
+#modalbox-wrapper .content {
+  padding: 20px;
+  color: white;
+  background-color: #aaaaaa;
+}
+#modalbox-wrapper .form-item {
+  padding-top: 20px;
+}
+.close-button {
+  float: right;
 }

@@ -7,6 +7,8 @@ require.config({
     }
 });
 
+$('.modalbox-overlay').hide()
+
 // workaround for older safari versions
 if(!Function.prototype.bind){
   Function.prototype.bind = function (bind) {

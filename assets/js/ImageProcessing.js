@@ -25,6 +25,7 @@ var ImageProcessing, _ref, module,
 
       ImageProcessing.__super__.constructor("#canvas-container")
       
+      this.initColorPicker()
 
       new OutlineTask(".controls-wrapper", this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
       new AreasTask(".controls-wrapper", this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
@@ -32,7 +33,28 @@ var ImageProcessing, _ref, module,
 
     }
 
+    ImageProcessing.prototype.initColorPicker = function(){
 
+
+      $('#modalbox-wrapper').hide()
+      $('#modalbox-wrapper').removeClass('hidden')
+
+      var f = $.farbtastic('#picker')
+      var p = $('#picker')
+      var selected;
+      $('.colorwell')
+        .each(function () { f.linkTo(this); $(this).css('opacity', 0.75); })
+        .focus(function() {
+          if (selected) {
+            $(selected).css('opacity', 0.75).removeClass('colorwell-selected');
+          }
+          f.linkTo(this);
+          p.css('opacity', 1);
+          $(selected = this).css('opacity', 1).addClass('colorwell-selected');
+        });
+
+      $('.farbtastic').addClass('center-block');
+    }
 
 
 
