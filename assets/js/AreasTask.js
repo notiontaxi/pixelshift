@@ -59,12 +59,7 @@ var AreasTask, _ref, module,
       $("#action-flood-stack").click(
         function(event, ui){
           window.maxDepth = 0;
-          var start = new Date().getTime();
           var newImg = this.imageProcessor.processFloodFill(this.canvasOrigin.getImageData(), this.canvasOrigin.getImageWidth(), 'four')
-          var end = new Date().getTime();
-          var time = end - start;
-          this.canvasOrigin.putImageData(newImg)    
-          $( "#algo-times" ).html("CPU time: "+time+" ms | Max stack: "+window.maxDepth);
         }.bind(this)
       )
 
@@ -72,18 +67,12 @@ var AreasTask, _ref, module,
       $("#action-flood-queue").click(
         function(event, ui){
           window.maxWidth = 0;
-          var start = new Date().getTime();
           var newImg = this.imageProcessor.processFloodFill(this.canvasOrigin.getImageData(), this.canvasOrigin.getImageWidth(), 'eight')
-          var end = new Date().getTime();
-          var time = end - start;
-     
-          $( "#algo-times" ).html("CPU time: "+time+" ms");
-
         }.bind(this)
       )   
 
       $(".action-show-color-picker").click(function(){
-        $('#modalbox-wrapper').fadeIn(300)
+        $('#color-picker-modal').fadeIn(300)
       })
 
     }

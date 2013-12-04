@@ -186,7 +186,7 @@ img {
   width: 100%;
   z-index: 1000;
 }
-#modalbox-wrapper {
+.modalbox-wrapper {
   left: 20%;
   top: 10%;
   z-index: 1001;
@@ -204,9 +204,9 @@ img {
   border-radius: 5px;
   border-width: 1px;
   border-style: solid;
-  border-color: #000000;
+  border-color: #ffffff;
 }
-#modalbox-wrapper .header {
+.modalbox-wrapper .header {
   font-size: 150%;
   color: #333333;
   background-color: lightblue;
@@ -215,12 +215,12 @@ img {
   padding-left: 20px;
   padding-right: 20px;
 }
-#modalbox-wrapper .content {
+.modalbox-wrapper .content {
   padding: 20px;
   color: white;
   background-color: #aaaaaa;
 }
-#modalbox-wrapper .form-item {
+.modalbox-wrapper .form-item {
   padding-top: 20px;
 }
 .right-float {
@@ -228,4 +228,9 @@ img {
 }
 .left-float {
   float: left;
+}
+.color-chooser-button {
+  background-image: none;
+  background-color: white;
+  width: 50px;
 }

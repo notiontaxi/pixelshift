@@ -36,14 +36,16 @@ var ImageProcessing, _ref, module,
     ImageProcessing.prototype.initColorPicker = function(){
 
 
-      $('#modalbox-wrapper').hide()
-      $('#modalbox-wrapper').removeClass('hidden')
+      $('.modalbox-wrapper').hide()
+      $('.modalbox-wrapper').removeClass('hidden')
 
       var f = $.farbtastic('#picker')
       var p = $('#picker')
       var selected;
       $('.colorwell')
-        .each(function () { f.linkTo(this); $(this).css('opacity', 0.75); })
+        .each(function () { f.linkTo(this)})
+        // for different colors
+        /*
         .focus(function() {
           if (selected) {
             $(selected).css('opacity', 0.75).removeClass('colorwell-selected');
@@ -52,12 +54,20 @@ var ImageProcessing, _ref, module,
           p.css('opacity', 1);
           $(selected = this).css('opacity', 1).addClass('colorwell-selected');
         });
+        */
 
       $('.farbtastic').addClass('center-block');
 
       $(".action-close-modal").click(function(e){
-        $('#modalbox-wrapper').hide()
+        $('#color-picker-modal').hide()
+        var color = $('#color-picker-color').css('background-color')
+        $('.color-chooser-button').css({'background-color': color})
+        color = color.replace('rgb', 'rgba')
+        color = color.replace(')', ', 0.5)')
+        $('.color-chooser-button').css({'color': color})
       })
+
+      $("#color-picker-modal").draggable()
 
     }
 
