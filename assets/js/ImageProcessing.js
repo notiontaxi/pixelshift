@@ -26,16 +26,12 @@ var ImageProcessing, _ref, module,
       ImageProcessing.__super__.constructor("#canvas-container")
       
 
-      this.addTask(new OutlineTask(".controls-wrapper", this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor))
-      this.addTask(new AreasTask(".controls-wrapper", this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor))
-      this.addTask(new VectorizerTask(".controls-wrapper", this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor))
+      new OutlineTask(".controls-wrapper", this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
+      new AreasTask(".controls-wrapper", this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
+      new VectorizerTask(".controls-wrapper", this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
 
     }
 
-    ImageProcessing.prototype.addTask = function(task){
-      task.initializeTools()
-      task.appendToMenuBar()
-    } 
 
 
 

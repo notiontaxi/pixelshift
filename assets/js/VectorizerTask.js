@@ -24,26 +24,16 @@ var VectorizerTask, _ref, module,
       VectorizerTask.__super__.constructor(canvasOrigin, canvasStage, canvasShown, imageProcessor)
       // render templates
       $(containerIdentifier).append($(contentTemplate))
+      this.init()
     }
 
     VectorizerTask.prototype.appendToMenuBar = function(){
-      var li = $('<li/>')
-
-      var a = $('<a/>', 
-            {
-                href: '#'
-              , text: 'Vectorizer'
-              , id: 'action-menu-vectorizer'
-            }
-          ).appendTo(li)
-
-      li.appendTo('.image-actions-list')
-
-      this.addMenuBarAction()
-    }
+      this.appendToLGMenuBar('Vectorizer', 'action-menu-vectorizer', 'image-actions-list')
+      this.appendToSDMenuBar('Vectorizer', 'action-menu-vectorizer', 'image-actions-list-sd')  
+    }   
 
     VectorizerTask.prototype.addMenuBarAction = function(){
-      $("#action-menu-vectorizer").click(
+      $(".action-menu-vectorizer").click(
       function(event, ui){
         event.stopPropagation()
         event.preventDefault()

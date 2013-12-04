@@ -24,6 +24,7 @@ var OutlineTask, _ref, module,
 
       // render templates
       $(containerIdentifier).append($(contentTemplate))
+      this.init()
     }
 
 
@@ -44,23 +45,12 @@ var OutlineTask, _ref, module,
     }
 
     OutlineTask.prototype.appendToMenuBar = function(){
-      var li = $('<li/>')
-
-      var a = $('<a/>', 
-            {
-                href: '#'
-              , text: 'Outline'
-              , id: 'action-menu-outline'
-            }
-          ).appendTo(li)
-
-      li.appendTo('.image-actions-list')
-
-      this.addMenuBarAction()
-    }
+      this.appendToLGMenuBar('Outline', 'action-menu-outline', 'image-actions-list')
+      this.appendToSDMenuBar('Outline', 'action-menu-outline', 'image-actions-list-sd')  
+    }      
 
     OutlineTask.prototype.addMenuBarAction = function(){
-      $("#action-menu-outline").click(
+      $(".action-menu-outline").click(
       function(event, ui){
         event.stopPropagation()
         event.preventDefault()
@@ -74,6 +64,9 @@ var OutlineTask, _ref, module,
         return false; // prevent childs to do this action
       });
     }
+     
+
+
 
     OutlineTask.prototype.initializeTools = function(){
 

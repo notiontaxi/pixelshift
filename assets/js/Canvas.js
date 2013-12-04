@@ -121,7 +121,7 @@ define([], function() {
 
       if(this.currentScale !== 1){
         var canvas = this.getElement()
-        console.log(this.pixelPerMove)
+
         switch(direction){
           case "up":
             if(this.visibleArea.y1 > 0){
@@ -170,9 +170,6 @@ define([], function() {
 
       this.oldVisibleWidth = this.visibleArea.x2 - this.visibleArea.x1
       this.oldVisibleHeight = this.visibleArea.y2 - this.visibleArea.y1
-
-      console.log("widthDiff: "+widthDiff)
-      console.log("heightDiff: "+heightDiff)
     }
 
     /**
@@ -429,7 +426,7 @@ define([], function() {
         var x = 0
 
         if(pixelChanges[0] === 'diff'){
-          console.log("undo using diff strategy")
+          //console.log("undo using diff strategy")
           pixelRevets.push('diff')
           for(var i = 1; i < pixelChanges.length; i+=2){
             pos = pixelChanges[i]
@@ -456,7 +453,7 @@ define([], function() {
             imageData.data[pos]   = x&(255)
           }
         }else if(pixelChanges[0] === 'ImagaData'){
-            console.log("undo using ImagaData strategy")
+            //console.log("undo using ImagaData strategy")
             pixelRevets.push('ImagaData')
             pixelRevets.push(this.getFullImageData().data)
             var lastPixels = pixelChanges[1]
@@ -554,7 +551,7 @@ define([], function() {
           // avoid big data mass
           if(this.undoStack.length > 20){
             this.undoStack.shift()
-            console.log("remove last element in undo stack")
+            //console.log("remove last element in undo stack")
           }
 
           // set pointer to current state

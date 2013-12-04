@@ -25,27 +25,18 @@ var AreasTask, _ref, module,
       // render templates
       $(containerIdentifier).append($(contentTemplate))
 
+      this.init()
       this.addColorPicker()
     }
 
-    AreasTask.prototype.appendToMenuBar = function(){
-      var li = $('<li/>')
 
-      var a = $('<a/>', 
-            {
-                href: '#'
-              , text: 'Floodfill'
-              , id: 'action-menu-floodfill'
-            }
-          ).appendTo(li)
-
-      li.appendTo('.image-actions-list')
-
-      this.addMenuBarAction()
+    ImageProcessingTask.prototype.appendToMenuBar = function(){
+      this.appendToLGMenuBar('Floodfill', 'action-menu-floodfill', 'image-actions-list')
+      this.appendToSDMenuBar('Floodfill', 'action-menu-floodfill', 'image-actions-list-sd')  
     }
 
     AreasTask.prototype.addMenuBarAction = function(){
-      $("#action-menu-floodfill").click(
+      $(".action-menu-floodfill").click(
       function(event, ui){
         event.stopPropagation()
         event.preventDefault()
