@@ -81,6 +81,11 @@ var AreasTask, _ref, module,
 
         }.bind(this)
       )   
+
+      $(".action-show-color-picker").click(function(){
+        $('#modalbox-wrapper').fadeIn(300)
+      })
+
     }
 
 

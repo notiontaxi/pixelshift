@@ -54,6 +54,11 @@ var ImageProcessing, _ref, module,
         });
 
       $('.farbtastic').addClass('center-block');
+
+      $(".action-close-modal").click(function(e){
+        $('#modalbox-wrapper').hide()
+      })
+
     }
 
 

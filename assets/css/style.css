@@ -210,9 +210,10 @@ img {
   font-size: 150%;
   color: #333333;
   background-color: lightblue;
-}
-#modalbox-wrapper .header .padding(5px, 5px, 20px, 20px) .text {
-  float: left;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 #modalbox-wrapper .content {
   padding: 20px;
@@ -222,6 +223,9 @@ img {
 #modalbox-wrapper .form-item {
   padding-top: 20px;
 }
-.close-button {
+.right-float {
   float: right;
+}
+.left-float {
+  float: left;
 }
