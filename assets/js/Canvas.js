@@ -148,14 +148,14 @@ define([], function() {
 
     Canvas.prototype.computeVisibleArea = function(){
 
-      var width = Math.round(this.canvasWidth / this.currentScale)
-      var height = Math.round(this.canvasHeight / this.currentScale)
+      var width = Math.floor(this.canvasWidth / this.currentScale)
+      var height = Math.floor(this.canvasHeight / this.currentScale)
 
       var widthDiff = this.oldVisibleWidth - width
       var heightDiff = this.oldVisibleHeight - height
 
-      this.visibleArea.x1 += Math.round(widthDiff/2)
-      this.visibleArea.y1 += Math.round(heightDiff/2)
+      this.visibleArea.x1 += (widthDiff - (widthDiff%2)) /2
+      this.visibleArea.y1 += (heightDiff- (heightDiff%2))/2
 
       this.visibleArea.x2 = width + this.visibleArea.x1
       this.visibleArea.y2 = height + this.visibleArea.y1
