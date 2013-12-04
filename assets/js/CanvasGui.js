@@ -288,8 +288,6 @@ define(['text!templates/canvas-gui.html', 'text!templates/menu-bar.html', 'text!
     }.bind(this))
 
     Mousetrap.bind('command+0', function(event, ui){
-        event.stopPropagation()
-        event.preventDefault()
         this.canvasStage.zoomReset()
     }.bind(this))    
 
