@@ -45,6 +45,8 @@ define([], function() {
         , x2: this.canvasWidth        
         , y2: this.canvasHeight
       }
+      this.oldVisibleWidth = 800
+      this.oldVisibleHeight = 640      
 
       this.gotNewImage = true
 
@@ -56,8 +58,6 @@ define([], function() {
       this.gotNewImage = true
 
       this.currentScale = 1
-      this.positionX = 0
-      this.positionY = 0
 
       this.clones = new Array()
       this.undoStack = new Array()
@@ -86,22 +86,23 @@ define([], function() {
     }
 
     Canvas.prototype.zoomOut = function(){
-      
       if(this.currentScale > 1.00){
-            this.currentScale--                  
-        if(this.currentScale < 2)
+        this.currentScale-- 
+
+        if(this.currentScale === 1.00)
           this.zoomReset()
         else
           this.draw()
       }
-
     }
 
+
     Canvas.prototype.zoomReset = function(){
-        this.positionX = 0
-        this.positionY = 0
-        this.currentScale = 1
-        this.parent.copyToClones()
+        this.currentScale = 1.00
+        this.computeVisibleArea()
+        this.visibleArea.x1 = 0
+        this.visibleArea.y1 = 0
+        this.draw()
     }
 
     /**
@@ -115,59 +116,55 @@ define([], function() {
 
         switch(direction){
           case "up":
-          if(this.positionY < (this.canvasHeight/2*(this.currentScale-1))){
-            this.positionY+=pixelPerMove
-            this.getElement().css({'top': this.positionY+"px"})
-          }
+            if(this.visibleArea.y1 > 0){
+              this.visibleArea.y1-=pixelPerMove
+              this.draw()
+            }
             break
           case "down":
-            if(this.positionY > -(this.canvasHeight/2*(this.currentScale-1))){
-              this.positionY-=pixelPerMove
-              this.getElement().css({'top': this.positionY+"px"})
+            if(this.visibleArea.y2 < this.canvasHeight){
+              this.visibleArea.y1+=pixelPerMove
+              this.draw()
             }
             break
           case "left":
-          if(this.positionX < (this.canvasWidth/2*(this.currentScale-1))){
-            this.positionX+=pixelPerMove
-            this.getElement().css({'left': this.positionX+"px"})
-          }
+            if(this.visibleArea.x1 > 0){
+              this.visibleArea.x1-=pixelPerMove
+              this.draw()
+            }
             break
           case "right":
-          if(this.positionX > -(this.canvasWidth/2*(this.currentScale-1))){
-            this.positionX-=pixelPerMove
-            this.getElement().css({'left': this.positionX+"px"})
+          if(this.visibleArea.x2 < this.canvasWidth){
+            this.visibleArea.x1+=pixelPerMove
+            this.draw()
           }
             break
         }
       
-        this.draw()
+        
       }
     }
 
 
     Canvas.prototype.computeVisibleArea = function(){
 
-      var halfW = (this.halfCanvasWidth / this.currentScale) 
-      var halfH = (this.halfCanvasHeight / this.currentScale)
+      var width = Math.round(this.canvasWidth / this.currentScale)
+      var height = Math.round(this.canvasHeight / this.currentScale)
 
-      var before = this.visibleArea.x2 - this.visibleArea.x1 
-      var lessPix = before/2
+      var widthDiff = this.oldVisibleWidth - width
+      var heightDiff = this.oldVisibleHeight - height
 
-      this.visibleArea.x1 = this.positionX
-      this.visibleArea.y1 = this.positionY
+      this.visibleArea.x1 += Math.round(widthDiff/2)
+      this.visibleArea.y1 += Math.round(heightDiff/2)
 
-      this.visibleArea.x2 = Math.floor(this.visibleArea.x1 + halfW*2)
-      this.visibleArea.y2 = Math.floor(this.visibleArea.y1 + halfH*2)
+      this.visibleArea.x2 = width + this.visibleArea.x1
+      this.visibleArea.y2 = height + this.visibleArea.y1
 
-      this.offsetOnEndOfRow = (this.visibleArea.x2 - this.visibleArea.x1) % this.currentScale
-      this.offsetOnEndOfLines = (this.visibleArea.y2 - this.visibleArea.y1) % this.currentScale
+      this.oldVisibleWidth = this.visibleArea.x2 - this.visibleArea.x1
+      this.oldVisibleHeight = this.visibleArea.y2 - this.visibleArea.y1
 
-      var after = this.visibleArea.x2 - this.visibleArea.x1 
-
-      console.log("before: "+before)
-      console.log("after: "+after)
-      console.log("diff: "+(before-after))
-      console.log("magic: "+lessPix)
+      console.log("widthDiff: "+widthDiff)
+      console.log("heightDiff: "+heightDiff)
     }
 
     /**
