@@ -112,13 +112,12 @@ footer {
   background-image: black;
 }
 .canvas {
-  border-radius: 4px;
-  border-color: #aaaaaa;
-  border: 1px solid;
   margin: 10px;
 }
 .relative {
   position: relative;
+  left: 0px;
+  top: 0px;
 }
 .canvas-wrap {
   width: 800px;

@@ -294,8 +294,8 @@ define([], function() {
       // i.e (800*160*4 + 200*4) = 520000 = 200th pixel in row 160
       var start = this.canvasWidth * 4 * visibleArea.y1  + visibleArea.x1 * 4
       // i.e. (800*4*480 + 600*4) = 1538400 = 600th pixek in row 480
-      var end   = this.canvasWidth * 4 * (visibleArea.y2-1) + visibleArea.x2 * 4
-      var rowLength = (visibleArea.x2 - visibleArea.x1) * 4
+      var end   = this.canvasWidth * 4 * (visibleArea.y2) + visibleArea.x2 * 4 
+      var rowLength = (visibleArea.x2 - visibleArea.x1) * 4 + 4
       var rowIncrement = this.canvasWidth * 4
       var i, j
 
@@ -324,9 +324,9 @@ define([], function() {
       var allPixels = this.getFullImageData()
       
       // number of horizontal pixels in y direction 
-      var xPixelAmount = area.width
+      var xPixelAmount = area.width 
       // number of vertical pixels in x direction
-      var yPixelAmount = area.height
+      var yPixelAmount = area.height 
 
       var jumpY = this.canvasWidth*4*this.currentScale
       var jumpX = this.currentScale*4      
@@ -788,7 +788,7 @@ define([], function() {
     }
 
      Canvas.prototype.clear = function(){
-      this.ctx.fillStyle="grey"
+      this.ctx.fillStyle="#888888"
       this.ctx.fillRect(0,0, this.ctx.canvas.width, this.ctx.canvas.height)
     } 
 
