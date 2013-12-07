@@ -244,30 +244,37 @@ define([], function() {
     }
 
 
-    Canvas.prototype.drawSinglePixel = function(pixel, data, outline, side){
-      var pos = this.toImageGaussianCoords(pixel)
-      var totalPos = (pos.x + pos.y * this.canvasWidth) * 4 * this.currentScale
+    Canvas.prototype.drawSinglePixel = function(pixel,outline, withLine, secondPixel){
+      var pos = this.toImageGaussianCoords(pixel.pixelFilled)
 
-      if(side == 'left')
-        totalPos += this.currentScale*4
-      else if(side == 'upper')
-        totalPos += this.canvasWidth * this.currentScale * 4
+      if(pixel.side == 'left')
+        pos.x++ 
+      else if(pixel.side == 'upper')
+        pos.y++
 
-      data.data[totalPos] = 0
-      if(outline){
-        data.data[totalPos+1] = 255
-        data.data[totalPos+2] = 0
-      }else{
-        data.data[totalPos+1] = 0
-        data.data[totalPos+2] = 255        
+      var gPos = {x: pos.x * this.currentScale, y: pos.y * this.currentScale}
+      var pointSize = Math.ceil((this.currentScale*2) / 15)
+
+      if(withLine){
+        var pos2 = this.toImageGaussianCoords(secondPixel.pixelFilled)
+        if(secondPixel.side == 'left')
+          pos2.x++ 
+        else if(secondPixel.side == 'upper')
+          pos2.y++        
+        this.drawLine(gPos, {x: pos2.x * this.currentScale , y: pos2.y * this.currentScale})
       }
-      data.data[totalPos+3] = 255
 
-      return data
+      if(outline){
+        this.drawPoint(gPos, pointSize, 'green')
+      }else{
+       this.drawPoint(gPos, pointSize, 'blue')
+      }
+
+
+
     }
 
     Canvas.prototype.drawPaths = function(){
-      var data = this.getFullImageData()
       var paths = this.paths
       var currentPath = null
 
@@ -275,10 +282,13 @@ define([], function() {
         currentPath = paths[i]
         for(var p = 0; p < currentPath.edges.length; p++)
           if(this.pixelWithinVisibleBounds(currentPath.edges[p].pixelFilled))
-            data = this.drawSinglePixel(currentPath.edges[p].pixelFilled, data, currentPath.isOutline, currentPath.edges[p].side) 
+            if(p+1 < currentPath.edges.length && this.pixelWithinVisibleBounds(currentPath.edges[p+1].pixelFilled))
+              this.drawSinglePixel(currentPath.edges[p], currentPath.isOutline, true, currentPath.edges[p+1])
+            else
+              this.drawSinglePixel(currentPath.edges[p], currentPath.isOutline, false) 
+
       }
 
-      this._putFullImageData(data)
     }
 
     /**
@@ -909,10 +919,10 @@ define([], function() {
     * @param {Object} position Object with x and y coordinate of start point
     * @param {Number} radius
     */
-    Canvas.prototype.drawPoint = function(position, radius){
+    Canvas.prototype.drawPoint = function(position, radius, color){
       this.ctx.beginPath();
       this.ctx.arc(position.x, position.y, radius, 0, 2 * Math.PI, false);
-      this.ctx.fillStyle = 'blue';
+      this.ctx.fillStyle = color;
       this.ctx.fill();
     }
 
@@ -922,9 +932,9 @@ define([], function() {
     * @param {Object} endPoint Object with x and y coordinate of end point
     */
     Canvas.prototype.drawLine = function(startPoint, endPoint){
-      this.ctx.moveTo(startPoint.x,startPoint.y);
-      this.ctx.lineTo(endPoint.x,endPoint.y);
-      this.ctx.stroke();
+      this.ctx.moveTo(startPoint.x,startPoint.y)
+      this.ctx.lineTo(endPoint.x,endPoint.y)
+      this.ctx.stroke()
     }
 
     /**
