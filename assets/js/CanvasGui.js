@@ -36,11 +36,13 @@ define(['text!templates/canvas-gui.html', 'text!templates/menu-bar.html', 'text!
     this.canvasOrigin = new Canvas(this.canvasOriginIdentifier, true)
     this.canvasStage = new Canvas(this.canvasStageIdentifier)
     this.canvasShown = new Canvas(this.canvasShownIdentifier)
+    this.canvasShown.addEventListeners()
 
     this.canvasOrigin.addClone(this.canvasStage)
     this.canvasStage.addClone(this.canvasShown)
 
     this.canvasStage.setParent(this.canvasOrigin)
+    this.canvasShown.setParent(this.canvasStage)
 
     this.fileProcessor = new FileProcessor()
     this.imageProcessor = new ImageProcessor()

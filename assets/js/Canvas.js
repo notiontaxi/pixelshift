@@ -70,6 +70,9 @@ define([], function() {
 
       this.alphaGrid = true
       this.coloredGrid = false
+      this.points = null
+
+
       this.gridZoomLevel = 3
 
       this.parent = null
@@ -95,7 +98,7 @@ define([], function() {
       if(this.currentScale > 1.00){
         this.currentScale-- 
 
-        if(this.pixelPerMove < 50)
+        if(this.pixelPerMove < 50 && this.currentScale < 13)
           this.pixelPerMove += 4
 
         if(this.currentScale === 1.00)
@@ -121,49 +124,99 @@ define([], function() {
 
       if(this.currentScale !== 1){
         var canvas = this.getElement()
-
+        var width = Math.floor(this.imageWidth * this.currentScale)
+        var height = Math.floor(this.imageHeight * this.currentScale)        
+        var bound = 0
         switch(direction){
           case "up":
             if(this.visibleArea.y1 > 0){
-              this.visibleArea.y1-=this.pixelPerMove
+              this.visibleArea.y1 -= this.pixelPerMove
+              this.visibleArea.y1 = this.visibleArea.y1 < 0 ? 0 : this.visibleArea.y1
               this.draw()
             }
             break
           case "down":
-            if(this.visibleArea.y2 < this.canvasHeight){
-              this.visibleArea.y1+=this.pixelPerMove
+            bound = Math.floor((height - this.canvasHeight) / this.currentScale)
+
+            if(this.visibleArea.y1 < bound){
+              this.visibleArea.y1 += this.pixelPerMove
+              this.visibleArea.y1 = this.visibleArea.y1 > bound ? bound : this.visibleArea.y1
               this.draw()
             }
             break
           case "left":
             if(this.visibleArea.x1 > 0){
-              this.visibleArea.x1-=this.pixelPerMove
+              this.visibleArea.x1 -= this.pixelPerMove
+              this.visibleArea.x1 = this.visibleArea.x1 < 0 ? 0 : this.visibleArea.x1
               this.draw()
             }
             break
           case "right":
-          if(this.visibleArea.x2 < this.canvasWidth){
-            this.visibleArea.x1+=this.pixelPerMove
-            this.draw()
-          }
+            bound = Math.floor((width - this.canvasWidth) / this.currentScale)
+            console.log(bound)
+            console.log(this.canvasWidth)
+            console.log(this.imageXOffset)
+            console.log(width)
+            if(this.visibleArea.x1 < bound){
+              this.visibleArea.x1 += this.pixelPerMove
+              this.visibleArea.x1 = this.visibleArea.x1 > bound ? bound : this.visibleArea.x1
+              this.draw()
+            }
             break
         }
       
-        
+        this.checkVisibleBoundaries()
       }
     }
 
+    Canvas.prototype.checkVisibleBoundaries = function(){
+      var enclosement = this.CanvasEnclosesImage()
+      var width = Math.floor(this.imageWidth * this.currentScale)
+      var height = Math.floor(this.imageHeight * this.currentScale)           
+      var boundY = Math.floor((height - this.canvasHeight) / this.currentScale) 
+      var boundX = Math.floor((width - this.canvasWidth) / this.currentScale) 
+
+      if(enclosement.x){
+        this.visibleArea.x1 = 0
+      }else{
+        this.visibleArea.x1 = this.visibleArea.x1 < 0 ? 0 : this.visibleArea.x1
+        this.visibleArea.x1 = this.visibleArea.x1 > boundX ? boundX : this.visibleArea.x1
+      }
+
+      if(enclosement.y){
+        this.visibleArea.y1 = 0     
+      }
+      else{
+        this.visibleArea.y1 = this.visibleArea.y1 < 0 ? 0 : this.visibleArea.y1
+        this.visibleArea.y1 = this.visibleArea.y1 > boundY ? boundY : this.visibleArea.y1
+      }
+    }
+
+    /**
+    * Checks if the canvas encloses theh image in x/y direction
+    */
+    Canvas.prototype.CanvasEnclosesImage = function(){
+      return {
+          x: this.imageWidth*this.currentScale <= this.canvasWidth
+        , y: this.imageHeight*this.currentScale <= this.canvasHeight
+      }
+    }
 
     Canvas.prototype.computeVisibleArea = function(){
 
       var width = Math.floor(this.canvasWidth / this.currentScale)
       var height = Math.floor(this.canvasHeight / this.currentScale)
 
+      width = width > this.imageWidth ? this.imageWidth : width
+      height = height > this.imageHeight ? this.imageHeight : height
+      
       var widthDiff = this.oldVisibleWidth - width
       var heightDiff = this.oldVisibleHeight - height
 
-      this.visibleArea.x1 += (widthDiff - (widthDiff%2)) /2
-      this.visibleArea.y1 += (heightDiff- (heightDiff%2))/2
+      this.visibleArea.x1 += (widthDiff  - (widthDiff  % 2 )) / 2
+      this.visibleArea.y1 += (heightDiff - (heightDiff % 2 )) / 2
+
+      this.checkVisibleBoundaries()
 
       this.visibleArea.x2 = width + this.visibleArea.x1
       this.visibleArea.y2 = height + this.visibleArea.y1
@@ -187,9 +240,51 @@ define([], function() {
           this.drawColoredGrid()
         else if(this.alphaGrid)
           this.drawGrid()
+        if(!!this.points)
+          this.drawPoints()
       }     
 
       this.copyToClones(true)
+    }
+
+
+    Canvas.prototype.drawSinglePixel = function(pixel, data){
+
+    }
+
+    Canvas.prototype.drawPoints = function(){
+
+      var data = this.getFullImageData()
+
+      for(var p = 0; p < this.points.size; p++)
+        if(this.pixelWithinVisibleBounds(p))
+          drawSinglePixel(p, data)
+      
+      this._putFullImageData(data)
+
+    }
+
+    /**
+    * pixel in image NOT in full data
+    */
+    Canvas.prototype.pixelWithinVisibleBounds = function(pixel){
+      var coords = this.toGaussianCoords(pixel)
+      return this.isWithinXBounds(coords.x) && this.isWithinYBounds(coords.y)
+    }
+
+    Canvas.prototype.isWithinXBounds = function(x){
+      return x >= this.visibleArea.x1 && x <=this.visibleArea.x2
+    }
+    Canvas.prototype.isWithinYBounds = function(y){
+      return y >= this.visibleArea.y1 && y <=this.visibleArea.y2
+    }    
+
+    Canvas.prototype.toGaussianCoords = function(totalPosition){
+      var r = totalPosition/4
+      return {
+          x: r%this.imageWidth
+        , y: Math.ceil(r/this.imageWidth)
+      }
     }
 
 
@@ -296,10 +391,10 @@ define([], function() {
       var allPixels = this.getFullImageData()
       var pixels = Array()
 
-      // i.e (800*160*4 + 200*4) = 520000 = 200th pixel in row 160
-      var start = this.canvasWidth * 4 * visibleArea.y1  + visibleArea.x1 * 4
-      // i.e. (800*4*480 + 600*4) = 1538400 = 600th pixek in row 480
-      var end   = this.canvasWidth * 4 * (visibleArea.y2) + visibleArea.x2 * 4 
+      // 
+      var start = this.canvasWidth * 4 * visibleArea.y1  + visibleArea.x1 * 4 + this.startOfPictue
+      // 
+      var end   = this.canvasWidth * 4 * (visibleArea.y2) + visibleArea.x2 * 4 + this.startOfPictue
       var rowLength = (visibleArea.x2 - visibleArea.x1) * 4 + 4
       var rowIncrement = this.canvasWidth * 4
       var i, j
@@ -578,6 +673,7 @@ define([], function() {
       _this.imageWidth = 0
       _this.imageXOffset = 0
       _this.imageYOffset = 0
+      _this.startOfPictue = 0
 
       if(img.width > img.height)
       {
@@ -587,11 +683,11 @@ define([], function() {
         }else{
           _this.imageWidth = img.width
           _this.imageHeight = img.height
-          _this.imageXOffset = Math.round((_this.cv.width - _this.imageWidth) / 2)
+          _this.imageXOffset = Math.floor((_this.cv.width - _this.imageWidth) / 2)
         }
 
         if(_this.imageHeight < _this.cv.height)
-          _this.imageYOffset = Math.round((_this.cv.height - _this.imageHeight) / 2)
+          _this.imageYOffset = Math.floor((_this.cv.height - _this.imageHeight) / 2)
         
       } else {
 
@@ -605,10 +701,10 @@ define([], function() {
         }
 
         if(_this.imageWidth < _this.cv.width)
-          _this.imageXOffset = Math.round((_this.cv.width - _this.imageWidth) / 2)
-        
-             
+          _this.imageXOffset = Math.round((_this.cv.width - _this.imageWidth) / 2)      
       }
+      _this.startOfPictue = _this.imageYOffset*_this.canvasWidth*4 + _this.imageXOffset*4
+
       _this.gotNewImage = true
       _this.clear()
       _this.getContext().drawImage(img, _this.imageXOffset, _this.imageYOffset, _this.imageWidth, _this.imageHeight)
@@ -646,8 +742,8 @@ define([], function() {
 
       this.imageHeight  = otherCanvas.imageHeight * scale
       this.imageWidth   = otherCanvas.imageWidth * scale
-      this.imageXOffset = (this.canvasWidth - this.imageWidth) / 2
-      this.imageYOffset = (this.canvasHeight - this.imageHeight) / 2
+      this.imageXOffset = Math.floor((this.canvasWidth - this.imageWidth) / 2)
+      this.imageYOffset = Math.floor((this.canvasHeight - this.imageHeight) / 2)
 
       if(!doNotDraw){
         // save current context state, to restore changes in scaling later
@@ -795,11 +891,22 @@ define([], function() {
      Canvas.prototype.clear = function(){
       this.ctx.fillStyle="#888888"
       this.ctx.fillRect(0,0, this.ctx.canvas.width, this.ctx.canvas.height)
-    } 
-
+    }
 
     /**
-    * Draws a line into the canvas
+    * Draws a point onto the canvas
+    * @param {Object} position Object with x and y coordinate of start point
+    * @param {Number} radius
+    */
+    Canvas.prototype.drawPoint = function(position, radius){
+      this.ctx.beginPath();
+      this.ctx.arc(position.x, position.y, radius, 0, 2 * Math.PI, false);
+      this.ctx.fillStyle = 'blue';
+      this.ctx.fill();
+    }
+
+    /**
+    * Draws a line onto the canvas
     * @param {Object} startPoint Object with x and y coordinate of start point
     * @param {Object} endPoint Object with x and y coordinate of end point
     */
@@ -875,7 +982,59 @@ define([], function() {
           else 
             this.clones[c].copy(this)
     }
-    
+
+
+    Canvas.prototype.addEventListeners = function(){
+      this.getElement().click(function(e){this.clickAction(e)}.bind(this))
+    }
+
+    Canvas.prototype.clickAction = function(event){
+      var absoluteCoords = this.mouseCoords(event)
+      var relativeCoords = this.coordinateToUnzoomedSystem(absoluteCoords)
+      console.log(absoluteCoords)
+      console.log(relativeCoords)
+      this.drawPoint(absoluteCoords, 5)
+    }
+
+    Canvas.prototype.coordinateToUnzoomedSystem = function(absoluteCoords){
+      return {
+          x: Math.ceil(absoluteCoords.x / this.parent.currentScale) + this.visibleArea.x1
+        , y: Math.ceil(absoluteCoords.y / this.parent.currentScale) + this.visibleArea.y1
+      }
+    }
+
+    Canvas.prototype.coordinateToZoomedSystem = function(absoluteCoords){
+      return {
+          x: Math.ceil(absoluteCoords.x * this.parent.currentScale) - this.visibleArea.x1
+        , y: Math.ceil(absoluteCoords.y * this.parent.currentScale) - this.visibleArea.y1
+      }
+    }    
+
+    /**
+    * UI -> put into a view
+    */
+    Canvas.prototype.mouseCoords = function (event){
+        var totalOffsetX = 0;
+        var totalOffsetY = 0;
+        var canvasX = 0;
+        var canvasY = 0;
+        var currentElement = this.getElement()[0];
+
+        do{
+            totalOffsetX += currentElement.offsetLeft - currentElement.scrollLeft;
+            totalOffsetY += currentElement.offsetTop - currentElement.scrollTop;
+        }
+        while(currentElement = currentElement.offsetParent)
+
+        canvasX = event.pageX - totalOffsetX;
+        canvasY = event.pageY - totalOffsetY;
+
+        var coords = {x:canvasX, y:canvasY}
+
+        return coords
+    } 
+
+
 
 
 // --------------------------------------

@@ -130,8 +130,8 @@ footer {
 .navbar-inverse {
   background-image: black;
 }
-.canvas {
-  margin: 10px;
+.writable {
+  cursor: crosshair;
 }
 .relative {
   position: relative;
