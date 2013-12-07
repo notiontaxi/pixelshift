@@ -26,7 +26,7 @@ var Edge, _ref, module,
     /**
     *
     */
-    function Edge(type, pixelFilled, pixelEmpty, belongsToOutline){   
+    function Edge(type, pixelFilled, pixelEmpty){   
       this.type = type 
       this.pixelFilled = pixelFilled
       this.pixelEmpty = pixelEmpty

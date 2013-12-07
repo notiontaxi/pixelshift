@@ -932,8 +932,10 @@ define([], function() {
     * @param {Object} endPoint Object with x and y coordinate of end point
     */
     Canvas.prototype.drawLine = function(startPoint, endPoint){
+      this.ctx.beginPath()
       this.ctx.moveTo(startPoint.x,startPoint.y)
       this.ctx.lineTo(endPoint.x,endPoint.y)
+      this.ctx.closePath()
       this.ctx.stroke()
     }
 
