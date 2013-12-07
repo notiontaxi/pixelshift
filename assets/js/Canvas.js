@@ -153,10 +153,6 @@ define([], function() {
             break
           case "right":
             bound = Math.floor((width - this.canvasWidth) / this.currentScale)
-            console.log(bound)
-            console.log(this.canvasWidth)
-            console.log(this.imageXOffset)
-            console.log(width)
             if(this.visibleArea.x1 < bound){
               this.visibleArea.x1 += this.pixelPerMove
               this.visibleArea.x1 = this.visibleArea.x1 > bound ? bound : this.visibleArea.x1
@@ -240,53 +236,68 @@ define([], function() {
           this.drawColoredGrid()
         else if(this.alphaGrid)
           this.drawGrid()
-        if(!!this.points)
-          this.drawPoints()
+        if(!!this.paths)
+          this.drawPaths()
       }     
 
       this.copyToClones(true)
     }
 
 
-    Canvas.prototype.drawSinglePixel = function(pixel, data){
+    Canvas.prototype.drawSinglePixel = function(pixel, data, outline, side){
+      var pos = this.toImageGaussianCoords(pixel)
+      var totalPos = (pos.x + pos.y * this.canvasWidth) * 4 * this.currentScale
 
+      if(side == 'left')
+        totalPos += this.currentScale*4
+      else if(side == 'upper')
+        totalPos += this.canvasWidth * this.currentScale * 4
+
+      data.data[totalPos] = 0
+      if(outline){
+        data.data[totalPos+1] = 255
+        data.data[totalPos+2] = 0
+      }else{
+        data.data[totalPos+1] = 0
+        data.data[totalPos+2] = 255        
+      }
+      data.data[totalPos+3] = 255
+
+      return data
     }
 
-    Canvas.prototype.drawPoints = function(){
-
+    Canvas.prototype.drawPaths = function(){
       var data = this.getFullImageData()
+      var paths = this.paths
+      var currentPath = null
 
-      for(var p = 0; p < this.points.size; p++)
-        if(this.pixelWithinVisibleBounds(p))
-          drawSinglePixel(p, data)
-      
+      for(var i = 0; i < paths.length; i++){
+        currentPath = paths[i]
+        for(var p = 0; p < currentPath.edges.length; p++)
+          if(this.pixelWithinVisibleBounds(currentPath.edges[p].pixelFilled))
+            data = this.drawSinglePixel(currentPath.edges[p].pixelFilled, data, currentPath.isOutline, currentPath.edges[p].side) 
+      }
+
       this._putFullImageData(data)
-
     }
 
     /**
     * pixel in image NOT in full data
     */
     Canvas.prototype.pixelWithinVisibleBounds = function(pixel){
-      var coords = this.toGaussianCoords(pixel)
+      var coords = this.toImageGaussianCoords(pixel)
       return this.isWithinXBounds(coords.x) && this.isWithinYBounds(coords.y)
     }
 
     Canvas.prototype.isWithinXBounds = function(x){
-      return x >= this.visibleArea.x1 && x <=this.visibleArea.x2
+      var result = x >= 0 && x <= this.canvasWidth/this.currentScale 
+      return result
     }
+
     Canvas.prototype.isWithinYBounds = function(y){
-      return y >= this.visibleArea.y1 && y <=this.visibleArea.y2
+      var result =  y >= 0 && y <= this.canvasHeight/this.currentScale 
+      return result
     }    
-
-    Canvas.prototype.toGaussianCoords = function(totalPosition){
-      var r = totalPosition/4
-      return {
-          x: r%this.imageWidth
-        , y: Math.ceil(r/this.imageWidth)
-      }
-    }
-
 
     Canvas.prototype.drawColoredGrid = function(){
       var data = this.getFullImageData()
@@ -449,7 +460,7 @@ define([], function() {
               allPixels.data[positionDestination] = area.pixels[positionSource]
               allPixels.data[positionDestination+1] = area.pixels[positionSource+1]
               allPixels.data[positionDestination+2] = area.pixels[positionSource+2]
-              allPixels.data[positionDestination+3] = area.pixels[positionSource+3]
+              allPixels.data[positionDestination+3] = 50//area.pixels[positionSource+3]
 
             }
           }
@@ -1005,10 +1016,23 @@ define([], function() {
 
     Canvas.prototype.coordinateToZoomedSystem = function(absoluteCoords){
       return {
-          x: Math.ceil(absoluteCoords.x * this.parent.currentScale) - this.visibleArea.x1
-        , y: Math.ceil(absoluteCoords.y * this.parent.currentScale) - this.visibleArea.y1
+          x: Math.ceil(absoluteCoords.x - this.visibleArea.x1) * this.parent.currentScale
+        , y: Math.ceil(absoluteCoords.y - this.visibleArea.y1) * this.parent.currentScale
       }
-    }    
+    }
+
+    Canvas.prototype.toImageGaussianCoords = function(totalPosition){
+      var pos = Math.floor(totalPosition/4)
+
+      return {
+          x: pos%this.imageWidth - this.visibleArea.x1
+        , y: Math.ceil(pos/this.imageWidth) - 1 - this.visibleArea.y1
+      }
+    }
+
+    Canvas.prototype.xyToTotalPosition = function(pos){
+      return (pos.y * this.canvasWidth + pos.x) * 4
+    }
 
     /**
     * UI -> put into a view

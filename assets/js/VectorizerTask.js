@@ -57,16 +57,8 @@ var VectorizerTask, _ref, module,
       $("#action-show-paths").click(
         function(event, ui){
           var result = this.imageProcessor.processPathFinding(this.canvasOrigin.getImageData(), this.canvasOrigin.getImageWidth())
-          this.canvasStage.points = result
+          this.canvasStage.paths = result.paths
           $("#path-count").html(result.message)
-          this.canvasOrigin.putImageData(result.imageData)
-          var data = this.canvasOrigin.getFullImageData()
-          console.log(this.canvasOrigin.startOfPictue)
-          data.data[this.canvasOrigin.startOfPictue] = 128
-          data.data[this.canvasOrigin.startOfPictue+1] = 50
-          data.data[this.canvasOrigin.startOfPictue+2] = 180
-          data.data[this.canvasOrigin.startOfPictue+3] = 200
-          this.canvasOrigin._putFullImageData(data)
         }.bind(this)
       )
 

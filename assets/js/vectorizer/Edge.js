@@ -30,7 +30,14 @@ var Edge, _ref, module,
       this.type = type 
       this.pixelFilled = pixelFilled
       this.pixelEmpty = pixelEmpty
-      this.belongsToOutline = belongsToOutline
+
+      if(pixelEmpty > pixelFilled)
+        if(pixelEmpty === pixelFilled + 4)
+          this.side = 'left'
+        else
+          this.side = 'upper'
+      else
+        'other'
     }
 
     Edge.prototype.addEdge = function(edge){
