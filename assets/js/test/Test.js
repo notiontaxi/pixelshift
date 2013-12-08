@@ -55,7 +55,7 @@ var Test, _ref, module,
 
       val = Vector.copyAintoB(vecA, testMe)
       vecA.x = 99
-      msg = testMe.x == 10 && testMe.y == 10 ? 'passed' : 'not passed'
+      msg = testMe.x == 80 && testMe.y == 110 ? 'passed' : 'not passed'
       vecA.x = 10
       console.log("copy: "+msg)                
 
