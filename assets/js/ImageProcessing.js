@@ -7,7 +7,7 @@ https://github.com/notiontaxi
 
 "use strict"
 
-define(['text!templates/image-processing.html','js/OutlineTask', 'js/AreasTask','js/VectorizerTask','js/CanvasGui'], function(contentTemplate, OutlineTask, AreasTask, VectorizerTask, CanvasGui) {
+define(['text!templates/image-processing.html','js/OutlineTask', 'js/AreasTask','js/VectorizerTask','js/CanvasGui', 'js/test/Test'], function(contentTemplate, OutlineTask, AreasTask, VectorizerTask, CanvasGui, Test) {
 
 var ImageProcessing, _ref, module,
 
@@ -31,6 +31,8 @@ var ImageProcessing, _ref, module,
       new AreasTask(".controls-wrapper", this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
       new VectorizerTask(".controls-wrapper", this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
 
+      var test = new Test()
+      test.vector()
     }
 
     ImageProcessing.prototype.initColorPicker = function(){

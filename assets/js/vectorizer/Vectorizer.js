@@ -7,7 +7,7 @@ https://github.com/notiontaxi
 
 "use strict"
 
-define(['js/vectorizer/Path'], function(Path) {
+define(['js/vectorizer/Path', 'js/math/Vector', 'js/test/Test'], function(Path, Vector, Test) {
 
 var Vectorizer, _ref, module,
 
@@ -20,6 +20,10 @@ var Vectorizer, _ref, module,
 
 
     function Vectorizer(containerIdentifier){  
+      this.tempVecA = Vector({x:0, y:0},{x:0, y:0})
+      this.tempVecD = Vector({x:0, y:0},{x:0, y:0})
+      this.tempVecX = Vector({x:0, y:0},{x:0, y:0})
+
     }
 
     Vectorizer.prototype.processPathFinding = function(imageData, imageWidth){
@@ -145,6 +149,56 @@ var Vectorizer, _ref, module,
 
       return result
   }
+
+  Vectorizer.prototype.isStraightPath = function(constraintA, constraintB, vI, vK, directions){
+    
+    var hurt =  Vector.crossValue(constraintA, Vector.getVector(vI, vK, this.tempVecA)) < 0 
+                ||
+                Vector.crossValue(constraintB, Vector.getVector(vI, vK, this.tempVecA)) > 0 
+    if(!hurt){
+      this.updateConstraints(constraintA, constraintB)
+    }
+    else
+    {
+      result = false
+    }
+    return result
+
+  }
+
+  Vectorizer.prototype.updateConstraints = function(constraintA, constraintB){
+    // negation of this.tempVecA.x <= 1 && this.tempVecA.y <= 1
+    if(this.tempVecA.x > 1 || this.tempVecA.y > 1){
+      // c0
+      if(this.tempVecA.y >= 0 && (this.tempVecA.y > 0 || this.tempVecA.x < 0))
+        this.tempVecD.x = this.tempVecA.x +1
+      else
+        this.tempVecD.x = this.tempVecA.x -1
+
+      if(this.tempVecA.x <= 0 && (this.tempVecA.x < 0 || this.tempVecA.y < 0))
+        this.tempVecD.y = this.tempVecA.y +1
+      else
+        this.tempVecD.y = this.tempVecA.y -1
+
+      if(Vector.crossValue(constraintA, this.tempVecD) >= 0)
+        Vector.copyAintoB(this.tempVecD, constraintA)
+
+      //c1
+      if(this.tempVecA.y <= 0 && (this.tempVecA.y < 0 || this.tempVecA.x < 0))
+        this.tempVecD.x = this.tempVecA.x +1
+      else
+        this.tempVecD.x = this.tempVecA.x -1
+
+      if(this.tempVecA.x >= 0 && (this.tempVecA.x > 0 || this.tempVecA.y < 0))
+        this.tempVecD.y = this.tempVecA.y +1
+      else
+        this.tempVecD.y = this.tempVecA.y -1
+
+      if(Vector.crossValue(constraintB, this.tempVecD) <= 0)
+        Vector.copyAintoB(this.tempVecD, constraintB)
+    }
+  }
+
 
 
 // --------------------------------------
