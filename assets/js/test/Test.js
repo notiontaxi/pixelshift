@@ -57,7 +57,12 @@ var Test, _ref, module,
       vecA.x = 99
       msg = testMe.x == 80 && testMe.y == 110 ? 'passed' : 'not passed'
       vecA.x = 10
-      console.log("copy: "+msg)                
+      console.log("copy: "+msg)       
+
+      Vector.setToNull(testMe)
+      msg = testMe.x == 0 && testMe.y == 0 && 
+            testMe.position.x == 0 && testMe.position.y == 0 ? 'passed' : 'not passed'
+      console.log("setToNull: "+msg)                
 
     }
 

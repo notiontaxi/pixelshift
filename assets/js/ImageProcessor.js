@@ -135,6 +135,9 @@ define(['js/Histogram', 'js/helper/Colors', 'js/vectorizer/Vectorizer'], functio
 
     var vec = new Vectorizer()
     var pathFindingResult = vec.processPathFinding(imageData, imageWidth)
+    var allStraightPaths = vec.findAllStraightPaths(pathFindingResult.paths, imageWidth)
+
+    console.log(allStraightPaths)
 
     return pathFindingResult
   }

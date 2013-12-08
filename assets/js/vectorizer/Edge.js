@@ -7,7 +7,7 @@ https://github.com/notiontaxi
 
 "use strict"
 
-define([], function() {
+define(['js/math/Vector'], function(Vector) {
 
 var Edge, _ref, module,
 
@@ -26,10 +26,13 @@ var Edge, _ref, module,
     /**
     *
     */
-    function Edge(type, pixelFilled, pixelEmpty){   
+    function Edge(type, pixelFilled, pixelEmpty, imageWidth){   
       this.type = type 
       this.pixelFilled = pixelFilled
       this.pixelEmpty = pixelEmpty
+
+      this.computeGaussCoords(imageWidth)
+      //this.vector = new Vector(this.gaussCoords, {x: 0, y:0})
 
       if(pixelEmpty > pixelFilled)
         if(pixelEmpty === pixelFilled + 4)
@@ -40,13 +43,16 @@ var Edge, _ref, module,
         'other'
     }
 
-    Edge.prototype.addEdge = function(edge){
-      this.edges.push(edge)
-    }
+    Edge.prototype.computeGaussCoords = function(imageWidth){
 
-    Edge.prototype.getEdges = function(){
-      return this.edges
-    }
+      var pos = Math.floor(this.pixelFilled/4)
+
+      this.gaussCoords = {
+          x: pos%imageWidth
+        , y: Math.ceil(pos/imageWidth) - 1
+      }
+    } 
+
 
     Edge.prototype.equals = function(otherEdge){
       if(   otherEdge.pixelFilled == this.pixelFilled 

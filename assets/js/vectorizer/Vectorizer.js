@@ -20,9 +20,12 @@ var Vectorizer, _ref, module,
 
 
     function Vectorizer(containerIdentifier){  
-      this.tempVecA = Vector({x:0, y:0},{x:0, y:0})
-      this.tempVecD = Vector({x:0, y:0},{x:0, y:0})
-      this.tempVecX = Vector({x:0, y:0},{x:0, y:0})
+      this.tempVecA = new Vector({x:0, y:0},{x:0, y:0})
+      this.tempVecD = new Vector({x:0, y:0},{x:0, y:0})
+      this.tempVecX = new Vector({x:0, y:0},{x:0, y:0})
+
+      this.constraintA = new Vector({x:0, y:0},{x:0, y:0})
+      this.constraintB = new Vector({x:0, y:0},{x:0, y:0})   
 
     }
 
@@ -150,13 +153,67 @@ var Vectorizer, _ref, module,
       return result
   }
 
-  Vectorizer.prototype.isStraightPath = function(constraintA, constraintB, vI, vK, directions){
-    
-    var hurt =  Vector.crossValue(constraintA, Vector.getVector(vI, vK, this.tempVecA)) < 0 
+
+
+  /**
+  * @param {Array} paths array with inline and outline paths
+  */
+  Vectorizer.prototype.findAllStraightPaths = function(paths, imageWidth){
+
+    var allStraightPaths = Array()
+
+    for(var p = 0; p < paths.length; p++){
+      allStraightPaths.push(this.findSingleStraightPaths(paths[p], imageWidth))
+    }
+    return allStraightPaths
+  }
+
+  /**
+  * @param {Path} path with Edges
+  */
+  Vectorizer.prototype.findSingleStraightPaths = function(path, imageWidth){
+ 
+
+    var edges = path.edges
+    var numberOfEdges = edges.length
+    var currentEdge = null
+    var counterEdge = null
+    var straightPaths = Array()
+    var counter = 0
+    this.directions = Array()
+
+    for(var i = 0; i < numberOfEdges; i++){
+
+      currentEdge = edges[i]
+      Vector.setToNull(this.constraintA)
+      Vector.setToNull(this.constraintB)
+      this.directions[0] = this.directions[1] = this.directions[2] = this.directions[3] = 0
+      counter = i+1
+
+      for(var k = i+1; k < numberOfEdges-i; k++){
+
+        counterEdge = edges[k]
+        Vector.getVector(currentEdge.gaussCoords, 
+          counterEdge.gaussCoords, this.tempVecA)
+
+        if(this.isStraightPath() && this.checkDirections(currentEdge))
+          counter = k
+        else
+          break
+      }
+      straightPaths[i] = counter
+    }
+    return straightPaths
+  }
+
+  Vectorizer.prototype.isStraightPath = function(){
+    var result
+    var hurt =  Vector.crossValue(this.constraintA, this.tempVecA) < 0 
                 ||
-                Vector.crossValue(constraintB, Vector.getVector(vI, vK, this.tempVecA)) > 0 
+                Vector.crossValue(this.constraintB, this.tempVecA) > 0 
     if(!hurt){
-      this.updateConstraints(constraintA, constraintB)
+      this.updateConstraints(this.constraintA, this.constraintB)
+      result = true
     }
     else
     {
@@ -166,7 +223,12 @@ var Vectorizer, _ref, module,
 
   }
 
-  Vectorizer.prototype.updateConstraints = function(constraintA, constraintB){
+  Vectorizer.prototype.checkDirections = function(currentEdge){
+    this.directions[currentEdge.type-1] = 1
+    return this.directions[0] + this.directions[1] + this.directions[2] + this.directions[3] < 4
+  }
+
+  Vectorizer.prototype.updateConstraints = function(){
     // negation of this.tempVecA.x <= 1 && this.tempVecA.y <= 1
     if(this.tempVecA.x > 1 || this.tempVecA.y > 1){
       // c0
@@ -180,8 +242,8 @@ var Vectorizer, _ref, module,
       else
         this.tempVecD.y = this.tempVecA.y -1
 
-      if(Vector.crossValue(constraintA, this.tempVecD) >= 0)
-        Vector.copyAintoB(this.tempVecD, constraintA)
+      if(Vector.crossValue(this.constraintA, this.tempVecD) >= 0)
+        Vector.copyAintoB(this.tempVecD, this.constraintA)
 
       //c1
       if(this.tempVecA.y <= 0 && (this.tempVecA.y < 0 || this.tempVecA.x < 0))
@@ -194,8 +256,8 @@ var Vectorizer, _ref, module,
       else
         this.tempVecD.y = this.tempVecA.y -1
 
-      if(Vector.crossValue(constraintB, this.tempVecD) <= 0)
-        Vector.copyAintoB(this.tempVecD, constraintB)
+      if(Vector.crossValue(this.constraintB, this.tempVecD) <= 0)
+        Vector.copyAintoB(this.tempVecD, this.constraintB)
     }
   }
 

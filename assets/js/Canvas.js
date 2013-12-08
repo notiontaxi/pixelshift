@@ -246,22 +246,12 @@ define([], function() {
 
     Canvas.prototype.drawSinglePixel = function(pixel,outline, withLine, secondPixel){
       var pos = this.toImageGaussianCoords(pixel.pixelFilled)
-
-      if(pixel.side == 'left')
-        pos.x++ 
-      else if(pixel.side == 'upper')
-        pos.y++
-
-      var gPos = {x: pos.x * this.currentScale, y: pos.y * this.currentScale}
+      var gPos = {x: pos.x * this.currentScale +this.currentScale/2, y: pos.y * this.currentScale +this.currentScale/2 }
       var pointSize = Math.ceil((this.currentScale*2) / 15)
 
       if(withLine){
         var pos2 = this.toImageGaussianCoords(secondPixel.pixelFilled)
-        if(secondPixel.side == 'left')
-          pos2.x++ 
-        else if(secondPixel.side == 'upper')
-          pos2.y++        
-        this.drawLine(gPos, {x: pos2.x * this.currentScale , y: pos2.y * this.currentScale})
+        this.drawLine(gPos, {x: pos2.x * this.currentScale + this.currentScale/2, y: pos2.y * this.currentScale + this.currentScale/2 })
       }
 
       if(outline){
@@ -269,8 +259,6 @@ define([], function() {
       }else{
        this.drawPoint(gPos, pointSize, 'blue')
       }
-
-
 
     }
 
@@ -286,7 +274,6 @@ define([], function() {
               this.drawSinglePixel(currentPath.edges[p], currentPath.isOutline, true, currentPath.edges[p+1])
             else
               this.drawSinglePixel(currentPath.edges[p], currentPath.isOutline, false) 
-
       }
 
     }

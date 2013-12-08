@@ -21,6 +21,7 @@ var Path, _ref, module,
 
     function Path(isOutline, imageData, imageWidth){   
       this.isOutline = isOutline
+      this.straightPaths = Array()
 
       if(isOutline)
         this.lookFor = 0
@@ -44,7 +45,7 @@ var Path, _ref, module,
 
     Path.prototype.findPath = function(startPixel){
 
-      this.startEdge = new Edge(Edge.EDGETYPE_LEFT, startPixel, startPixel-4)
+      this.startEdge = new Edge(Edge.EDGETYPE_LEFT, startPixel, startPixel-4 , this.imageWidth)
       this.edges.push(this.startEdge)
       var currentEdge = this.startEdge
       var notFinished = true
@@ -150,9 +151,9 @@ var Path, _ref, module,
       var edge
 
       if(this.isOutline)
-        edge = new Edge(type, pixelfilled, pixelempty, this.isOutline)
+        edge = new Edge(type, pixelfilled, pixelempty, this.imageWidth)
       else
-        edge = new Edge(type, pixelfilled, pixelempty, false)
+        edge = new Edge(type, pixelfilled, pixelempty, this.imageWidth)
 
       return edge
     }

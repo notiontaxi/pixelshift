@@ -111,6 +111,13 @@ var Vector, _ref, module,
       out.y = v1.y      
     }
 
+    Vector.setToNull = function(out){
+      out.x = 0
+      out.y = 0
+      out.position.x = 0
+      out.position.y = 0
+    }
+
 
 // --------------------------------------
     return Vector
