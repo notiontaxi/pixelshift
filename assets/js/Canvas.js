@@ -245,13 +245,13 @@ define([], function() {
 
 
     Canvas.prototype.drawSinglePixel = function(pixel,outline,i ,withLine, secondPixel){
-      var pos = this.toImageGaussianCoords(pixel.pixelFilled)
-      var gPos = {x: pos.x * this.currentScale +this.currentScale/2, y: pos.y * this.currentScale +this.currentScale/2 }
+      var pos = this.toImageGaussianCoords(pixel.vertice)
+      var gPos = {x: pos.x * this.currentScale , y: pos.y * this.currentScale  }
       var pointSize = Math.ceil((this.currentScale*2) / 15)
 
       if(withLine){
-        var pos2 = this.toImageGaussianCoords(secondPixel.pixelFilled)
-        this.drawLine(gPos, {x: pos2.x * this.currentScale + this.currentScale/2, y: pos2.y * this.currentScale + this.currentScale/2 })
+        var pos2 = this.toImageGaussianCoords(secondPixel.vertice)
+        this.drawLine(gPos, {x: pos2.x * this.currentScale , y: pos2.y * this.currentScale  })
       }
 
       if(outline){
@@ -272,7 +272,7 @@ define([], function() {
 
       for(var i = 0; i < paths.length; i++){
         currentPath = paths[i]
-        //currentPoints = currentPath.getPoints()
+        //currentPoints = currentPath.edges//.getPoints()
         currentPoints = currentPath.getFilteredPoints(this.filter[i])
         for(var p = 0; p < currentPoints.length; p++)
           if(this.pixelWithinVisibleBounds(currentPoints[p].pixelFilled))

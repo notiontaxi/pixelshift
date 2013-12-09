@@ -195,10 +195,10 @@ var Vectorizer, _ref, module,
 
         counterEdge = edges[k]
         Vector.getVector(currentEdge.gaussCoords, counterEdge.gaussCoords, this.tempVecA)
-        console.log(i+' to '+k+':')
-        console.log(this.tempVecA)
-        console.log(this.constraintA)
-        console.log(this.constraintB)
+        //console.log(i+' to '+k+':')
+        //console.log(this.tempVecA)
+        //console.log(this.constraintA)
+        //console.log(this.constraintB)
 
         if(this.isStraightPath() && this.checkDirections(currentEdge))
           counter = k
@@ -236,7 +236,7 @@ var Vectorizer, _ref, module,
     // negation of this.tempVecA.x <= 1 && this.tempVecA.y <= 1
     if(this.tempVecA.x >= 1 || this.tempVecA.x <= -1 || this.tempVecA.y >= 1 || this.tempVecA.y <= -1){
       // c0
-      console.log('update')
+      //console.log('update')
       if(this.tempVecA.y >= 0 && (this.tempVecA.y > 0 || this.tempVecA.x < 0))
         this.tempVecD.x = this.tempVecA.x +1
       else

@@ -31,6 +31,7 @@ var Edge, _ref, module,
       this.pixelFilled = pixelFilled
       this.pixelEmpty = pixelEmpty
 
+      this.setVertice(imageWidth)
       this.computeGaussCoords(imageWidth)
       //this.vector = new Vector(this.gaussCoords, {x: 0, y:0})
 
@@ -45,13 +46,32 @@ var Edge, _ref, module,
 
     Edge.prototype.computeGaussCoords = function(imageWidth){
 
-      var pos = Math.floor(this.pixelFilled/4)
+      var pos = Math.floor(this.vertice/4)
 
       this.gaussCoords = {
           x: pos%imageWidth
         , y: Math.ceil(pos/imageWidth) - 1
       }
     } 
+
+    Edge.prototype.setVertice = function(imageWidth){
+      
+      switch(this.type){
+        case Edge.EDGETYPE_LEFT:
+          this.vertice = this.pixelFilled+imageWidth*4
+          break
+        case Edge.EDGETYPE_BOTTOM:
+          this.vertice = this.pixelFilled+4+imageWidth*4
+          break
+        case Edge.EDGETYPE_RIGHT:
+          this.vertice = this.pixelFilled+4
+          break
+        case Edge.EDGETYPE_TOP:
+          this.vertice = this.pixelFilled
+          break
+      }
+
+    }
 
 
     Edge.prototype.equals = function(otherEdge){

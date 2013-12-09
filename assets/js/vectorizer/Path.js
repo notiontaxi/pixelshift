@@ -88,14 +88,14 @@ var Path, _ref, module,
 
         for(var i = 0; i < filter.length;){
           this.filteredPoints.push(points[filter[i]])
-          console.log('i: '+i)
-          console.log('filter[i]: '+filter[i])
+          //console.log('i: '+i)
+          //console.log('filter[i]: '+filter[i])
           i = filter[i]
         }
 
-      console.log('filtered')
-      console.log(filter)
-      console.log(this.filteredPoints)        
+      //console.log('filtered')
+      //console.log(filter)
+      //console.log(this.filteredPoints)        
 
       }
 
