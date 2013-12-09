@@ -53,6 +53,7 @@ var Path, _ref, module,
       while(notFinished){
 
         var nextEdge = this.getNextEdgeOf(currentEdge)
+
         this.edges.push(nextEdge)
         currentEdge = nextEdge
 
@@ -60,6 +61,45 @@ var Path, _ref, module,
           notFinished = false
 
       }
+    }
+
+    Path.prototype.getPoints = function(){
+
+      if(!this.points){
+        var newEdges = Array()
+        newEdges.push(this.edges[0])
+
+        for(var i = 1; i < this.edges.length; i++){
+          if(this.edges[i].pixelFilled != this.edges[i-1].pixelFilled)
+            newEdges.push(this.edges[i])
+        }
+        this.points = newEdges
+      }
+      return this.points
+    }
+
+    Path.prototype.getFilteredPoints = function(filter){
+
+      if(!this.filteredPoints){
+        this.filteredPoints = Array()
+        
+        var points = this.getPoints()
+        this.filteredPoints.push(points[0])
+
+        for(var i = 0; i < filter.length;){
+          this.filteredPoints.push(points[filter[i]])
+          console.log('i: '+i)
+          console.log('filter[i]: '+filter[i])
+          i = filter[i]
+        }
+
+      console.log('filtered')
+      console.log(filter)
+      console.log(this.filteredPoints)        
+
+      }
+
+      return this.filteredPoints
     }
 
     Path.prototype.getNextEdgeOf = function(edge){

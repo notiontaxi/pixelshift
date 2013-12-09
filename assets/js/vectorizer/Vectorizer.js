@@ -174,7 +174,7 @@ var Vectorizer, _ref, module,
   Vectorizer.prototype.findSingleStraightPaths = function(path, imageWidth){
  
 
-    var edges = path.edges
+    var edges = path.getPoints()
     var numberOfEdges = edges.length
     var currentEdge = null
     var counterEdge = null
@@ -182,19 +182,23 @@ var Vectorizer, _ref, module,
     var counter = 0
     this.directions = Array()
 
-    for(var i = 0; i < numberOfEdges; i++){
+    for(var i = 0; i < numberOfEdges-1; i++){
 
       currentEdge = edges[i]
       Vector.setToNull(this.constraintA)
       Vector.setToNull(this.constraintB)
+      
       this.directions[0] = this.directions[1] = this.directions[2] = this.directions[3] = 0
       counter = i+1
 
-      for(var k = i+1; k < numberOfEdges-i; k++){
+      for(var k = i+1; k < numberOfEdges; k++){
 
         counterEdge = edges[k]
-        Vector.getVector(currentEdge.gaussCoords, 
-          counterEdge.gaussCoords, this.tempVecA)
+        Vector.getVector(currentEdge.gaussCoords, counterEdge.gaussCoords, this.tempVecA)
+        console.log(i+' to '+k+':')
+        console.log(this.tempVecA)
+        console.log(this.constraintA)
+        console.log(this.constraintB)
 
         if(this.isStraightPath() && this.checkDirections(currentEdge))
           counter = k
@@ -212,7 +216,7 @@ var Vectorizer, _ref, module,
                 ||
                 Vector.crossValue(this.constraintB, this.tempVecA) > 0 
     if(!hurt){
-      this.updateConstraints(this.constraintA, this.constraintB)
+      this.updateConstraints()
       result = true
     }
     else
@@ -230,8 +234,9 @@ var Vectorizer, _ref, module,
 
   Vectorizer.prototype.updateConstraints = function(){
     // negation of this.tempVecA.x <= 1 && this.tempVecA.y <= 1
-    if(this.tempVecA.x > 1 || this.tempVecA.y > 1){
+    if(this.tempVecA.x >= 1 || this.tempVecA.x <= -1 || this.tempVecA.y >= 1 || this.tempVecA.y <= -1){
       // c0
+      console.log('update')
       if(this.tempVecA.y >= 0 && (this.tempVecA.y > 0 || this.tempVecA.x < 0))
         this.tempVecD.x = this.tempVecA.x +1
       else

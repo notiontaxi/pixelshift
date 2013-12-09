@@ -58,6 +58,7 @@ var VectorizerTask, _ref, module,
         function(event, ui){
           var result = this.imageProcessor.processPathFinding(this.canvasOrigin.getImageData(), this.canvasOrigin.getImageWidth())
           this.canvasStage.paths = result.paths
+          this.canvasStage.filter = result.filter
           $("#path-count").html(result.message)
         }.bind(this)
       )

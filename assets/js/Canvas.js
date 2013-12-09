@@ -244,7 +244,7 @@ define([], function() {
     }
 
 
-    Canvas.prototype.drawSinglePixel = function(pixel,outline, withLine, secondPixel){
+    Canvas.prototype.drawSinglePixel = function(pixel,outline,i ,withLine, secondPixel){
       var pos = this.toImageGaussianCoords(pixel.pixelFilled)
       var gPos = {x: pos.x * this.currentScale +this.currentScale/2, y: pos.y * this.currentScale +this.currentScale/2 }
       var pointSize = Math.ceil((this.currentScale*2) / 15)
@@ -260,20 +260,26 @@ define([], function() {
        this.drawPoint(gPos, pointSize, 'blue')
       }
 
+      this.drawText(i, gPos, 'white')
+      gPos.y += this.currentScale/4
+      this.drawText('('+pixel.gaussCoords.x+','+pixel.gaussCoords.y+')', gPos, 'white')
     }
 
     Canvas.prototype.drawPaths = function(){
       var paths = this.paths
       var currentPath = null
+      var currentPoints = null
 
       for(var i = 0; i < paths.length; i++){
         currentPath = paths[i]
-        for(var p = 0; p < currentPath.edges.length; p++)
-          if(this.pixelWithinVisibleBounds(currentPath.edges[p].pixelFilled))
-            if(p+1 < currentPath.edges.length && this.pixelWithinVisibleBounds(currentPath.edges[p+1].pixelFilled))
-              this.drawSinglePixel(currentPath.edges[p], currentPath.isOutline, true, currentPath.edges[p+1])
+        //currentPoints = currentPath.getPoints()
+        currentPoints = currentPath.getFilteredPoints(this.filter[i])
+        for(var p = 0; p < currentPoints.length; p++)
+          if(this.pixelWithinVisibleBounds(currentPoints[p].pixelFilled))
+            if(p+1 < currentPoints.length && this.pixelWithinVisibleBounds(currentPoints[p+1].pixelFilled))
+              this.drawSinglePixel(currentPoints[p], currentPath.isOutline,p , true, currentPoints[p+1])
             else
-              this.drawSinglePixel(currentPath.edges[p], currentPath.isOutline, false) 
+              this.drawSinglePixel(currentPoints[p], currentPath.isOutline,p ,false) 
       }
 
     }
@@ -934,12 +940,12 @@ define([], function() {
     * @param {float} rot clockwise rotation in radian (45° = Math.PI/4, 90° = Math.PI/2, 180° = Math.PI, a.s.o.) 
     */
     Canvas.prototype.drawText = function(text, pos, color, rot){
-      this.ctx.font = "bold 12px sans-serif"
+      this.ctx.font = "bold 8px sans-serif"
       this.ctx.textAlign = 'center'
       this.ctx.textBaseline = 'middle'
       // cut if its a number
-      if(!isNaN(text*2))
-        text = text.toFixed(1)
+      //if(!isNaN(text*2))
+        //text = text.toFixed(0)
 
       this.ctx.fillStyle = color;
 
