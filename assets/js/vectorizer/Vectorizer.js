@@ -173,16 +173,15 @@ var Vectorizer, _ref, module,
   */
   Vectorizer.prototype.findSingleStraightPaths = function(path, imageWidth){
  
-
-    var edges = path.getPoints()
-    var numberOfEdges = edges.length
+    var edges = path.edges
+    var edgesLimit = edges.length-1
     var currentEdge = null
     var counterEdge = null
     var straightPaths = Array()
     var counter = 0
     this.directions = Array()
 
-    for(var i = 0; i < numberOfEdges-1; i++){
+    for(var i = 0; i <= edgesLimit; i++){
 
       currentEdge = edges[i]
       Vector.setToNull(this.constraintA)
@@ -191,9 +190,9 @@ var Vectorizer, _ref, module,
       this.directions[0] = this.directions[1] = this.directions[2] = this.directions[3] = 0
       counter = i+1
 
-      for(var k = i+1; k < numberOfEdges; k++){
-
-        counterEdge = edges[k]
+      for(var k = i+1; k < edgesLimit*2; k++){
+        //console.log(k)
+        counterEdge = edges[k%edgesLimit]
         Vector.getVector(currentEdge.gaussCoords, counterEdge.gaussCoords, this.tempVecA)
         //console.log(i+' to '+k+':')
         //console.log(this.tempVecA)
@@ -201,11 +200,11 @@ var Vectorizer, _ref, module,
         //console.log(this.constraintB)
 
         if(this.isStraightPath() && this.checkDirections(currentEdge))
-          counter = k
+          counter = k%edgesLimit
         else
           break
       }
-      straightPaths[i] = counter
+      straightPaths[i] = counter%edgesLimit
     }
     return straightPaths
   }

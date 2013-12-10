@@ -51,7 +51,6 @@ var Path, _ref, module,
       var notFinished = true
 
       while(notFinished){
-
         var nextEdge = this.getNextEdgeOf(currentEdge)
 
         this.edges.push(nextEdge)
@@ -59,7 +58,6 @@ var Path, _ref, module,
 
         if(currentEdge.equals(this.startEdge))
           notFinished = false
-
       }
     }
 
@@ -83,19 +81,32 @@ var Path, _ref, module,
       if(!this.filteredPoints){
         this.filteredPoints = Array()
         
-        var points = this.getPoints()
+        var points = this.edges
+        var points
+        var lastI = 0
         this.filteredPoints.push(points[0])
 
         for(var i = 0; i < filter.length;){
-          this.filteredPoints.push(points[filter[i]])
+          
           //console.log('i: '+i)
           //console.log('filter[i]: '+filter[i])
-          i = filter[i]
+          this.filteredPoints.push(points[filter[i]])
+          i = filter[i]          
+
+          if(i < lastI){
+            // remove first point, is a shorter connection was found
+            this.filteredPoints.shift()
+            // don't star over at the begining... this would be endless
+            break
+          }
+          lastI = i
+
+
         }
 
-      //console.log('filtered')
+      //console.log('filter:')
       //console.log(filter)
-      //console.log(this.filteredPoints)        
+      //this.log(this.filteredPoints)        
 
       }
 

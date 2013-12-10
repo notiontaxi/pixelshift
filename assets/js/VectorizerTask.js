@@ -59,6 +59,7 @@ var VectorizerTask, _ref, module,
           var result = this.imageProcessor.processPathFinding(this.canvasOrigin.getImageData(), this.canvasOrigin.getImageWidth())
           this.canvasStage.paths = result.paths
           this.canvasStage.filter = result.filter
+          this.canvasStage.pathType = 'dfsds'
           $("#path-count").html(result.message)
         }.bind(this)
       )

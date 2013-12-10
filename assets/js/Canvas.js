@@ -265,21 +265,22 @@ define([], function() {
       this.drawText('('+pixel.gaussCoords.x+','+pixel.gaussCoords.y+')', gPos, 'white')
     }
 
-    Canvas.prototype.drawPaths = function(){
+    Canvas.prototype.drawPaths = function(pathType){
       var paths = this.paths
       var currentPath = null
       var currentPoints = null
 
       for(var i = 0; i < paths.length; i++){
         currentPath = paths[i]
-        //currentPoints = currentPath.edges//.getPoints()
-        currentPoints = currentPath.getFilteredPoints(this.filter[i])
-        for(var p = 0; p < currentPoints.length; p++)
+        currentPoints = this.pathType == 'full' ? currentPath.edges : currentPath.getFilteredPoints(this.filter[i])
+
+        for(var p = 0; p < currentPoints.length; p++){
           if(this.pixelWithinVisibleBounds(currentPoints[p].pixelFilled))
             if(p+1 < currentPoints.length && this.pixelWithinVisibleBounds(currentPoints[p+1].pixelFilled))
               this.drawSinglePixel(currentPoints[p], currentPath.isOutline,p , true, currentPoints[p+1])
             else
               this.drawSinglePixel(currentPoints[p], currentPath.isOutline,p ,false) 
+        }
       }
 
     }
