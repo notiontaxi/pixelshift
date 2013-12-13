@@ -55,21 +55,22 @@ var Edge, _ref, module,
     } 
 
     Edge.prototype.setVertice = function(imageWidth){
-      
+  
       switch(this.type){
         case Edge.EDGETYPE_LEFT:
-          this.vertice = this.pixelFilled+imageWidth*4
-          break
-        case Edge.EDGETYPE_BOTTOM:
-          this.vertice = this.pixelFilled+4+imageWidth*4
-          break
-        case Edge.EDGETYPE_RIGHT:
-          this.vertice = this.pixelFilled+4
-          break
-        case Edge.EDGETYPE_TOP:
           this.vertice = this.pixelFilled
           break
-      }
+        case Edge.EDGETYPE_BOTTOM:
+          this.vertice = this.pixelFilled+imageWidth*4
+          break
+        case Edge.EDGETYPE_RIGHT:
+          this.vertice = this.pixelFilled+4+imageWidth*4
+          break
+        case Edge.EDGETYPE_TOP:
+          this.vertice = this.pixelFilled+4
+          break
+      }  
+
 
     }
 

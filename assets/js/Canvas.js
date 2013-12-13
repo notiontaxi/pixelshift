@@ -272,17 +272,16 @@ define([], function() {
 
       for(var i = 0; i < paths.length; i++){
         currentPath = paths[i]
-        currentPoints = this.pathType == 'full' ? currentPath.edges : currentPath.getFilteredPoints(this.filter[i])
-
+        currentPoints = this.pathType == 'full' ? currentPath.edges : currentPath.getAllowedPoints()
+        //console.log(currentPath.edges)
         for(var p = 0; p < currentPoints.length; p++){
           if(this.pixelWithinVisibleBounds(currentPoints[p].pixelFilled))
             if(p+1 < currentPoints.length && this.pixelWithinVisibleBounds(currentPoints[p+1].pixelFilled))
               this.drawSinglePixel(currentPoints[p], currentPath.isOutline,p , true, currentPoints[p+1])
             else
-              this.drawSinglePixel(currentPoints[p], currentPath.isOutline,p ,false) 
+              this.drawSinglePixel(currentPoints[p], currentPath.isOutline,p ,false)
         }
       }
-
     }
 
     /**

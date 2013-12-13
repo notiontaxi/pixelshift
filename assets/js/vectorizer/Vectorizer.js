@@ -53,7 +53,7 @@ var Vectorizer, _ref, module,
         newLine = (i%(imageWidth*4) == 0)
         if(newLine){
           // first one is black of known path
-          if(imageData.data[i] == 0 && imageData.data[i-imageWidth*4] == 253){         
+          if(imageData.data[i] == 0 && imageData.data[i-imageWidth*4] == 253){
             outside = false
             foundInner = false
             //console.log('first one is black at '+i%imageWidth)
@@ -153,19 +153,33 @@ var Vectorizer, _ref, module,
       return result
   }
 
+  Vectorizer.prototype.filterAllowedPath = function(straightPath){
+    var allowedPaths = Array()
+
+    for(var i = 0; i < straightPath.length; i++){
+      allowedPaths[i] = straightPath[(i+straightPath.length-1)%straightPath.length]      
+    }
+    return straightPath
+  }
 
 
   /**
   * @param {Array} paths array with inline and outline paths
   */
-  Vectorizer.prototype.findAllStraightPaths = function(paths, imageWidth){
+  Vectorizer.prototype.extendPaths = function(paths, imageWidth){
 
     var allStraightPaths = Array()
+    var allAllowedPaths = Array()
+    var singleStraightPath = null
+    var result
 
     for(var p = 0; p < paths.length; p++){
-      allStraightPaths.push(this.findSingleStraightPaths(paths[p], imageWidth))
+      singleStraightPath = this.findSingleStraightPaths(paths[p], imageWidth)
+      //allStraightPaths.push(singleStraightPath)
+      result = this.filterAllowedPath(singleStraightPath)
+      paths[p].straight = result.straight
+      paths[p].allowed = result.allowed
     }
-    return allStraightPaths
   }
 
   /**
@@ -178,6 +192,7 @@ var Vectorizer, _ref, module,
     var currentEdge = null
     var counterEdge = null
     var straightPaths = Array()
+    var allowedPaths = Array()
     var counter = 0
     this.directions = Array()
 
@@ -191,36 +206,60 @@ var Vectorizer, _ref, module,
       counter = i+1
 
       for(var k = i+1; k < edgesLimit*2; k++){
-        //console.log(k)
+        //console.log(i+' to '+k+'('+k%edgesLimit+'):')
         counterEdge = edges[k%edgesLimit]
         Vector.getVector(currentEdge.gaussCoords, counterEdge.gaussCoords, this.tempVecA)
-        //console.log(i+' to '+k+':')
-        //console.log(this.tempVecA)
-        //console.log(this.constraintA)
-        //console.log(this.constraintB)
 
-        if(this.isStraightPath() && this.checkDirections(currentEdge))
+        if(this.isStraightPath() && this.checkDirections(currentEdge)){
           counter = k%edgesLimit
+            //console.log(this.tempVecA)
+            //console.log(this.constraintA)
+            //console.log(this.constraintB)
+        }
         else
           break
       }
-      straightPaths[i] = counter%edgesLimit
+      straightPaths[i%edgesLimit] = counter%edgesLimit
+      allowedPaths[(i+1)%edgesLimit]  = (counter-1)%edgesLimit
     }
-    return straightPaths
+
+    this.cleanUp(straightPaths, edgesLimit)
+    this.cleanUp(allowedPaths, edgesLimit)
+
+    return {
+        straight: straightPaths
+      , allowed: allowedPaths
+    }
   }
+
+  Vectorizer.prototype.cleanUp = function(straightPaths, edgesLimit){
+    for(var i = 0; i < straightPaths.length; i++){
+      straightPaths[i] = this.getMin(straightPaths, i+1, straightPaths[i])
+    }
+  }
+  Vectorizer.prototype.getMin = function(arrayValues, from, to){
+    var min = to
+    for(var i = from; i < to; i++){
+      min = arrayValues[i] < min && arrayValues[i] > from ? arrayValues[i] : min
+    }
+    return min
+  }  
 
   Vectorizer.prototype.isStraightPath = function(){
     var result
-    var hurt =  Vector.crossValue(this.constraintA, this.tempVecA) < 0 
-                ||
-                Vector.crossValue(this.constraintB, this.tempVecA) > 0 
-    if(!hurt){
-      this.updateConstraints()
-      result = true
+    var crossA =  Vector.crossValue(this.constraintA, this.tempVecA) < 0
+    var crossB =  Vector.crossValue(this.constraintB, this.tempVecA) > 0
+    //console.log('crossA: '+crossA+' crossB: '+crossB)
+
+    var hurt = crossA || crossB
+                
+    if(hurt){
+      result = false
     }
     else
     {
-      result = false
+      this.updateConstraints()
+      result = true
     }
     return result
 
@@ -232,10 +271,10 @@ var Vectorizer, _ref, module,
   }
 
   Vectorizer.prototype.updateConstraints = function(){
-    // negation of this.tempVecA.x <= 1 && this.tempVecA.y <= 1
-    if(this.tempVecA.x >= 1 || this.tempVecA.x <= -1 || this.tempVecA.y >= 1 || this.tempVecA.y <= -1){
+    if(!(this.tempVecA.x <= 1 && this.tempVecA.x >= -1 && this.tempVecA.y <= 1 && this.tempVecA.y >= -1)){
+    //if(this.tempVecA.x > 1 || this.tempVecA.x < -1 || this.tempVecA.y > 1 || this.tempVecA.y < -1){
       // c0
-      //console.log('update')
+      //console.log("update")
       if(this.tempVecA.y >= 0 && (this.tempVecA.y > 0 || this.tempVecA.x < 0))
         this.tempVecD.x = this.tempVecA.x +1
       else

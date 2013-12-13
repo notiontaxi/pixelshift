@@ -76,7 +76,54 @@ var Path, _ref, module,
       return this.points
     }
 
+    Path.prototype.getAllowedPoints = function(){
+      //console.log(this.allowed)
+      return this.getFilteredPoints(this.allowed)
+    }
+    Path.prototype.getStraightPoints = function(){
+      //console.log(this.straight)
+      return this.getFilteredPoints(this.straight)
+    }    
+/*
     Path.prototype.getFilteredPoints = function(filter){
+
+        var points = this.edges
+        this.filteredPoints = null
+
+        for(var k = 0; k < filter.length; k++){
+
+          var filteredPoints = Array()
+          var lastI = 0
+          var start = k 
+          var startOver = false
+          var i = start
+
+            for(;;){
+
+              filteredPoints.push(points[filter[i]])
+              i = filter[i]        
+              
+              if(i < lastI || filter[start] == 0)
+                startOver = true
+              // don't star over at the begining... this would be endless
+              if(i >= filter[start] && startOver){
+                filteredPoints[filteredPoints.length-1] = filteredPoints[0]
+                break
+              }
+
+              lastI = i
+            }
+
+
+          if(this.filteredPoints == null || this.filteredPoints.length > filteredPoints.length)
+            this.filteredPoints = filteredPoints
+        }
+      
+      console.log("FILTERED")
+      return this.filteredPoints
+    }*/
+    
+ Path.prototype.getFilteredPoints = function(filter){
 
       if(!this.filteredPoints){
         this.filteredPoints = Array()
@@ -100,18 +147,11 @@ var Path, _ref, module,
             break
           }
           lastI = i
-
-
         }
-
-      //console.log('filter:')
-      //console.log(filter)
-      //this.log(this.filteredPoints)        
-
       }
 
       return this.filteredPoints
-    }
+    }    
 
     Path.prototype.getNextEdgeOf = function(edge){
 
