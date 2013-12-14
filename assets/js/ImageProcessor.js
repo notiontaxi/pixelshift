@@ -133,8 +133,9 @@ define(['js/Histogram', 'js/helper/Colors', 'js/vectorizer/Vectorizer'], functio
 
   ImageProcessor.prototype.processPathFinding = function(imageData, imageWidth){
 
+    var bitmap = this.processThreshold(this.computeThreshold(imageData),imageData)
     var vec = new Vectorizer()
-    var pathFindingResult = vec.processPathFinding(imageData, imageWidth)
+    var pathFindingResult = vec.processPathFinding(bitmap, imageWidth)
     vec.extendPaths(pathFindingResult.paths, imageWidth)
 
     return pathFindingResult

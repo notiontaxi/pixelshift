@@ -85,7 +85,6 @@ var Path, _ref, module,
         else
           this.allowedPoints = this.getFilteredPoints(this.allowed)
 
-      console.log("Allowed")
       return this.allowedPoints
     }
     Path.prototype.getStraightPoints = function(){
@@ -95,7 +94,6 @@ var Path, _ref, module,
         else
           this.straighPoints = this.getFilteredPoints(this.straight)
 
-      console.log("Straight")
       return this.straighPoints
     }    
 
@@ -107,7 +105,7 @@ var Path, _ref, module,
         for(var k = 0; k < filter.length; k++){
 
           var filteredPoints = Array()
-
+          var result = null
           var currentIndex = k 
           var currentkey = Infinity
           var startKey = filter[k]
@@ -121,9 +119,9 @@ var Path, _ref, module,
             if(currentkey <= startKey)
               startOver = true
 
+            // close path and exit
             if(currentkey >= startKey && startOver){
               moveOn = false
-              // close path
               if(currentkey != startKey)
                 filteredPoints.push(filteredPoints[0])
               if(currentkey <= startKey)
@@ -134,53 +132,19 @@ var Path, _ref, module,
               filteredPoints.push(points[filter[currentIndex]])           
             }
 
-            
-
             currentIndex = filter[currentIndex] 
             currentkey = filter[currentIndex]
             i++
           }while(moveOn && i < filter.length)
 
-          //console.log('i: '+i)
-          //console.log(filteredPoints)
-          if(this.filteredPoints == null || this.filteredPoints.length > filteredPoints.length)
-            this.filteredPoints = filteredPoints
+
+          if(result == null || result.length > filteredPoints.length)
+            result = filteredPoints
         }
       
-      console.log("FILTERED")
-      return this.filteredPoints
+      return result
     }
 
-    /*
- Path.prototype.getFilteredPoints = function(filter){
-
-      if(!this.filteredPoints){
-        this.filteredPoints = Array()
-        
-        var points = this.edges
-        var points
-        var lastI = 0
-        this.filteredPoints.push(points[0])
-
-        for(var i = 0; i < filter.length;){
-          
-          //console.log('i: '+i)
-          //console.log('filter[i]: '+filter[i])
-          this.filteredPoints.push(points[filter[i]])
-          i = filter[i]          
-
-          if(i < lastI){
-            // remove first point, is a shorter connection was found
-            this.filteredPoints.shift()
-            // don't star over at the begining... this would be endless
-            break
-          }
-          lastI = i
-        }
-      }
-
-      return this.filteredPoints
-    }    */
 
     Path.prototype.getNextEdgeOf = function(edge){
 
@@ -276,6 +240,13 @@ var Path, _ref, module,
         edge = new Edge(type, pixelfilled, pixelempty, this.imageWidth)
 
       return edge
+    }
+
+    Path.prototype.computeExtendedPaths = function(straight, allowed){
+      this.straight = straight
+      this.allowed = allowed
+      this.getStraightPoints()
+      this.getAllowedPoints()
     }
 
 

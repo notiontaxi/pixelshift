@@ -113,7 +113,8 @@ var Vectorizer, _ref, module,
           var edges = path.getEdges()
           for(var e = 0; e < edges.length; e++){
             //imageData.data[edges[e].pixelFilled+1] = 255
-            imageData.data[edges[e].pixelEmpty]    = 253
+            if(!edges[e].leftBound)
+              imageData.data[edges[e].pixelEmpty]    = 253
           }
           newPath = true
           paths.push(path)
@@ -174,11 +175,8 @@ var Vectorizer, _ref, module,
     var result
 
     for(var p = 0; p < paths.length; p++){
-      singleStraightPath = this.findSingleStraightPaths(paths[p], imageWidth)
-      //allStraightPaths.push(singleStraightPath)
-      result = this.filterAllowedPath(singleStraightPath)
-      paths[p].straight = result.straight
-      paths[p].allowed = result.allowed
+      var singlePath = this.findSingleStraightPaths(paths[p], imageWidth)
+      paths[p].computeExtendedPaths(singlePath.straight, singlePath.allowed)
     }
   }
 
@@ -220,7 +218,7 @@ var Vectorizer, _ref, module,
           break
       }
       straightPaths[i%edgesLimit] = counter%edgesLimit
-      allowedPaths[(i+1)%edgesLimit]  = (counter-1)%edgesLimit
+      allowedPaths[(i+1)%edgesLimit]  = (counter-1)%edgesLimit == -1 ? 0 : (counter-1)%edgesLimit
     }
 
     this.cleanUp(straightPaths, edgesLimit)

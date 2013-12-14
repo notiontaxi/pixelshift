@@ -31,9 +31,10 @@ var Edge, _ref, module,
       this.pixelFilled = pixelFilled
       this.pixelEmpty = pixelEmpty
 
+      this.leftBound = pixelFilled%(imageWidth*4) == 0
+
       this.setVertice(imageWidth)
       this.computeGaussCoords(imageWidth)
-      //this.vector = new Vector(this.gaussCoords, {x: 0, y:0})
 
       if(pixelEmpty > pixelFilled)
         if(pixelEmpty === pixelFilled + 4)
@@ -70,8 +71,6 @@ var Edge, _ref, module,
           this.vertice = this.pixelFilled+4
           break
       }  
-
-
     }
 
 

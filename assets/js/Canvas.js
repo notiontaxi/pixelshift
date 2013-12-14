@@ -68,8 +68,8 @@ define([], function() {
       this.keepChangesForUndo = keepChangesForUndo === true ? true : false
       this.storeImageInfo()
 
-      this.alphaGrid = true
-      this.coloredGrid = false
+      this.alphaGrid = false
+      this.coloredGrid = true
       this.points = null
 
 
@@ -232,9 +232,7 @@ define([], function() {
       this.setAreaPixels(area)
 
       if(this.currentScale >= this.gridZoomLevel  && this.drawGrid){
-        if(this.coloredGrid)
-          this.drawColoredGrid()
-        else if(this.alphaGrid)
+        if(this.alphaGrid)
           this.drawGrid()
         if(!!this.paths)
           this.drawPaths()
@@ -248,38 +246,43 @@ define([], function() {
       var pos = this.toImageGaussianCoords(pixel.vertice)
       var gPos = {x: pos.x * this.currentScale , y: pos.y * this.currentScale  }
       var pointSize = Math.ceil((this.currentScale*2) / 15)
+      var color = 'red' 
 
+      if(outline)
+        color = 'green'
+      else
+        color = 'blue'
+      
       if(withLine){
         var pos2 = this.toImageGaussianCoords(secondPixel.vertice)
-        this.drawLine(gPos, {x: pos2.x * this.currentScale , y: pos2.y * this.currentScale  })
+        this.drawLine(gPos, {x: pos2.x * this.currentScale , y: pos2.y * this.currentScale }, color)
       }
 
-      if(outline){
-        this.drawPoint(gPos, pointSize, 'green')
-      }else{
-       this.drawPoint(gPos, pointSize, 'blue')
-      }
-
+      this.drawPoint(gPos, pointSize, color)
       this.drawText(i, gPos, 'white')
       gPos.y += this.currentScale/4
-      this.drawText('('+pixel.gaussCoords.x+','+pixel.gaussCoords.y+')', gPos, 'white')
+      gPos.y += 2
+      //this.drawText('('+pixel.gaussCoords.x+','+pixel.gaussCoords.y+')', gPos, 'white')
     }
 
-    Canvas.prototype.drawPaths = function(pathType){
+    Canvas.prototype.drawPaths = function(){
       var paths = this.paths
       var currentPath = null
       var currentPoints = null
 
       for(var i = 0; i < paths.length; i++){
         currentPath = paths[i]
-        currentPoints = this.pathType == 'full' ? currentPath.edges : currentPath.getAllowedPoints()
-        //console.log(currentPath.edges)
+
+        if(this.pathType == 'full')
+          currentPoints = currentPath.edges
+        else if(this.pathType == 'straight')
+          currentPoints = currentPath.getStraightPoints()
+        else if(this.pathType == 'allowed')
+          currentPoints = currentPath.getAllowedPoints()
+
         for(var p = 0; p < currentPoints.length; p++){
-          if(this.pixelWithinVisibleBounds(currentPoints[p].pixelFilled))
-            if(p+1 < currentPoints.length && this.pixelWithinVisibleBounds(currentPoints[p+1].pixelFilled))
-              this.drawSinglePixel(currentPoints[p], currentPath.isOutline,p , true, currentPoints[p+1])
-            else
-              this.drawSinglePixel(currentPoints[p], currentPath.isOutline,p ,false)
+          if(p+1 < currentPoints.length )
+            this.drawSinglePixel(currentPoints[p], currentPath.isOutline,p , true, currentPoints[p+1])
         }
       }
     }
@@ -302,68 +305,6 @@ define([], function() {
       return result
     }    
 
-    Canvas.prototype.drawColoredGrid = function(){
-      var data = this.getFullImageData()
-
-      // number of horizontal lines in y direction 
-      var xLines = Math.floor(this.canvasWidth  / this.currentScale)
-      // number of vertical lines in x direction
-      var yLines = Math.floor(this.canvasHeight / this.currentScale)
-      var pos = 0
-
-      var jumpY = this.canvasWidth*4*this.currentScale
-      var jumpX = this.currentScale*4
-
-      // horizontal
-      for(var xL = 0; xL <= yLines; xL++){
-        for(var w = 0; w < this.canvasWidth*4; w+=4){
-          // lines * jump length per line + curren pixel position 
-          pos = xL*jumpY + w
-         
-          if((data.data[pos] == 252 && data.data[pos-this.canvasWidth*4] ==   0) ||
-             (data.data[pos] ==   0 && data.data[pos-this.canvasWidth*4] == 252)){
-            data.data[pos] = 255
-            data.data[pos+1] = 0
-            data.data[pos+2] = 0
-            data.data[pos+3] = 255
-          }else if((data.data[pos] == 253 && data.data[pos-this.canvasWidth*4] ==   0) ||
-                   (data.data[pos] ==   0 && data.data[pos-this.canvasWidth*4] == 253)){
-            data.data[pos] = 0
-            data.data[pos+1] = 255
-            data.data[pos+2] = 0
-            data.data[pos+3] = 255
-          }else{
-            data.data[pos+3] -= 100
-          }
-          
-        }
-      }
-      
-      // vertical
-      for(var h = 0; h < this.canvasHeight*4; h++){
-        for(var yL = 0; yL <= xLines; yL++){
-          // current height * width + current vertical line number * jump length depending on scale
-          pos = h*this.canvasWidth*4 + yL*jumpX
-          if((data.data[pos] == 252 && data.data[pos-4] ==   0) ||
-             (data.data[pos] ==   0 && data.data[pos-4] == 252)){
-            data.data[pos] = 255
-            data.data[pos+1] = 0
-            data.data[pos+2] = 0
-            data.data[pos+3] = 255
-          }else if((data.data[pos] == 253 && data.data[pos-4] ==   0) ||
-                   (data.data[pos] ==   0 && data.data[pos-4] == 253)){
-            data.data[pos] = 0
-            data.data[pos+1] = 255
-            data.data[pos+2] = 0
-            data.data[pos+3] = 255
-          }else{
-            data.data[pos+3] -= 100
-          }       
-        }
-      }
-
-      this._putFullImageData(data)
-    }
 
     Canvas.prototype.drawGrid = function(){
       var data = this.getFullImageData()
@@ -463,7 +404,7 @@ define([], function() {
               allPixels.data[positionDestination] = area.pixels[positionSource]
               allPixels.data[positionDestination+1] = area.pixels[positionSource+1]
               allPixels.data[positionDestination+2] = area.pixels[positionSource+2]
-              allPixels.data[positionDestination+3] = 50//area.pixels[positionSource+3]
+              allPixels.data[positionDestination+3] = area.pixels[positionSource+3]
 
             }
           }
@@ -923,13 +864,17 @@ define([], function() {
     * Draws a line onto the canvas
     * @param {Object} startPoint Object with x and y coordinate of start point
     * @param {Object} endPoint Object with x and y coordinate of end point
+    * @param {String} color 
     */
-    Canvas.prototype.drawLine = function(startPoint, endPoint){
+    Canvas.prototype.drawLine = function(startPoint, endPoint, color){
+      var oldStyle = this.ctx.strokeStyle 
+      this.ctx.strokeStyle = color
       this.ctx.beginPath()
       this.ctx.moveTo(startPoint.x,startPoint.y)
       this.ctx.lineTo(endPoint.x,endPoint.y)
       this.ctx.closePath()
       this.ctx.stroke()
+      this.ctx.strokeStyle = oldStyle
     }
 
     /**

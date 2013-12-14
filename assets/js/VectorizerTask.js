@@ -46,22 +46,38 @@ var VectorizerTask, _ref, module,
       }).children().click(function(e) {
         return false; // prevent childs to do this action
       });
-
-
     }
 
 
     VectorizerTask.prototype.initializeTools = function(){
 
       // Automatic threshold button
-      $("#action-show-paths").click(
+      $("#action-compute-paths").click(
         function(event, ui){
           var result = this.imageProcessor.processPathFinding(this.canvasOrigin.getImageData(), this.canvasOrigin.getImageWidth())
           this.canvasStage.paths = result.paths
-          this.canvasStage.pathType = 'fulll'
+          this.canvasStage.pathType = 'full'
           $("#path-count").html(result.message)
         }.bind(this)
       )
+      $("#action-show-full-paths").click(
+        function(event, ui){
+          this.canvasStage.pathType = 'full'
+          this.canvasStage.draw()
+        }.bind(this)
+      )  
+      $("#action-show-straight-paths").click(
+        function(event, ui){
+          this.canvasStage.pathType = 'straight'
+          this.canvasStage.draw()
+        }.bind(this)
+      ) 
+      $("#action-show-allowed-paths").click(
+        function(event, ui){
+          this.canvasStage.pathType = 'allowed'
+          this.canvasStage.draw()
+        }.bind(this)
+      )     
 
     }
 
