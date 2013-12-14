@@ -44,6 +44,7 @@ var ImageProcessing, _ref, module,
     ImageProcessing.prototype.initColorPicker = function(){
 
       $('.modalbox-wrapper.hidden').hide()
+      $('.oolbar-modal.hidden').hide()
       $('.modalbox-wrapper').removeClass('hidden')
 
       var f = $.farbtastic('#picker')
