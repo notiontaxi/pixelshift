@@ -22,6 +22,8 @@ var Path, _ref, module,
     function Path(isOutline, imageData, imageWidth){   
       this.isOutline = isOutline
       this.straightPaths = Array()
+      this.allowedPoints = null
+      this.straighPoints = null
 
       if(isOutline)
         this.lookFor = 0
@@ -77,52 +79,79 @@ var Path, _ref, module,
     }
 
     Path.prototype.getAllowedPoints = function(){
-      //console.log(this.allowed)
-      return this.getFilteredPoints(this.allowed)
+      if(this.allowedPoints == null)
+        if(this.edges.length <= 5)
+          this.allowedPoints = this.edges
+        else
+          this.allowedPoints = this.getFilteredPoints(this.allowed)
+
+      console.log("Allowed")
+      return this.allowedPoints
     }
     Path.prototype.getStraightPoints = function(){
-      //console.log(this.straight)
-      return this.getFilteredPoints(this.straight)
-    }    
-/*
-    Path.prototype.getFilteredPoints = function(filter){
+      if(this.straighPoints == null)
+        if(this.edges.length <= 4)
+          this.allowedPoints = this.edges
+        else
+          this.straighPoints = this.getFilteredPoints(this.straight)
 
+      console.log("Straight")
+      return this.straighPoints
+    }    
+
+
+    Path.prototype.getFilteredPoints = function(filter){
+        
         var points = this.edges
-        this.filteredPoints = null
 
         for(var k = 0; k < filter.length; k++){
 
           var filteredPoints = Array()
-          var lastI = 0
-          var start = k 
+
+          var currentIndex = k 
+          var currentkey = Infinity
+          var startKey = filter[k]
+
           var startOver = false
-          var i = start
+          var moveOn = true
+          var i = 0
+          
+          do{
 
-            for(;;){
+            if(currentkey <= startKey)
+              startOver = true
 
-              filteredPoints.push(points[filter[i]])
-              i = filter[i]        
-              
-              if(i < lastI || filter[start] == 0)
-                startOver = true
-              // don't star over at the begining... this would be endless
-              if(i >= filter[start] && startOver){
-                filteredPoints[filteredPoints.length-1] = filteredPoints[0]
-                break
-              }
+            if(currentkey >= startKey && startOver){
+              moveOn = false
+              // close path
+              if(currentkey != startKey)
+                filteredPoints.push(filteredPoints[0])
+              if(currentkey <= startKey)
+                filteredPoints.push(points[filter[currentIndex]])  
 
-              lastI = i
+            }else{
+              // push next point
+              filteredPoints.push(points[filter[currentIndex]])           
             }
 
+            
 
+            currentIndex = filter[currentIndex] 
+            currentkey = filter[currentIndex]
+            i++
+          }while(moveOn && i < filter.length)
+
+          //console.log('i: '+i)
+          //console.log(filteredPoints)
           if(this.filteredPoints == null || this.filteredPoints.length > filteredPoints.length)
             this.filteredPoints = filteredPoints
         }
       
       console.log("FILTERED")
       return this.filteredPoints
-    }*/
-    
+    }
+
+    /*
  Path.prototype.getFilteredPoints = function(filter){
 
       if(!this.filteredPoints){
@@ -151,7 +180,7 @@ var Path, _ref, module,
       }
 
       return this.filteredPoints
-    }    
+    }    */
 
     Path.prototype.getNextEdgeOf = function(edge){
 
