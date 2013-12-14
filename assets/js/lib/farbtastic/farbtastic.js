@@ -204,6 +204,7 @@ jQuery._farbtastic = function (container, callback) {
       var lum = Math.max(0, Math.min(1, -(pos.y / fb.square) + .5));
       fb.setHSL([fb.hsl[0], sat, lum]);
     }
+    $('#color-picker-color').trigger('new-color', fb.color)
     return false;
   }
 

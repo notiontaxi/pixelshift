@@ -78,6 +78,9 @@ define([], function() {
       this.parent = null
     }
 
+    /**
+    * If you wanna know scale of parent i.e.
+    */
     Canvas.prototype.setParent = function(parent){
       this.parent = parent
     }

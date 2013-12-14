@@ -65,6 +65,11 @@ footer{
   padding: 0px;
 }
 
+.toolbox-button{
+  .margin(1px, 1px, 2px, 2px);
+  padding: 0px;
+}
+
 .btn-200{
   width: 200px;
 }
@@ -120,8 +125,6 @@ footer{
   margin: 0px 5px 0px 5px;
 
   padding: 5px 5px 10px 5px;
-
-
 
   -webkit-border-bottom-right-radius: 5px;
   -webkit-border-bottom-left-radius: 5px;
@@ -260,7 +263,8 @@ canvas, img {
   top: 300px;
   left: 50%;
 
-  width: 250px;
+  width: auto;
+  height: auto;
 
   margin-top: -200px;
   margin-left: -125px;
@@ -269,18 +273,42 @@ canvas, img {
   .solid-border(white);
 
   .header{
-    font-size: 150%;
+    height: 20px;
+    font-size: 110%;
     color: @darkGrey;
     background-color: lightblue;
-    .padding(5px, 5px, 20px, 20px)
+    .padding(0px, 0px, 5px, 0px)
   }
   .content{
-    padding: 20px;
+    padding: 0px;
+    margin: 0px;
     color: white;
     background-color: @lightGrey;
   }
   .form-item{
     padding-top: 20px;
+  }
+  .right-upper{
+    .rounded-corners(0px);
+    font-size: 80%;
+    height: 100%;
+    -webkit-border-bottom-left-radius: 5px;
+    -moz-border-radius-bottomleft: 5px;
+    border-bottom-left-radius: 5px;    
+  }
+
+  .farbtastic{
+    padding: 0px;
+    .margin(0px, 0px, 5px, 5px);
+  }
+  #color-picker-color{
+    width: 205px;
+    -webkit-border-bottom-right-radius: 5px;
+    -webkit-border-bottom-left-radius: 5px;
+    -moz-border-radius-bottomright: 5px;
+    -moz-border-radius-bottomleft: 5px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
   }
 
 }
@@ -306,6 +334,12 @@ canvas, img {
   padding-bottom: @bottom;
   padding-left: @left;
   padding-right: @right;   
+}
+.margin(@top, @bottom, @left, @right){
+  margin-top: @top;
+  margin-bottom: @bottom;
+  margin-left: @left;
+  margin-right: @right;   
 }
 
 .solid-border(@color){

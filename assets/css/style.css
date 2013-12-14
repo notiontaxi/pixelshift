@@ -49,6 +49,13 @@ footer {
   margin: 0px;
   padding: 0px;
 }
+.toolbox-button {
+  margin-top: 1px;
+  margin-bottom: 1px;
+  margin-left: 2px;
+  margin-right: 2px;
+  padding: 0px;
+}
 .btn-200 {
   width: 200px;
 }
@@ -194,7 +201,8 @@ img {
   position: fixed;
   top: 300px;
   left: 50%;
-  width: 250px;
+  width: auto;
+  height: auto;
   margin-top: -200px;
   margin-left: -125px;
   -webkit-border-radius: 5px;
@@ -207,21 +215,51 @@ img {
   border-color: #ffffff;
 }
 .modalbox-wrapper .header {
-  font-size: 150%;
+  height: 20px;
+  font-size: 110%;
   color: #333333;
   background-color: lightblue;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  padding-left: 20px;
-  padding-right: 20px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  padding-left: 5px;
+  padding-right: 0px;
 }
 .modalbox-wrapper .content {
-  padding: 20px;
+  padding: 0px;
+  margin: 0px;
   color: white;
   background-color: #aaaaaa;
 }
 .modalbox-wrapper .form-item {
   padding-top: 20px;
+}
+.modalbox-wrapper .right-upper {
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  -ms-border-radius: 0px;
+  -o-border-radius: 0px;
+  border-radius: 0px;
+  font-size: 80%;
+  height: 100%;
+  -webkit-border-bottom-left-radius: 5px;
+  -moz-border-radius-bottomleft: 5px;
+  border-bottom-left-radius: 5px;
+}
+.modalbox-wrapper .farbtastic {
+  padding: 0px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+.modalbox-wrapper #color-picker-color {
+  width: 205px;
+  -webkit-border-bottom-right-radius: 5px;
+  -webkit-border-bottom-left-radius: 5px;
+  -moz-border-radius-bottomright: 5px;
+  -moz-border-radius-bottomleft: 5px;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
 }
 .right-float {
   float: right;
