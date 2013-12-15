@@ -19,10 +19,11 @@ define(['text!templates/toolbar.html'], function(toolbarTemplate) {
   // tell wehre the menu should be rendered and where i can find the canvas
     function Toolbar(containerIdentifier){
       this.containerIdentifier = containerIdentifier
-      this.colorPickerColorIdentifier = "#color-picker-color"
+      this.colorPickerColorIdent = "#color-picker-color"
+      this.buttonIdent = "#toolbar-foreground-color"
 
-      this.addEventListeners()
       this.initialize()
+      this.addEventListeners()
     }
 
     Toolbar.prototype.initialize = function(){
@@ -32,12 +33,18 @@ define(['text!templates/toolbar.html'], function(toolbarTemplate) {
    
     Toolbar.prototype.addEventListeners = function(containerIdentifier){
 
-      
 
-      $('#color-picker-color').on('new-color', 
+      $(this.colorPickerColorIdent).on('new-color', 
         function(event, color){
-          $('#foreground-color-btn').css({'background-color': color})
+          $("#toolbar-foreground-color").css({'background-color': color})
       })
+
+      $(".action-show-color-picker").click(function(){
+        $('#color-picker-modal').fadeIn(300)
+      })
+
+      $(".action-switch-mode").click(Toolbar.toggleActive)
+      //$(".mode-active")[0].getAttribute('mode')
 
       /*
       $(".action-upload-image").click(
@@ -48,6 +55,13 @@ define(['text!templates/toolbar.html'], function(toolbarTemplate) {
           $('input[type="file"]').click()
         }.bind(this))
       */  
+    }
+
+    Toolbar.toggleActive = function(event){
+      $(".action-switch-mode").each(function(){
+        $(this).removeClass('mode-active')
+      })
+      $(this).addClass('mode-active')
     }
 
     Toolbar.prototype.initializeTools = function(){

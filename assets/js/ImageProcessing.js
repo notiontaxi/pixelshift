@@ -7,7 +7,7 @@ https://github.com/notiontaxi
 
 "use strict"
 
-define(['text!templates/image-processing.html','js/OutlineTask', 'js/AreasTask','js/VectorizerTask','js/CanvasGui', 'js/test/Test','js/Toolbar'], function(contentTemplate, OutlineTask, AreasTask, VectorizerTask, CanvasGui, Test, Toolbar) {
+define(['text!templates/image-processing.html','js/OutlineTask','js/VectorizerTask', 'js/FloodfillTask','js/CanvasGui', 'js/test/Test','js/Toolbar'], function(contentTemplate, OutlineTask, VectorizerTask, FloodfillTask, CanvasGui, Test, Toolbar) {
 
 var ImageProcessing, _ref, module,
 
@@ -28,23 +28,23 @@ var ImageProcessing, _ref, module,
       this.initColorPicker()
       this.initToolbar()
 
-      new OutlineTask(".controls-wrapper", this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
-      new AreasTask(".controls-wrapper", this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
+      new OutlineTask(   ".controls-wrapper", this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
       new VectorizerTask(".controls-wrapper", this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
+      new FloodfillTask( ".controls-wrapper", this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
+      
 
       var test = new Test()
       test.vector()
     }
 
     ImageProcessing.prototype.initToolbar = function(){
-      new Toolbar('#toolbar-modal .content')
+      this.toolbar = new Toolbar('#toolbar-modal .content')
       $("#toolbar-modal").draggable()
     }
 
     ImageProcessing.prototype.initColorPicker = function(){
 
       $('.modalbox-wrapper.hidden').hide()
-      $('.oolbar-modal.hidden').hide()
       $('.modalbox-wrapper').removeClass('hidden')
 
       var f = $.farbtastic('#picker')
@@ -55,6 +55,8 @@ var ImageProcessing, _ref, module,
       $('.farbtastic').addClass('center-block');
       $(".action-close-color-picker").click(function(e){
         $('#color-picker-modal').hide()
+        var color = $('#color-picker-color').css('background-color')
+        $('#toolbar-foreground-color').css({'background-color': color})
       })
 
       $("#color-picker-modal").draggable()

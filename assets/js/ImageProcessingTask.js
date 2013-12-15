@@ -18,20 +18,30 @@ var ImageProcessingTask, _ref, module,
 // --------------------------------------
 
 
+    ImageProcessingTask.TYPE_MENU = 1
+    ImageProcessingTask.TYPE_TOOLBAR = 2
 
-    function ImageProcessingTask(canvasOrigin, canvasStage, canvasShown, imageProcessor){
-
+    function ImageProcessingTask(canvasOrigin, canvasStage, canvasShown, imageProcessor, type){
+      this.type = type
       this.canvasOrigin = canvasOrigin  
       this.canvasStage = canvasStage
       this.canvasShown = canvasShown
       this.imageProcessor = imageProcessor
-
     }
 
     ImageProcessingTask.prototype.init = function(){
+
       this.initializeTools()
-      this.appendToMenuBar()
-      this.addMenuBarAction()
+      if(this.type === ImageProcessingTask.TYPE_MENU){
+        this.appendToMenuBar()
+        this.addMenuBarAction()
+      }else if(this.type === ImageProcessingTask.TYPE_TOOLBAR){
+        this.appendToToolbar()
+        this.addToolbarAction()
+      }else{
+        console.error("invalid type")
+      }
+
     }    
 
     ImageProcessingTask.prototype.initializeTools = function(){
@@ -44,14 +54,43 @@ var ImageProcessingTask, _ref, module,
     ImageProcessingTask.prototype.appendToMenuBar = function(){
       console.error("appendToMenuBar() not implementet jet")
     }
-
-
      /**
     * Click actions for slide in/out
     */
     ImageProcessingTask.prototype.addMenuBarAction = function(){
       console.error("addMenuBarAction() not implementet jet")
-    }     
+    }
+    /**
+    * Regular Menu bar
+    */
+    ImageProcessingTask.prototype.appendToToolbar = function(){
+      console.error("appendToToolbar() not implementet jet")
+    }
+     /**
+    * Click actions for slide in/out
+    */
+    ImageProcessingTask.prototype.addToolbarAction = function(){
+      console.error("addToolbarAction() not implementet jet")
+    }
+
+    ImageProcessingTask.prototype.addToToolbar = function(iconClass, id, mode, toolbar){
+
+      var button = $('<button/>', 
+            {
+                 id: id
+              ,  mode: mode
+              , class: 'btn btn-default action-switch-mode'
+            }
+          ).prependTo(toolbar)
+
+      var i = $('<i/>', 
+          {
+            class: iconClass
+          }
+        ).appendTo(button)
+
+      return button
+    }  
 
     ImageProcessingTask.prototype.appendToLGMenuBar = function(text, className, typeName){
       var li = $('<li/>')

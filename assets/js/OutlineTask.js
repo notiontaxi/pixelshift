@@ -20,7 +20,7 @@ var OutlineTask, _ref, module,
 
     function OutlineTask(containerIdentifier, canvasOrigin, canvasStage, canvasShown,imageProcessor){
 
-      OutlineTask.__super__.constructor(canvasOrigin, canvasStage ,canvasShown, imageProcessor)
+      OutlineTask.__super__.constructor(canvasOrigin, canvasStage ,canvasShown, imageProcessor, ImageProcessingTask.TYPE_MENU)
 
       // render templates
       $(containerIdentifier).append($(contentTemplate))

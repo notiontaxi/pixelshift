@@ -21,8 +21,9 @@ var VectorizerTask, _ref, module,
 
     function VectorizerTask(containerIdentifier,canvasOrigin, canvasStage, canvasShown,imageProcessor){    
 
-      VectorizerTask.__super__.constructor(canvasOrigin, canvasStage, canvasShown, imageProcessor)
+      VectorizerTask.__super__.constructor(canvasOrigin, canvasStage, canvasShown, imageProcessor, ImageProcessingTask.TYPE_MENU)
       // render templates
+      
       $(containerIdentifier).append($(contentTemplate))
       this.init()
     }

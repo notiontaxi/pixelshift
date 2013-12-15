@@ -49,13 +49,6 @@ footer {
   margin: 0px;
   padding: 0px;
 }
-.toolbox-button {
-  margin-top: 1px;
-  margin-bottom: 1px;
-  margin-left: 2px;
-  margin-right: 2px;
-  padding: 0px;
-}
 .btn-200 {
   width: 200px;
 }
@@ -215,7 +208,7 @@ img {
   border-color: #ffffff;
 }
 .modalbox-wrapper .header {
-  height: 20px;
+  height: 22px;
   font-size: 110%;
   color: #333333;
   background-color: lightblue;
@@ -234,16 +227,14 @@ img {
   padding-top: 20px;
 }
 .modalbox-wrapper .right-upper {
-  -webkit-border-radius: 0px;
-  -moz-border-radius: 0px;
-  -ms-border-radius: 0px;
-  -o-border-radius: 0px;
-  border-radius: 0px;
-  font-size: 80%;
-  height: 100%;
-  -webkit-border-bottom-left-radius: 5px;
-  -moz-border-radius-bottomleft: 5px;
-  border-bottom-left-radius: 5px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+  border-radius: 10px;
+  font-size: 70%;
+  height: 20px;
+  margin: 1px;
 }
 .modalbox-wrapper .farbtastic {
   padding: 0px;
@@ -267,8 +258,33 @@ img {
 .left-float {
   float: left;
 }
-.color-chooser-button {
+.tool-items {
+  z-index: 2001;
+  width: 53px;
+}
+.tool-items .btn {
   background-image: none;
   background-color: white;
   width: 50px;
+  margin-top: 1px;
+  margin-bottom: 1px;
+  margin-left: 1px;
+  margin-right: 1px;
+  padding: 0px;
+  height: 35px;
+}
+.tool-items .mode-active {
+  border-color: #000EB3;
+  background-color: #CFFFD6;
+}
+.arrow {
+  width: 0px;
+  height: 0px;
+  border-width: 8px;
+  border-style: solid;
+  position: absolute;
+}
+.arrow.left {
+  border-color: transparent #E9E5E5 transparent transparent;
+  top: 50%;
 }
