@@ -61,6 +61,10 @@ define(['text!templates/toolbar.html'], function(toolbarTemplate) {
       $(this).addClass('mode-active')
     }
 
+    Toolbar.prototype.foregroundColor = function(){
+      return $('this.buttonIdent').css('background-color')
+    }
+
     Toolbar.prototype.mode = function(){
       return this.toolbar.attr('mode')
     }

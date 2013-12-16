@@ -8,18 +8,18 @@ https://github.com/notiontaxi
 "use strict"
 
 define(['text!templates/image-processing.html',
-  'js/OutlineTask',
-  'js/VectorizerTask', 
-  'js/FloodfillTask',
-  'js/PencilTask',
+  'js/strategies/OutlineStrategy',
+  'js/strategies/VectorizerStrategy', 
+  'js/strategies/FloodfillStrategy',
+  'js/strategies/PencilStrategy',
   'js/CanvasGui', 
   'js/test/Test',
   'js/Toolbar',
   'js/Context'], function(contentTemplate, 
-    OutlineTask, 
-    VectorizerTask, 
-    FloodfillTask,
-    PencilTask, 
+    OutlineStrategy, 
+    VectorizerStrategy, 
+    FloodfillStrategy,
+    PencilStrategy, 
     CanvasGui, 
     Test, 
     Toolbar,
@@ -43,24 +43,51 @@ var ImageProcessing, _ref, module,
       
       this.initColorPicker()
       
-      new OutlineTask(   ".controls-wrapper", this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
-      new VectorizerTask(".controls-wrapper", this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
-      new FloodfillTask( ".controls-wrapper", this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
-      new PencilTask( ".controls-wrapper", this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
+      this.initContext()
+      
+      this.runTests()
+
+    }
+
+    ImageProcessing.prototype.initContext = function(){
       this.context = new Context()
 
-      this.initCanvasStrategies()
+      this.outline = new OutlineStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
+      this.context.addStrategy(this.outline)
 
-      var test = new Test()
-      test.vector()
+      this.vector = new VectorizerStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
+      this.context.addStrategy(this.vector)
+
+      this.floodfill = new FloodfillStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
+      this.context.addStrategy(this.floodfill)
+
+      this.pencil = new PencilStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
+      this.context.addStrategy(this.pencil)
+
+      this.initCanvasStrategies()
     }
 
     ImageProcessing.prototype.initCanvasStrategies = function(){
       this.canvasShown.getElement().click(
         function(event){
-            this.context.strategy(event, this.toolbar.mode())
+          // get strategy funcion (execute), call it and pass curent state
+            this.context.strategy(this.toolbar.mode())(this.state())
         }.bind(this))
     }
+
+    ImageProcessing.prototype.runTests = function(){
+      var test = new Test()
+      test.vector()      
+    }
+
+    ImageProcessing.prototype.state = function(){
+      return {
+              color: this.toolbar.foregroundColor()
+            , totalPosition: this.canvasShown.coordinateToUnzoomedSystem(event) 
+            , position: this.canvasShown.mouseCoords(event)
+          }
+    }
+
 
     /*
     Canvas.prototype.clickAction = function(event){
