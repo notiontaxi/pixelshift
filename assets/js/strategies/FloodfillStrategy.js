@@ -20,17 +20,29 @@ var FloodfillStrategy, _ref, module,
 
     FloodfillStrategy.NAME = 'floodfill'
 
-    function FloodfillStrategy(containerIdentifier,canvasOrigin, canvasStage, canvasShown,imageProcessor){    
-
+    function FloodfillStrategy(canvasOrigin, canvasStage, canvasShown,imageProcessor){    
+      this.name = FloodfillStrategy.NAME
       FloodfillStrategy.__super__.constructor(canvasOrigin, canvasStage, canvasShown, imageProcessor, ImageProcessingStrategy.TYPE_TOOLBAR)
       // render templates
       
+
+
       //$(containerIdentifier).append($(contentTemplate))
       this.init()
     }
 
     FloodfillStrategy.prototype.execute = function(state){
-      console.log('execute floodfill task')
+      /*
+      var imageData = this.imageProcessor.processFloodFill(
+        this.canvasOrigin.getFullImageData(), 
+        this.canvasOrigin.imageWidth, 
+        'four', 
+        state.totalPosition, 
+        state.color)
+
+      this.canvasOrigin._putFullImageData(imageData)
+      */
+      console.log('TODO: execute floodfill task')
       console.log(state)
     }
 

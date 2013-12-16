@@ -20,7 +20,7 @@ var OutlineStrategy, _ref, module,
   OutlineStrategy.NAME = 'outline'
 
     function OutlineStrategy(canvasOrigin, canvasStage, canvasShown,imageProcessor){
-
+      this.name = OutlineStrategy.NAME
       OutlineStrategy.__super__.constructor(canvasOrigin, canvasStage ,canvasShown, imageProcessor, ImageProcessingStrategy.TYPE_MENU)
 
       // render templates

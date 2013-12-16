@@ -20,10 +20,10 @@ var VectorizerStrategy, _ref, module,
     VectorizerStrategy.NAME = 'vectorize'
 
     function VectorizerStrategy(containerIdentifier,canvasOrigin, canvasStage, canvasShown,imageProcessor){    
-
+      this.name = VectorizerStrategy.NAME
       VectorizerStrategy.__super__.constructor(canvasOrigin, canvasStage, canvasShown, imageProcessor, ImageProcessingStrategy.TYPE_MENU)
       // render templates
-      
+        
       $(".controls-wrapper").append($(contentTemplate))
       this.init()
     }

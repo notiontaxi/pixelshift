@@ -62,7 +62,8 @@ define(['text!templates/toolbar.html'], function(toolbarTemplate) {
     }
 
     Toolbar.prototype.foregroundColor = function(){
-      return $('this.buttonIdent').css('background-color')
+      return {r: 255, g: 0, b:0, a: 255}
+      //return $('this.buttonIdent').css('background-color')
     }
 
     Toolbar.prototype.mode = function(){

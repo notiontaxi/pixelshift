@@ -71,7 +71,7 @@ var ImageProcessing, _ref, module,
       this.canvasShown.getElement().click(
         function(event){
           // get strategy funcion (execute), call it and pass curent state
-            this.context.strategy(this.toolbar.mode())(this.state())
+            this.context.strategy(this.toolbar.mode()).execute(this.state(event))
         }.bind(this))
     }
 
@@ -80,11 +80,12 @@ var ImageProcessing, _ref, module,
       test.vector()      
     }
 
-    ImageProcessing.prototype.state = function(){
+    ImageProcessing.prototype.state = function(event){
       return {
               color: this.toolbar.foregroundColor()
-            , totalPosition: this.canvasShown.coordinateToUnzoomedSystem(event) 
-            , position: this.canvasShown.mouseCoords(event)
+            //, totalCoords: this.canvasShown.coordinateToUnzoomedSystem(event) 
+            //, coords: this.canvasShown.mouseCoords(event)
+            , totalPosition: this.canvasShown.xyToTotalPosition(this.canvasShown.mouseCoords(event))
           }
     }
 

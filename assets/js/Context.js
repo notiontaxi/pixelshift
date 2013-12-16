@@ -28,13 +28,18 @@ define([], function() {
       this.strategies.push(strategy)
   }
 
-  Context.prototype.strategy = function(event, mode){
+  Context.prototype.strategy = function(mode){
+    var result = null
+
     for(var i = 0; i < this.strategies.length; i++)
       if(this.strategies[i].name === mode)
-        return this.strategies[i].execute
+        result = this.strategies[i]
+    
 
-    console.error('no matching strategy fount')
-    return null
+    if(!result)
+      console.error('no matching strategy found')
+
+    return result
   }
 
 

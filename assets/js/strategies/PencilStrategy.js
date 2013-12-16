@@ -20,8 +20,8 @@ var PencilStrategy, _ref, module,
 
     PencilStrategy.NAME = 'pencil'
 
-    function PencilStrategy(containerIdentifier,canvasOrigin, canvasStage, canvasShown,imageProcessor){    
-
+    function PencilStrategy(canvasOrigin, canvasStage, canvasShown,imageProcessor){    
+      this.name = PencilStrategy.NAME
       PencilStrategy.__super__.constructor(canvasOrigin, canvasStage, canvasShown, imageProcessor, ImageProcessingStrategy.TYPE_TOOLBAR)
       // render templates
       

@@ -230,28 +230,15 @@ define(['js/Histogram', 'js/helper/Colors', 'js/vectorizer/Vectorizer'], functio
     return colorA.r === colorB.r && colorA.g === colorB.g && colorA.b === colorB.b
   }
 
-  ImageProcessor.prototype.processFloodFill = function(imageData, imageWidth, type){
+  ImageProcessor.prototype.processFloodFill = function(imageData, imageWidth, type, position, color){
 
-    imageData = this.processThreshold(this.computeThreshold(imageData),imageData)
+    //imageData = this.processThreshold(this.computeThreshold(imageData),imageData)
+    console.log('TODO: colorclass with equal and similar(variance)')
+    if(type == "four")
+      this.floodFillStack(imageData, imageWidth, position, imageData.data[position], color)
+    else if(type == "eight")
+      this.floodFillBreadth(imageData, imageWidth, position, imageData.data[position], color)
 
-    var colors = new ColorHelper
-    var label
-
-    if(type == "four"){
-      for (var i = 0; i < imageData.data.length; i+=4)
-        if (imageData.data[i] == 0){
-          label = colors.getRandomColor().values
-          this.floodFillStack(imageData, imageWidth, i, 0, label)
-        }
-      }else if(type == "eight"){
-       for (var i = 0; i < imageData.data.length; i+=4)
-        if (imageData.data[i] == 0){
-          label = colors.getRandomColor().values
-          this.floodFillBreadth(imageData, imageWidth, i, 0, label)
-        }       
-      }else{
-        this.floodFillSequential(imageData, imageWidth, colors)
-      }
     return imageData;
   }
 
