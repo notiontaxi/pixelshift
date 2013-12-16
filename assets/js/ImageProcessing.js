@@ -7,7 +7,23 @@ https://github.com/notiontaxi
 
 "use strict"
 
-define(['text!templates/image-processing.html','js/OutlineTask','js/VectorizerTask', 'js/FloodfillTask','js/CanvasGui', 'js/test/Test','js/Toolbar'], function(contentTemplate, OutlineTask, VectorizerTask, FloodfillTask, CanvasGui, Test, Toolbar) {
+define(['text!templates/image-processing.html',
+  'js/OutlineTask',
+  'js/VectorizerTask', 
+  'js/FloodfillTask',
+  'js/PencilTask',
+  'js/CanvasGui', 
+  'js/test/Test',
+  'js/Toolbar',
+  'js/Context'], function(contentTemplate, 
+    OutlineTask, 
+    VectorizerTask, 
+    FloodfillTask,
+    PencilTask, 
+    CanvasGui, 
+    Test, 
+    Toolbar,
+    Context) {
 
 var ImageProcessing, _ref, module,
 
@@ -26,21 +42,35 @@ var ImageProcessing, _ref, module,
       ImageProcessing.__super__.constructor("#canvas-container")
       
       this.initColorPicker()
-      this.initToolbar()
-
+      
       new OutlineTask(   ".controls-wrapper", this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
       new VectorizerTask(".controls-wrapper", this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
       new FloodfillTask( ".controls-wrapper", this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
-      
+      new PencilTask( ".controls-wrapper", this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
+      this.context = new Context()
+
+      this.initCanvasStrategies()
 
       var test = new Test()
       test.vector()
     }
 
-    ImageProcessing.prototype.initToolbar = function(){
-      this.toolbar = new Toolbar('#toolbar-modal .content')
-      $("#toolbar-modal").draggable()
+    ImageProcessing.prototype.initCanvasStrategies = function(){
+      this.canvasShown.getElement().click(
+        function(event){
+            this.context.strategy(event, this.toolbar.mode())
+        }.bind(this))
     }
+
+    /*
+    Canvas.prototype.clickAction = function(event){
+      var absoluteCoords = this.mouseCoords(event)
+      var relativeCoords = this.coordinateToUnzoomedSystem(absoluteCoords)
+      console.log(absoluteCoords)
+      console.log(relativeCoords)
+      this.drawPoint(absoluteCoords, 5)
+    }
+    }*/
 
     ImageProcessing.prototype.initColorPicker = function(){
 

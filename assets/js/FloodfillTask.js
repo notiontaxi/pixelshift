@@ -29,7 +29,7 @@ var FloodfillTask, _ref, module,
     }
 
     FloodfillTask.prototype.appendToToolbar = function(){
-      this.button = this.addToToolbar('icon-paintroll', 'toolbar-pencil', 'floodfill', '.tool-items')
+      this.button = this.addToToolbar('icon-paintroll', 'toolbar-floodfill', 'floodfill', '.tool-items')
     }   
 
     FloodfillTask.prototype.addToolbarAction = function(){
@@ -39,7 +39,7 @@ var FloodfillTask, _ref, module,
 
     FloodfillTask.prototype.initializeTools = function(){
 
-   
+
 
     }
 

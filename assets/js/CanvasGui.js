@@ -7,7 +7,14 @@ https://github.com/notiontaxi
 
 "use strict"
 
-define(['text!templates/canvas-gui.html', 'text!templates/menu-bar.html', 'text!templates/menu-bar-small-device.html', 'js/FileProcessor', 'js/ImageProcessor', 'js/Canvas', 'js/DragNDrop'], function(canvasGuiTemplate, menuTemplate, menuTemplateSmallDevice,FileProcessor, ImageProcessor, Canvas, DragNDrop) {
+define(['text!templates/canvas-gui.html', 
+  'text!templates/menu-bar.html', 
+  'text!templates/menu-bar-small-device.html', 
+  'js/FileProcessor', 
+  'js/ImageProcessor', 
+  'js/Canvas', 
+  'js/DragNDrop',
+  'js/Toolbar'], function(canvasGuiTemplate, menuTemplate, menuTemplateSmallDevice,FileProcessor, ImageProcessor, Canvas, DragNDrop, Toolbar) {
 
   var CanvasGui, _ref, module;
   module = function() {}
@@ -25,6 +32,7 @@ define(['text!templates/canvas-gui.html', 'text!templates/menu-bar.html', 'text!
     this.canvasShownIdentifier = "canvas-shown"
 
     this.canvasWrapId = "#dragg-container"
+    this.toolbar =  new Toolbar('#toolbar .content')
 
     $(canvasContainerIdentifier).html($(canvasGuiTemplate))
     $(this.menuContainerIdentifier).html($(menuTemplate))
@@ -36,7 +44,6 @@ define(['text!templates/canvas-gui.html', 'text!templates/menu-bar.html', 'text!
     this.canvasOrigin = new Canvas(this.canvasOriginIdentifier, true)
     this.canvasStage = new Canvas(this.canvasStageIdentifier)
     this.canvasShown = new Canvas(this.canvasShownIdentifier)
-    this.canvasShown.addEventListeners()
 
     this.canvasOrigin.addClone(this.canvasStage)
     this.canvasStage.addClone(this.canvasShown)
@@ -52,7 +59,7 @@ define(['text!templates/canvas-gui.html', 'text!templates/menu-bar.html', 'text!
     this.initializeEditFunctionality()
     this.initializeViewFunctionality()
     this.addKeyBindings()
-    //this.makeItDraggable()
+
     this.initializeSmallDevicesMenu()
 
     this.initialize()
@@ -250,6 +257,17 @@ define(['text!templates/canvas-gui.html', 'text!templates/menu-bar.html', 'text!
         this.canvasStage.zoomReset()
     }.bind(this))              
 
+    $(".action-show-toolbar").click(
+      function(event, ui){
+        this.toolbar.show()
+    }.bind(this)) 
+
+    /*
+    $(".action-show-color-picker").click(
+      function(event, ui){
+        this.colorpicker.show()
+    }.bind(this))     
+  */
   }    
 
   CanvasGui.prototype.addKeyBindings = function(){

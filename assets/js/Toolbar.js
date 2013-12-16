@@ -22,17 +22,20 @@ define(['text!templates/toolbar.html'], function(toolbarTemplate) {
       this.colorPickerColorIdent = "#color-picker-color"
       this.buttonIdent = "#toolbar-foreground-color"
 
+
       this.initialize()
       this.addEventListeners()
     }
 
     Toolbar.prototype.initialize = function(){
       $(this.containerIdentifier).append($(toolbarTemplate))
+      this.toolbar = $("#toolbar")
+      this.toolbar.removeClass('hidden')
+      this.toolbar.draggable()
     }
 
    
     Toolbar.prototype.addEventListeners = function(containerIdentifier){
-
 
       $(this.colorPickerColorIdent).on('new-color', 
         function(event, color){
@@ -43,37 +46,30 @@ define(['text!templates/toolbar.html'], function(toolbarTemplate) {
         $('#color-picker-modal').fadeIn(300)
       })
 
-      $(".action-switch-mode").click(Toolbar.toggleActive)
-      //$(".mode-active")[0].getAttribute('mode')
+      $(".action-close-toolbar").click(
+      function(event, ui){
+        this.hide()
+      }.bind(this)) 
 
-      /*
-      $(".action-upload-image").click(
-        function(event, ui){
-          event.stopPropagation()
-          event.preventDefault()
-          this.canvasStage.zoomReset()
-          $('input[type="file"]').click()
-        }.bind(this))
-      */  
     }
 
     Toolbar.toggleActive = function(event){
       $(".action-switch-mode").each(function(){
         $(this).removeClass('mode-active')
       })
+      $('#toolbar').attr('mode', $(this).attr('mode'))
       $(this).addClass('mode-active')
     }
 
-    Toolbar.prototype.initializeTools = function(){
-      /*
-      $(".action-grayscale").click(
-        function(event, ui){
-          event.stopPropagation()
-          event.preventDefault()
-          var newImg = this.imageProcessor.processGrayscale(this.canvasOrigin.getImageData(), this.canvasOrigin.getImageWidth())
-          this.canvasOrigin.putImageData(newImg)
-      }.bind(this))    
-      */
+    Toolbar.prototype.mode = function(){
+      return this.toolbar.attr('mode')
+    }
+
+    Toolbar.prototype.show = function(){
+        this.toolbar.fadeIn(300)
+    }
+    Toolbar.prototype.hide = function(){
+      this.toolbar.fadeOut(100)    
     }
 
 

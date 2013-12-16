@@ -947,19 +947,6 @@ define([], function() {
             this.clones[c].copy(this)
     }
 
-
-    Canvas.prototype.addEventListeners = function(){
-      this.getElement().click(function(e){this.clickAction(e)}.bind(this))
-    }
-
-    Canvas.prototype.clickAction = function(event){
-      var absoluteCoords = this.mouseCoords(event)
-      var relativeCoords = this.coordinateToUnzoomedSystem(absoluteCoords)
-      console.log(absoluteCoords)
-      console.log(relativeCoords)
-      this.drawPoint(absoluteCoords, 5)
-    }
-
     Canvas.prototype.coordinateToUnzoomedSystem = function(absoluteCoords){
       return {
           x: Math.ceil(absoluteCoords.x / this.parent.currentScale) + this.visibleArea.x1
