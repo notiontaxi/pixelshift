@@ -68,8 +68,7 @@ define([], function() {
       this.keepChangesForUndo = keepChangesForUndo === true ? true : false
       this.storeImageInfo()
 
-      this.alphaGrid = false
-      this.coloredGrid = true
+      this.alphaGrid = true
       this.points = null
 
 
@@ -962,7 +961,7 @@ define([], function() {
     }
 
     Canvas.prototype.toImageGaussianCoords = function(totalPosition){
-      var pos = Math.floor(totalPosition/4)
+      var pos = Math.floor(totalPosition.total/4)
 
       return {
           x: pos%this.imageWidth - this.visibleArea.x1
@@ -992,11 +991,17 @@ define([], function() {
 
         canvasX = event.pageX - totalOffsetX;
         canvasY = event.pageY - totalOffsetY;
+        var total = this.xyToTotalPosition({x:canvasX, y:canvasY})
 
-        var coords = {x:canvasX, y:canvasY}
+        var coords = {x:canvasX, y:canvasY, total: total}
 
         return coords
     } 
+
+    Canvas.prototype.totalCanvasPosition = function(mousePos){
+      var pos = this.coordinateToUnzoomedSystem(mousePos)
+      return (pos.y * this.canvasWidth + pos.x) * 4
+    }
 
 
 

@@ -231,7 +231,6 @@ define(['js/Histogram', 'js/helper/Colors', 'js/vectorizer/Vectorizer'], functio
   }
 
   ImageProcessor.prototype.processFloodFill = function(imageData, imageWidth, type, position, color){
-
     //imageData = this.processThreshold(this.computeThreshold(imageData),imageData)
     console.log('TODO: colorclass with equal and similar(variance)')
     if(type == "four")
@@ -245,6 +244,7 @@ define(['js/Histogram', 'js/helper/Colors', 'js/vectorizer/Vectorizer'], functio
   // regards the for pixels around the curent pixel (upper. lower, left, right) / uses stack
   ImageProcessor.prototype.floodFillStack = function(imageData, imageWidth, position, lookFor, label){
     var s = Array()
+    window.maxDepth = 0
     var currPixPos
     var lastPixel = imageData.data.length - 4
     s.push(position)
@@ -261,6 +261,7 @@ define(['js/Histogram', 'js/helper/Colors', 'js/vectorizer/Vectorizer'], functio
         window.maxDepth = (s.length > window.maxDepth) ? s.length : window.maxDepth
       }
     }
+    //console.log('depth: '+window.maxDepth)
   }
 
   // regards the eight pixels around the curent pixel / uses queue

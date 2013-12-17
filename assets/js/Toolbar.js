@@ -62,7 +62,19 @@ define(['text!templates/toolbar.html'], function(toolbarTemplate) {
     }
 
     Toolbar.prototype.foregroundColor = function(){
-      return {r: 255, g: 0, b:0, a: 255}
+      var color = $(this.buttonIdent).css('background-color')
+
+      var start = color.indexOf("(") +1
+      var stop = color.indexOf(")") 
+      color = color.substring(start,stop)
+      var colors = color.split(",")
+
+      console.log(color)
+      return {r: parseInt(colors[0]), 
+              g: parseInt(colors[1]), 
+              b: parseInt(colors[2]), 
+              a: 255}
+
       //return $('this.buttonIdent').css('background-color')
     }
 

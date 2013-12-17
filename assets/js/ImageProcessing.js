@@ -81,11 +81,13 @@ var ImageProcessing, _ref, module,
     }
 
     ImageProcessing.prototype.state = function(event){
+      var mouseCoords = this.canvasShown.mouseCoords(event)
+      var totalPosition = this.canvasShown.totalCanvasPosition(mouseCoords)
       return {
               color: this.toolbar.foregroundColor()
             //, totalCoords: this.canvasShown.coordinateToUnzoomedSystem(event) 
-            //, coords: this.canvasShown.mouseCoords(event)
-            , totalPosition: this.canvasShown.xyToTotalPosition(this.canvasShown.mouseCoords(event))
+            , mouse: mouseCoords
+            , totalPosition: totalPosition
           }
     }
 
@@ -114,6 +116,8 @@ var ImageProcessing, _ref, module,
       $(".action-close-color-picker").click(function(e){
         $('#color-picker-modal').hide()
         var color = $('#color-picker-color').css('background-color')
+        //color = color.replace('b', 'ba')  
+        //color = color.replace(')', ', 125)')  
         $('#toolbar-foreground-color').css({'background-color': color})
       })
 
