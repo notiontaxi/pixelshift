@@ -30,7 +30,7 @@ define(['text!templates/toolbar.html'], function(toolbarTemplate) {
     Toolbar.prototype.initialize = function(){
       $(this.containerIdentifier).append($(toolbarTemplate))
       this.toolbar = $("#toolbar")
-      this.toolbar.hide()
+      //this.toolbar.hide()
       this.toolbar.removeClass('hidden')
       this.toolbar.draggable()
     }

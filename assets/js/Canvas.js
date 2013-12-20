@@ -640,11 +640,11 @@ define([], function() {
         }else{
           _this.imageWidth = img.width
           _this.imageHeight = img.height
-          _this.imageXOffset = Math.floor((_this.cv.width - _this.imageWidth) / 2)
+          _this.imageXOffset = 0//Math.floor((_this.cv.width - _this.imageWidth) / 2)
         }
 
         if(_this.imageHeight < _this.cv.height)
-          _this.imageYOffset = Math.floor((_this.cv.height - _this.imageHeight) / 2)
+          _this.imageYOffset = 0//Math.floor((_this.cv.height - _this.imageHeight) / 2)
         
       } else {
 
@@ -658,7 +658,7 @@ define([], function() {
         }
 
         if(_this.imageWidth < _this.cv.width)
-          _this.imageXOffset = Math.round((_this.cv.width - _this.imageWidth) / 2)      
+          _this.imageXOffset = 0//Math.round((_this.cv.width - _this.imageWidth) / 2)      
       }
       _this.startOfPictue = _this.imageYOffset*_this.canvasWidth*4 + _this.imageXOffset*4
 
@@ -699,8 +699,8 @@ define([], function() {
 
       this.imageHeight  = otherCanvas.imageHeight * scale
       this.imageWidth   = otherCanvas.imageWidth * scale
-      this.imageXOffset = Math.floor((this.canvasWidth - this.imageWidth) / 2)
-      this.imageYOffset = Math.floor((this.canvasHeight - this.imageHeight) / 2)
+      this.imageXOffset = 0//Math.floor((this.canvasWidth - this.imageWidth) / 2)
+      this.imageYOffset = 0//Math.floor((this.canvasHeight - this.imageHeight) / 2)
 
       if(!doNotDraw){
         // save current context state, to restore changes in scaling later
@@ -713,7 +713,7 @@ define([], function() {
         this.clear()      
         this.getContext().scale(scale, scale)
         this.getContext().drawImage(newCanvas, this.imageXOffset*1/scale, this.imageYOffset*1/scale)
-
+        
         this.getContext().restore()
       }
       this.copyToClones()
@@ -763,7 +763,7 @@ define([], function() {
     * @returns {ImageData} ImageData without borders
     */
     Canvas.prototype.getImageData = function(){
-      return this.getContext().getImageData(this.imageXOffset,this.imageYOffset,this.imageWidth, this.imageHeight)
+      return this.getContext().getImageData(0,0,this.imageWidth, this.imageHeight)
     }
 
     /**
@@ -806,7 +806,7 @@ define([], function() {
     */
     Canvas.prototype.putImageData = function(imageData){
       this.clear()
-      this.getContext().putImageData(imageData,this.imageXOffset,this.imageYOffset)
+      this.getContext().putImageData(imageData,0,0)//this.imageXOffset,this.imageYOffset)
       this.registerContentModification()
     }
 
@@ -946,17 +946,17 @@ define([], function() {
             this.clones[c].copy(this)
     }
 
-    Canvas.prototype.coordinateToUnzoomedSystem = function(absoluteCoords){
+    Canvas.prototype.coordinateToUnzoomedGaussSystem = function(absoluteCoords){
       return {
-          x: Math.ceil(absoluteCoords.x / this.parent.currentScale) + this.visibleArea.x1
-        , y: Math.ceil(absoluteCoords.y / this.parent.currentScale) + this.visibleArea.y1
+          x: Math.floor(absoluteCoords.x / this.currentScale) + this.visibleArea.x1
+        , y: Math.floor(absoluteCoords.y / this.currentScale) + this.visibleArea.y1
       }
     }
 
-    Canvas.prototype.coordinateToZoomedSystem = function(absoluteCoords){
+    Canvas.prototype.coordinateToZoomedGaussSystem = function(absoluteCoords){
       return {
-          x: Math.ceil(absoluteCoords.x - this.visibleArea.x1) * this.parent.currentScale
-        , y: Math.ceil(absoluteCoords.y - this.visibleArea.y1) * this.parent.currentScale
+          x: Math.ceil(absoluteCoords.x - this.visibleArea.x1) * this.currentScale
+        , y: Math.ceil(absoluteCoords.y - this.visibleArea.y1) * this.currentScale
       }
     }
 
@@ -999,10 +999,26 @@ define([], function() {
     } 
 
     Canvas.prototype.totalCanvasPosition = function(mousePos){
-      var pos = this.coordinateToUnzoomedSystem(mousePos)
+      var pos = this.coordinateToUnzoomedGaussSystem(mousePos)
       return (pos.y * this.canvasWidth + pos.x) * 4
     }
 
+    Canvas.prototype.totalImagePosition = function(mousePos){
+      var pos = this.coordinateToUnzoomedGaussSystem(mousePos)
+
+      pos.x = pos.x > this.imageWidth ? this.imageWidth : pos.x
+      pos.y = pos.y > this.imageHeight ? this.imageHeight : pos.y 
+      console.log('mousePos: ')
+      console.log(pos)
+      return (pos.y * this.imageWidth + pos.x) * 4
+    }    
+
+    /**
+    * Static helper
+    */
+    Canvas.colorEquals = function(pos1, pos2){
+
+    }
 
 
 

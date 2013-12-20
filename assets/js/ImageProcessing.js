@@ -45,7 +45,7 @@ var ImageProcessing, _ref, module,
       
       this.initContext()
       
-      this.runTests()
+      //this.runTests()
 
     }
 
@@ -82,12 +82,12 @@ var ImageProcessing, _ref, module,
 
     ImageProcessing.prototype.state = function(event){
       var mouseCoords = this.canvasShown.mouseCoords(event)
-      var totalPosition = this.canvasShown.totalCanvasPosition(mouseCoords)
+      var totalImagePosition = this.canvasStage.totalImagePosition(mouseCoords)
       return {
               color: this.toolbar.foregroundColor()
             //, totalCoords: this.canvasShown.coordinateToUnzoomedSystem(event) 
             , mouse: mouseCoords
-            , totalPosition: totalPosition
+            , totalImagePosition: totalImagePosition
           }
     }
 

@@ -230,38 +230,42 @@ define(['js/Histogram', 'js/helper/Colors', 'js/vectorizer/Vectorizer'], functio
     return colorA.r === colorB.r && colorA.g === colorB.g && colorA.b === colorB.b
   }
 
-  ImageProcessor.prototype.processFloodFill = function(imageData, imageWidth, type, position, color){
-    //imageData = this.processThreshold(this.computeThreshold(imageData),imageData)
-    console.log('TODO: colorclass with equal and similar(variance)')
-    if(type == "four")
-      this.floodFillStack(imageData, imageWidth, position, imageData.data[position], color)
-    else if(type == "eight")
-      this.floodFillBreadth(imageData, imageWidth, position, imageData.data[position], color)
+  ImageProcessor.prototype.processFloodFill = function(imageData, imageWidth, type, position, color, variance){
+    var sameColor = ImageProcessor.sameColor(imageData, position, color, 0)
+    console.log("same color: "+sameColor)
 
+    if(!sameColor){
+      console.log('TODO: colorclass with equal and similar(variance)')
+      if(type == "four")
+        this.floodFillStack(imageData, imageWidth, position, color, variance)
+      else if(type == "eight")
+        this.floodFillBreadth(imageData, imageWidth, position, color, variance)
+    }
     return imageData;
   }
 
   // regards the for pixels around the curent pixel (upper. lower, left, right) / uses stack
-  ImageProcessor.prototype.floodFillStack = function(imageData, imageWidth, position, lookFor, label){
+  ImageProcessor.prototype.floodFillStack = function(imageData, imageWidth, position, label, variance){
     var s = Array()
-    window.maxDepth = 0
+
+    var color = ImageProcessor.getColorObject(imageData, position)
     var currPixPos
+    var sameColor = false
     var lastPixel = imageData.data.length - 4
+
     s.push(position)
+
     while(s.length > 0){
       currPixPos = s.pop() // stack
-      if(imageData.data[currPixPos] === lookFor && currPixPos > 0 && currPixPos < lastPixel){
-        imageData.data[currPixPos] = label.r
-        imageData.data[currPixPos+1] = label.g
-        imageData.data[currPixPos+2] = label.b
+      sameColor = ImageProcessor.sameColor(imageData, currPixPos, color, variance)
+      if(sameColor && currPixPos >= 0 && currPixPos <= lastPixel){
+        ImageProcessor.setColor(imageData, currPixPos, label)
         s.push(currPixPos - 4) // left
         s.push(currPixPos + 4) // right
         s.push(currPixPos - imageWidth*4) // upper
         s.push(currPixPos + imageWidth*4) // lower
-        window.maxDepth = (s.length > window.maxDepth) ? s.length : window.maxDepth
       }
     }
-    //console.log('depth: '+window.maxDepth)
   }
 
   // regards the eight pixels around the curent pixel / uses queue
@@ -290,6 +294,33 @@ define(['js/Histogram', 'js/helper/Colors', 'js/vectorizer/Vectorizer'], functio
     }
   }
 
+
+  /**
+  * Helper
+  */
+
+  ImageProcessor.sameColor = function(imageData, position, color, variance){
+    return  imageData.data[position]   >= color.r - variance && imageData.data[position]   <= color.r + variance &&
+            imageData.data[position+1] >= color.g - variance && imageData.data[position+1] <= color.g + variance &&
+            imageData.data[position+2] >= color.b - variance && imageData.data[position+2] <= color.b + variance &&
+            imageData.data[position+3] >= color.a - variance && imageData.data[position+3] <= color.a + variance
+  }
+
+  ImageProcessor.getColorObject = function(imageData, position){
+    return {
+        r: imageData.data[position]
+      , g: imageData.data[position+1]
+      , b: imageData.data[position+2]
+      , a: imageData.data[position+3]
+    }    
+  }
+
+  ImageProcessor.setColor = function(imageData, position, color){
+    imageData.data[position]   = color.r
+    imageData.data[position+1] = color.g
+    imageData.data[position+2] = color.b
+    imageData.data[position+3] = color.a
+  }
 
 // --------------------------------------
     return ImageProcessor
