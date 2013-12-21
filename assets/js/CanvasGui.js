@@ -79,8 +79,8 @@ define(['text!templates/canvas-gui.html',
     var width = window.outerWidth
 
     if(width < 992 && !this.wasSmallLayout){
-      this.canvasShown.updateSize(330,264)
-      $(this.canvasWrapId).css({"width":"330px", "height":"264px"})
+      this.canvasShown.updateSize(400,320)
+      $(this.canvasWrapId).css({"width":"400px", "height":"320px"})
       this.toggleMenu() 
       this.wasSmallLayout = true
       this.wasMediumLayout = this.wasLargeLayout = false

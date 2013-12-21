@@ -59,6 +59,7 @@ define([], function() {
       this.oldImageData = this.getImageData()
       this.gotNewImage = true
 
+      this.scale = 1
       this.currentScale = 1
 
       this.clones = new Array()
@@ -535,7 +536,7 @@ define([], function() {
     Canvas.prototype.getDiff = function(imageDataNew, imageInfosOld){
 
       var diff = new Array()
-      diff.push('diff');
+      diff.push('diff'); // diff strategy marker
       var allDiff = new Array()
       var rComp,gComp,bComp,aComp 
       var imageDataOld = imageInfosOld["pixel"]
@@ -566,9 +567,10 @@ define([], function() {
       if(diff.length*4 > imageDataNew.data.length){
         //console.log("store diff using ImagaData strategy")
         diff.length = 0
-        diff[0] = 'ImagaData'
+        diff[0] = 'ImagaData' // imageData strategy marker
         diff[1] = imageDataOld.data
       }else{
+        // keep computet diff
         //console.log("store diff using diff strategy")
       }
 
@@ -576,7 +578,6 @@ define([], function() {
       allDiff['size'] = imageInfosOld["size"]
 
       return allDiff
-
     }
 
     /**
@@ -593,9 +594,9 @@ define([], function() {
       if(this.keepChangesForUndo){
         var diff = this.getDiff(this.getFullImageData(), this.lastImageInfos)
 
-        if(diff['pixel'].length > 0){
+        if(diff['pixel'].length > 1){
           this.undoStack.push(diff)
-          //console.log("push diff to undo stack ("+diff['pixel'].length+")")
+          console.log("push diff to undo stack ("+diff['pixel'].length+")")
     
           // avoid big data mass
           if(this.undoStack.length > 20){
@@ -688,15 +689,16 @@ define([], function() {
     */
     Canvas.prototype.copy = function(otherCanvas, doNotDraw, scaled){
 
-      var scaleX = (this.canvasWidth / otherCanvas.imageWidth).toFixed(4)
-      var scaleY = (this.canvasHeight / otherCanvas.imageHeight).toFixed(4)
+      var scaleX = (this.canvasWidth / otherCanvas.canvasWidth).toFixed(4)
+      var scaleY = (this.canvasHeight / otherCanvas.canvasHeight).toFixed(4)
 
-      var scale = scaleX < scaleY ? scaleX : scaleY;
+      this.scale = scaleX < scaleY ? scaleX : scaleY;
       // do not scale, when original image is scmaller than canvas
-      scale = scale > 1.0 ? 1.0 : scale;
+      this.scale = this.scale > 1.0 ? 1.0 : this.scale;
+      //this.scale = this.scale  - this.scale % .5 // roud up to .5 step
 
-      this.imageHeight  = otherCanvas.imageHeight * scale
-      this.imageWidth   = otherCanvas.imageWidth * scale
+      this.imageHeight  = otherCanvas.imageHeight * this.scale
+      this.imageWidth   = otherCanvas.imageWidth * this.scale
       //this.imageXOffset = 0//Math.floor((this.canvasWidth - this.imageWidth) / 2)
       //this.imageYOffset = 0//Math.floor((this.canvasHeight - this.imageHeight) / 2)
 
@@ -709,7 +711,7 @@ define([], function() {
         newCanvas.getContext("2d").putImageData(otherCanvas.getImageData(), 0, 0);
 
         this.clear()      
-        this.getContext().scale(scale, scale)
+        this.getContext().scale(this.scale, this.scale)
         this.getContext().drawImage(newCanvas, 0, 0)
 
         this.getContext().restore()
@@ -735,15 +737,16 @@ define([], function() {
     */
     Canvas.prototype.fullCopy = function(otherCanvas, doNotDraw){
 
-      var scaleX = (this.canvasWidth / otherCanvas.canvasWidth).toFixed(4)
-      var scaleY = (this.canvasHeight / otherCanvas.canvasHeight).toFixed(4)
+      var scaleX = this.canvasWidth / otherCanvas.canvasWidth
+      var scaleY = this.canvasHeight / otherCanvas.canvasHeight
 
-      var scale = scaleX < scaleY ? scaleX : scaleY;
+      this.scale = scaleX < scaleY ? scaleX : scaleY;
       // do not scale, when original image is scmaller than canvas
-      scale = scale > 1.0 ? 1.0 : scale;
-
-      this.imageHeight  = otherCanvas.canvasHeight * scale
-      this.imageWidth   = otherCanvas.canvasWidth * scale
+      this.scale = this.scale > 1.0 ? 1.0 : this.scale;
+      //this.scale += .5 - this.scale % .5 // roud up to .5 step
+      
+      this.imageHeight  = otherCanvas.canvasHeight * this.scale
+      this.imageWidth   = otherCanvas.canvasWidth * this.scale
 
       if(!doNotDraw){
         // save current context state, to restore changes in scaling later
@@ -754,7 +757,7 @@ define([], function() {
         newCanvas.getContext("2d").putImageData(otherCanvas.getFullImageData(), 0, 0);
 
         this.clear()      
-        this.getContext().scale(scale, scale)
+        this.getContext().scale(this.scale, this.scale)
         this.getContext().drawImage(newCanvas, 0, 0)
 
         this.getContext().restore()
@@ -1007,8 +1010,9 @@ define([], function() {
         }
         while(currentElement = currentElement.offsetParent)
 
-        canvasX = event.pageX - totalOffsetX;
-        canvasY = event.pageY - totalOffsetY;
+        canvasX = (event.pageX - totalOffsetX)*1/this.scale
+        canvasY = (event.pageY - totalOffsetY)*1/this.scale
+
         var total = this.xyToTotalPosition({x:canvasX, y:canvasY})
 
         var coords = {x:canvasX, y:canvasY, total: total}
