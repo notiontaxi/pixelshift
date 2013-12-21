@@ -228,7 +228,6 @@ define([], function() {
     *
     */
     Canvas.prototype.draw = function(){
-      
       this.computeVisibleArea()
       var area = this.parent.getAreaPixels(this.visibleArea)
       this.setAreaPixels(area)
@@ -441,7 +440,7 @@ define([], function() {
     Canvas.prototype.undo = function(){
       if(this.undoStack.length !== 0){
         this.redoStack.push(this.revert(this.undoStack.pop()))
-        this.copyToClones()
+        this.drawClones()
       }
     }
 
@@ -451,7 +450,7 @@ define([], function() {
     Canvas.prototype.redo = function(){
       if(this.redoStack.length !== 0){
         this.undoStack.push(this.revert(this.redoStack.pop()))
-        this.copyToClones()
+        this.drawClones()
       }
     }
 
@@ -588,8 +587,6 @@ define([], function() {
     */
     Canvas.prototype.registerContentModification = function(){
 
-      this.copyToClones()
-
       // empty redo stack
       this.redoStack.length = 0
 
@@ -654,7 +651,7 @@ define([], function() {
         }else{
           _this.imageHeight = img.height
           _this.imageWidth = img.width
-          _this.imageYOffset = Math.round((_this.cv.height - _this.imageHeight) / 2)    
+          _this.imageYOffset = 0//Math.round((_this.cv.height - _this.imageHeight) / 2)    
         }
 
         if(_this.imageWidth < _this.cv.width)
@@ -666,6 +663,7 @@ define([], function() {
       _this.clear()
       _this.getContext().drawImage(img, _this.imageXOffset, _this.imageYOffset, _this.imageWidth, _this.imageHeight)
       _this.registerContentModification()
+      _this.drawClones()
     }
 
     /**
@@ -688,7 +686,7 @@ define([], function() {
     * @param {Canvas} otherCanvas  the canvas this should be updated to
     * @param {boolean} doNotDraw  true if width, height and offsets shold be set only
     */
-    Canvas.prototype.copy = function(otherCanvas, doNotDraw){
+    Canvas.prototype.copy = function(otherCanvas, doNotDraw, scaled){
 
       var scaleX = (this.canvasWidth / otherCanvas.imageWidth).toFixed(4)
       var scaleY = (this.canvasHeight / otherCanvas.imageHeight).toFixed(4)
@@ -699,8 +697,8 @@ define([], function() {
 
       this.imageHeight  = otherCanvas.imageHeight * scale
       this.imageWidth   = otherCanvas.imageWidth * scale
-      this.imageXOffset = 0//Math.floor((this.canvasWidth - this.imageWidth) / 2)
-      this.imageYOffset = 0//Math.floor((this.canvasHeight - this.imageHeight) / 2)
+      //this.imageXOffset = 0//Math.floor((this.canvasWidth - this.imageWidth) / 2)
+      //this.imageYOffset = 0//Math.floor((this.canvasHeight - this.imageHeight) / 2)
 
       if(!doNotDraw){
         // save current context state, to restore changes in scaling later
@@ -712,12 +710,20 @@ define([], function() {
 
         this.clear()      
         this.getContext().scale(scale, scale)
-        this.getContext().drawImage(newCanvas, this.imageXOffset*1/scale, this.imageYOffset*1/scale)
-        
+        this.getContext().drawImage(newCanvas, 0, 0)
+
         this.getContext().restore()
       }
-      this.copyToClones()
     }
+
+    /** 
+    * Updates this canvas only with image properties
+    * @param {Canvas} otherCanvas  the canvas this should be updated to
+    */
+    Canvas.prototype.copyImageProperties = function(otherCanvas){
+      this.imageHeight  = otherCanvas.imageHeight
+      this.imageWidth   = otherCanvas.imageWidth
+    }    
 
 
     /** 
@@ -808,6 +814,7 @@ define([], function() {
       this.clear()
       this.getContext().putImageData(imageData,0,0)//this.imageXOffset,this.imageYOffset)
       this.registerContentModification()
+      this.drawClones()
     }
 
     /**
@@ -946,6 +953,17 @@ define([], function() {
             this.clones[c].copy(this)
     }
 
+    // this method should be called in origin canvas 
+    //  -> draw stage canvas (with zoom)
+    //  -> copy to shown canvas
+    Canvas.prototype.drawClones = function(){
+      if(!!this.clones)
+        for(var c = 0; c < this.clones.length; c++){
+            this.clones[c].copyImageProperties(this)
+            this.clones[c].draw()
+          }
+    }
+
     Canvas.prototype.coordinateToUnzoomedGaussSystem = function(absoluteCoords){
       return {
           x: Math.floor(absoluteCoords.x / this.currentScale) + this.visibleArea.x1
@@ -984,8 +1002,8 @@ define([], function() {
         var currentElement = this.getElement()[0];
 
         do{
-            totalOffsetX += currentElement.offsetLeft - currentElement.scrollLeft;
-            totalOffsetY += currentElement.offsetTop - currentElement.scrollTop;
+            totalOffsetX += currentElement.offsetLeft //+ currentElement.scrollLeft;
+            totalOffsetY += currentElement.offsetTop //+ currentElement.scrollTop;
         }
         while(currentElement = currentElement.offsetParent)
 
@@ -1008,8 +1026,8 @@ define([], function() {
 
       pos.x = pos.x > this.imageWidth ? this.imageWidth : pos.x
       pos.y = pos.y > this.imageHeight ? this.imageHeight : pos.y 
-      console.log('mousePos: ')
-      console.log(pos)
+      //console.log('mousePos: ')
+      //console.log(pos)
       return (pos.y * this.imageWidth + pos.x) * 4
     }    
 

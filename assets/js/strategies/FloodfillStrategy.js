@@ -44,10 +44,6 @@ var FloodfillStrategy, _ref, module,
         10)
 
       this.canvasOrigin.putImageData(processedImageData)
-      // this.canvasOrigin.copyToClones()
-      
-      //console.log('TODO: execute floodfill task')
-      console.log(state)
     }
 
     FloodfillStrategy.prototype.appendToToolbar = function(){

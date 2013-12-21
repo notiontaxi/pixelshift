@@ -70,7 +70,6 @@ define(['text!templates/toolbar.html'], function(toolbarTemplate) {
       color = color.substring(start,stop)
       var colors = color.split(",")
 
-      console.log(color)
       return {r: parseInt(colors[0]), 
               g: parseInt(colors[1]), 
               b: parseInt(colors[2]), 

@@ -232,10 +232,8 @@ define(['js/Histogram', 'js/helper/Colors', 'js/vectorizer/Vectorizer'], functio
 
   ImageProcessor.prototype.processFloodFill = function(imageData, imageWidth, type, position, color, variance){
     var sameColor = ImageProcessor.sameColor(imageData, position, color, 0)
-    console.log("same color: "+sameColor)
 
     if(!sameColor){
-      console.log('TODO: colorclass with equal and similar(variance)')
       if(type == "four")
         this.floodFillStack(imageData, imageWidth, position, color, variance)
       else if(type == "eight")
@@ -244,7 +242,8 @@ define(['js/Histogram', 'js/helper/Colors', 'js/vectorizer/Vectorizer'], functio
     return imageData;
   }
 
-  // regards the for pixels around the curent pixel (upper. lower, left, right) / uses stack
+
+  // regards the for pixels around the current pixel (upper. lower, left, right) / uses stack
   ImageProcessor.prototype.floodFillStack = function(imageData, imageWidth, position, label, variance){
     var s = Array()
 
