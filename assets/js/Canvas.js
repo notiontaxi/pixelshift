@@ -23,21 +23,15 @@ define([], function() {
     */
     function Canvas(id, keepChangesForUndo){
       
-      this.id = id;
-      this.cv = document.getElementById(this.id);
-      this.ctx = this.cv.getContext('2d');
-
-      // TESTing 
-      this.ctx.webkitImageSmoothingEnabled = false
+      this.id = id
+      this.keepChangesForUndo = keepChangesForUndo
+      this.cv = document.getElementById(this.id)
+      this.ctx = this.cv.getContext('2d')
 
       this.canvasHeight = this.cv.height 
-      this.halfCanvasHeight = this.canvasHeight/2
       this.canvasWidth = this.cv.width
-      this.halfCanvasWidth = this.canvasWidth/2
       this.imageHeight = this.cv.height 
       this.imageWidth = this.cv.width
-      this.imageXOffset = 0
-      this.imageYOffset = 0
 
       this.visibleArea = {
           x1: 0
@@ -48,7 +42,7 @@ define([], function() {
       this.oldVisibleWidth = 800
       this.oldVisibleHeight = 640      
 
-      this.pixelPerMove = 50
+      this.pixelPerMove = 50 // change this value for bigger or smaller steps
 
       this.gotNewImage = true
 
@@ -66,13 +60,12 @@ define([], function() {
       this.undoStack = new Array()
       this.redoStack = new Array()
 
-      this.keepChangesForUndo = keepChangesForUndo === true ? true : false
       this.storeImageInfo()
 
       this.alphaGrid = false
       this.points = null
 
-      this.gridZoomLevel = 3
+      this.gridZoomLevel = 5
 
       this.parent = null
     }
@@ -251,7 +244,8 @@ define([], function() {
       var pos = this.toImageGaussianCoords(pixel.vertice)
       var gPos = {x: pos.x * this.currentScale , y: pos.y * this.currentScale  }
       var pointSize = Math.ceil((this.currentScale*2) / 15)
-      var color = 'red' 
+      var color = 'red'
+      console.log(pixel.vertice)
 
       if(outline)
         color = 'green'
@@ -271,6 +265,7 @@ define([], function() {
     }
 
     Canvas.prototype.drawPaths = function(){
+      console.log('draw paths')
       var paths = this.paths
       var currentPath = null
       var currentPoints = null
@@ -349,9 +344,9 @@ define([], function() {
     Canvas.prototype.getAreaPixels = function(visibleArea, allPixels){
       var pixels = Array()
 
-      var start = this.canvasWidth * 4 * visibleArea.y1  + visibleArea.x1 * 4 //+ this.startOfPictue
+      var start = this.canvasWidth * 4 * visibleArea.y1  + visibleArea.x1 * 4 
  
-      var end   = this.canvasWidth * 4 * (visibleArea.y2) + visibleArea.x2 * 4 //+ this.startOfPictue
+      var end   = this.canvasWidth * 4 * (visibleArea.y2) + visibleArea.x2 * 4 
       var rowLength = (visibleArea.x2 - visibleArea.x1) * 4 + 4
       var rowIncrement = this.canvasWidth * 4
       var i, j
@@ -420,16 +415,11 @@ define([], function() {
     * records last change for revert()
     */
     Canvas.prototype.storeImageInfo = function(){
-
-      //console.log("Storing image info")
-
       this.lastImageInfos = new Array()
       this.lastImageInfos["pixel"] = this.getFullImageData()
       this.lastImageInfos["size"] = {
           imageWidth: this.imageWidth
         , imageHeight: this.imageHeight
-        , imageXOffset: this.imageXOffset
-        , imageYOffset: this.imageYOffset
       } 
     }
 
@@ -466,8 +456,6 @@ define([], function() {
         var sizeReverts = {
             imageWidth: this.imageWidth
           , imageHeight: this.imageHeight
-          , imageXOffset: this.imageXOffset
-          , imageYOffset: this.imageYOffset
         }         
 
         var pixelChanges = allChanges["pixel"]
@@ -515,8 +503,6 @@ define([], function() {
 
         this.imageWidth = sizeChanges.imageWidth
         this.imageHeight = sizeChanges.imageHeight
-        this.imageXOffset = sizeChanges.imageXOffset
-        this.imageYOffset = sizeChanges.imageYOffset
 
         this._putFullImageData(imageData)
         this.storeImageInfo()
@@ -596,14 +582,12 @@ define([], function() {
 
         if(diff['pixel'].length > 1){
           this.undoStack.push(diff)
-          console.log("push diff to undo stack ("+diff['pixel'].length+")")
+          //console.log("push diff to undo stack ("+diff['pixel'].length+")")
     
           // avoid big data mass
           if(this.undoStack.length > 20){
             this.undoStack.shift()
-            //console.log("remove last element in undo stack")
           }
-
           // set pointer to current state
           this.storeImageInfo()
         }
@@ -626,9 +610,6 @@ define([], function() {
 
       _this.imageHeight = 0
       _this.imageWidth = 0
-      _this.imageXOffset = 0
-      _this.imageYOffset = 0
-      //_this.startOfPictue = 0
 
       if(img.width > img.height)
       {
@@ -638,11 +619,7 @@ define([], function() {
         }else{
           _this.imageWidth = img.width
           _this.imageHeight = img.height
-          _this.imageXOffset = 0//Math.floor((_this.cv.width - _this.imageWidth) / 2)
         }
-
-        if(_this.imageHeight < _this.cv.height)
-          _this.imageYOffset = 0//Math.floor((_this.cv.height - _this.imageHeight) / 2)
         
       } else {
 
@@ -651,18 +628,13 @@ define([], function() {
           _this.imageWidth = Math.round(img.width * (_this.cv.height/img.height))
         }else{
           _this.imageHeight = img.height
-          _this.imageWidth = img.width
-          _this.imageYOffset = 0//Math.round((_this.cv.height - _this.imageHeight) / 2)    
-        }
-
-        if(_this.imageWidth < _this.cv.width)
-          _this.imageXOffset = 0//Math.round((_this.cv.width - _this.imageWidth) / 2)      
+          _this.imageWidth = img.width  
+        }   
       }
-      //_this.startOfPictue = _this.imageYOffset*_this.canvasWidth*4 + _this.imageXOffset*4
 
       _this.gotNewImage = true
       _this.clear()
-      _this.getContext().drawImage(img, _this.imageXOffset, _this.imageYOffset, _this.imageWidth, _this.imageHeight)
+      _this.getContext().drawImage(img, 0, 0, _this.imageWidth, _this.imageHeight)
       _this.registerContentModification()
       _this.drawClones()
     }
@@ -699,8 +671,6 @@ define([], function() {
 
       this.imageHeight  = otherCanvas.imageHeight * this.scale
       this.imageWidth   = otherCanvas.imageWidth * this.scale
-      //this.imageXOffset = 0//Math.floor((this.canvasWidth - this.imageWidth) / 2)
-      //this.imageYOffset = 0//Math.floor((this.canvasHeight - this.imageHeight) / 2)
 
       if(!doNotDraw){
         // save current context state, to restore changes in scaling later
@@ -762,7 +732,7 @@ define([], function() {
 
         this.getContext().restore()
       }
-      this.copyToClones()
+
     }
 
 
@@ -816,7 +786,7 @@ define([], function() {
     Canvas.prototype.putImageData = function(imageData){
       this.clear()
 
-      this.getContext().putImageData(imageData,0,0)//this.imageXOffset,this.imageYOffset)
+      this.getContext().putImageData(imageData,0,0)
       this.registerContentModification()
     }
 
@@ -900,10 +870,6 @@ define([], function() {
       this.ctx.font = "bold 8px sans-serif"
       this.ctx.textAlign = 'center'
       this.ctx.textBaseline = 'middle'
-      // cut if its a number
-      //if(!isNaN(text*2))
-        //text = text.toFixed(0)
-
       this.ctx.fillStyle = color;
 
       if(!!rot){
@@ -982,8 +948,7 @@ define([], function() {
     }
 
     Canvas.prototype.toImageGaussianCoords = function(totalPosition){
-      var pos = Math.floor(totalPosition.total/4)
-
+      var pos = Math.floor(totalPosition/4)
       return {
           x: pos%this.imageWidth - this.visibleArea.x1
         , y: Math.ceil(pos/this.imageWidth) - 1 - this.visibleArea.y1
@@ -1005,8 +970,8 @@ define([], function() {
         var currentElement = this.getElement()[0];
 
         do{
-            totalOffsetX += currentElement.offsetLeft //+ currentElement.scrollLeft;
-            totalOffsetY += currentElement.offsetTop //+ currentElement.scrollTop;
+            totalOffsetX += currentElement.offsetLeft 
+            totalOffsetY += currentElement.offsetTop
         }
         while(currentElement = currentElement.offsetParent)
 
@@ -1030,8 +995,7 @@ define([], function() {
 
       pos.x = pos.x > this.imageWidth ? this.imageWidth : pos.x
       pos.y = pos.y > this.imageHeight ? this.imageHeight : pos.y 
-      //console.log('mousePos: ')
-      //console.log(pos)
+
       return (pos.y * this.imageWidth + pos.x) * 4
     }    
 

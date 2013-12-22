@@ -17,7 +17,7 @@ var ImageProcessingStrategy, _ref, module,
   //__extends(, )
 // --------------------------------------
 
-
+    // is this a tool for the menu bar above or for the toolbar? 
     ImageProcessingStrategy.TYPE_MENU = 1
     ImageProcessingStrategy.TYPE_TOOLBAR = 2
 
