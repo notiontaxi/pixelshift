@@ -44,6 +44,7 @@ var FloodfillStrategy, _ref, module,
         10)
 
       this.canvasOrigin.putImageData(processedImageData)
+      this.canvasOrigin.drawClones()
     }
 
     FloodfillStrategy.prototype.appendToToolbar = function(){

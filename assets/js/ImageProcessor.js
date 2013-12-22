@@ -35,11 +35,11 @@ define(['js/Histogram', 'js/helper/Colors', 'js/vectorizer/Vectorizer'], functio
   ImageProcessor.prototype.processThreshold = function(threshold, imageData){
     for (var i = 0; i < imageData.data.length; i+=4) {
       // get grey value for the current Pixel
-      var greyValue = this.rgbToGreyscale(imageData.data[i], imageData.data[i+1], imageData.data[i+2]);
+      var greyValue = this.rgbToGreyscale(imageData.data[i], imageData.data[i+1], imageData.data[i+2])
       // set the current Pixel to black or white depending on threshold
-      imageData.data[i] = imageData.data[i+1] = imageData.data[i+2] = greyValue >= threshold ? 255 : 0;
+      imageData.data[i] = imageData.data[i+1] = imageData.data[i+2] = greyValue >= threshold ? 255 : 0
     }
-    return imageData;
+    return imageData
   }
 
   ImageProcessor.prototype.processGrayscale = function(imageData){

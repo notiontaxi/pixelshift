@@ -31,23 +31,27 @@ var OutlineStrategy, _ref, module,
 
     OutlineStrategy.prototype.updateThreshold = function(threshold){
 
-      var imgDataLeft = this.canvasOrigin.getImageData()
+      var imgDataLeft = this.canvasOrigin.getFullImageData()
 
       // compute threshold automatically, if not set          multiplycation cause input is 0-100
       if(typeof threshold === 'undefined'){
         threshold = this.imageProcessor.computeThreshold(imgDataLeft)
-        this.canvasOrigin.putImageData(this.imageProcessor.processThreshold(threshold, imgDataLeft))
+        this.processedImageData = this.imageProcessor.processThreshold(threshold, imgDataLeft)
+        this.canvasOrigin.putImageData(this.processedImageData)
+        this.canvasOrigin.drawClones()
       }else{
-        threshold*2.55
-        this.canvasStage.putImageData(this.imageProcessor.processThreshold(threshold, imgDataLeft))
+        threshold*=2.55
+        this.processedImageData = this.imageProcessor.processThreshold(threshold, imgDataLeft)
+        this.canvasStage.draw(this.processedImageData)
+        //this.canvasStage.copyToClones()
       }
 
       return threshold
     }
 
     OutlineStrategy.prototype.appendToMenuBar = function(){
-      this.appendToLGMenuBar('Outline', 'action-menu-outline', 'image-actions-list')
-      this.appendToSDMenuBar('Outline', 'action-menu-outline', 'image-actions-list-sd')  
+      this.appendToLGMenuBar('Bitmap Tool', 'action-menu-outline', 'image-actions-list')
+      this.appendToSDMenuBar('Bitmap Tool', 'action-menu-outline', 'image-actions-list-sd')  
     }      
 
     OutlineStrategy.prototype.addMenuBarAction = function(){
@@ -100,6 +104,7 @@ var OutlineStrategy, _ref, module,
         function(event, ui){
           var newImg = this.imageProcessor.processDilation(this.canvasOrigin.getImageData(), this.canvasOrigin.getImageWidth())
           this.canvasOrigin.putImageData(newImg)
+          this.canvasOrigin.drawClones()
         }.bind(this)
       )   
 
@@ -108,6 +113,7 @@ var OutlineStrategy, _ref, module,
         function(event, ui){
           var newImg = this.imageProcessor.processErosion(this.canvasOrigin.getImageData(), this.canvasOrigin.getImageWidth())
           this.canvasOrigin.putImageData(newImg)
+          this.canvasOrigin.drawClones()
         }.bind(this)
       )   
 
@@ -116,18 +122,20 @@ var OutlineStrategy, _ref, module,
         function(event, ui){
           var newImg = this.imageProcessor.processOutline(this.canvasOrigin.getImageData(), this.canvasOrigin.getImageData() ,this.canvasOrigin.getImageWidth())
           this.canvasOrigin.putImageData(newImg)
+          this.canvasOrigin.drawClones()
         }.bind(this)
       )
 
       $("#threshold-ok").click(
         function(event, ui){
-          this.canvasOrigin.putImageData(this.canvasStage.getImageData())
+          if(!!this.processedImageData)
+            this.canvasOrigin.putImageData(this.processedImageData)
         }.bind(this)
       )
 
       $("#threshold-nok").click(
         function(event, ui){
-          this.canvasOrigin.copyToClones()
+          this.canvasOrigin.drawClones()
         }.bind(this)
       )
 

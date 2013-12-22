@@ -225,11 +225,14 @@ define([], function() {
 
     /**
     * Updates the visible area depending on scale
-    *
     */
-    Canvas.prototype.draw = function(){
+    Canvas.prototype.draw = function(imageData){
+
+      if(!imageData)
+        imageData = this.parent.getFullImageData()
+
       this.computeVisibleArea()
-      var area = this.parent.getAreaPixels(this.visibleArea)
+      var area = this.getAreaPixels(this.visibleArea, imageData)
       this.setAreaPixels(area)
 
       if(this.currentScale >= this.gridZoomLevel  && this.drawGrid){
@@ -237,9 +240,10 @@ define([], function() {
           this.drawGrid()
         if(!!this.paths)
           this.drawPaths()
-      }     
+      }
 
       this.copyToClones(true)
+
     }
 
 
@@ -342,15 +346,12 @@ define([], function() {
       this._putFullImageData(data)
     }
 
-    Canvas.prototype.getAreaPixels = function(visibleArea){
-
-      var allPixels = this.getFullImageData()
+    Canvas.prototype.getAreaPixels = function(visibleArea, allPixels){
       var pixels = Array()
 
-      // 
-      var start = this.canvasWidth * 4 * visibleArea.y1  + visibleArea.x1 * 4 + this.startOfPictue
-      // 
-      var end   = this.canvasWidth * 4 * (visibleArea.y2) + visibleArea.x2 * 4 + this.startOfPictue
+      var start = this.canvasWidth * 4 * visibleArea.y1  + visibleArea.x1 * 4 //+ this.startOfPictue
+ 
+      var end   = this.canvasWidth * 4 * (visibleArea.y2) + visibleArea.x2 * 4 //+ this.startOfPictue
       var rowLength = (visibleArea.x2 - visibleArea.x1) * 4 + 4
       var rowIncrement = this.canvasWidth * 4
       var i, j
@@ -377,7 +378,7 @@ define([], function() {
     Canvas.prototype.setAreaPixels = function(area){
 
       this.clear()
-      var allPixels = this.getFullImageData()
+      var allPixels = this.getFullImageData() 
       
       // number of horizontal pixels in y direction 
       var xPixelAmount = area.width 
@@ -627,7 +628,7 @@ define([], function() {
       _this.imageWidth = 0
       _this.imageXOffset = 0
       _this.imageYOffset = 0
-      _this.startOfPictue = 0
+      //_this.startOfPictue = 0
 
       if(img.width > img.height)
       {
@@ -657,7 +658,7 @@ define([], function() {
         if(_this.imageWidth < _this.cv.width)
           _this.imageXOffset = 0//Math.round((_this.cv.width - _this.imageWidth) / 2)      
       }
-      _this.startOfPictue = _this.imageYOffset*_this.canvasWidth*4 + _this.imageXOffset*4
+      //_this.startOfPictue = _this.imageYOffset*_this.canvasWidth*4 + _this.imageXOffset*4
 
       _this.gotNewImage = true
       _this.clear()
@@ -814,9 +815,9 @@ define([], function() {
     */
     Canvas.prototype.putImageData = function(imageData){
       this.clear()
+
       this.getContext().putImageData(imageData,0,0)//this.imageXOffset,this.imageYOffset)
       this.registerContentModification()
-      this.drawClones()
     }
 
     /**

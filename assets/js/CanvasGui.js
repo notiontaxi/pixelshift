@@ -164,7 +164,7 @@ define(['text!templates/canvas-gui.html',
       function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        this.canvasStage.zoomReset()
+        //this.canvasStage.zoomReset()
         $('input[type="file"]').click()
       }.bind(this))
 
