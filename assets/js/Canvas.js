@@ -69,9 +69,8 @@ define([], function() {
       this.keepChangesForUndo = keepChangesForUndo === true ? true : false
       this.storeImageInfo()
 
-      this.alphaGrid = true
+      this.alphaGrid = false
       this.points = null
-
 
       this.gridZoomLevel = 3
 
@@ -431,7 +430,6 @@ define([], function() {
         , imageXOffset: this.imageXOffset
         , imageYOffset: this.imageYOffset
       } 
-
     }
 
     /**
@@ -520,6 +518,7 @@ define([], function() {
         this.imageYOffset = sizeChanges.imageYOffset
 
         this._putFullImageData(imageData)
+        this.storeImageInfo()
 
         revert["pixel"] = pixelRevets
         revert["size"] = sizeReverts
