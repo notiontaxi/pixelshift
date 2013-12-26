@@ -8,7 +8,8 @@ https://github.com/notiontaxi
 
 "use strict"
 
-define(['js/strategies/ImageProcessingStrategy', 'js/Toolbar'], function(ImageProcessingStrategy, Toolbar) {
+define(['js/strategies/ImageProcessingStrategy',
+  'text!templates/pencilSubmenu.html'], function(ImageProcessingStrategy, Submenu) {
 
 var PencilStrategy, _ref, module,
 
@@ -36,11 +37,28 @@ var PencilStrategy, _ref, module,
 
     PencilStrategy.prototype.appendToToolbar = function(){
       this.button = this.addToToolbar('icon-pencil', 'toolbar-pencil', 'pencil', '.tool-items')
-    }   
+      this.submenu = $('#toolbar-pencil-submenu').append($(Submenu))
+      this.arrow = $(this.button).find('.toolbar-submenu-arrow')
 
-    PencilStrategy.prototype.addToolbarAction = function(){
-      this.button.click(Toolbar.toggleActive)
-    }
+      $('.pencil-submenu-content').slider(
+        {
+          range: "min",
+          orientation: "vertical",
+          value: 10,
+          min: 0,
+          max: 100,
+          slide: function( event, ui ) {
+        
+           $( "#toolbar-pencil-submenu .output" ).html(ui.value+'%')
+           this.thickness = ui.value
+          }.bind(this)
+        }
+      )
+
+      // TODO: compute this in a nicer way
+      var relPos = parseInt(this.button.offset().top - $('#toolbar').offset().top + this.button.height()/2 - $('#toolbar-pencil-submenu').height()/2 ,10)
+      this.submenu.css('top', relPos+'px')      
+    }   
 
 
     PencilStrategy.prototype.initializeTools = function(){

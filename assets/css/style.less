@@ -4,6 +4,7 @@
 @lightGreen: #3cdd68;
 @lightRed: #f0002a;
 @minWidth: 370px;
+@active: #CFFFD6;
 
 body {
   padding-top: 60px;
@@ -249,7 +250,6 @@ canvas, img {
   left: 20%;
   top:10%;
   z-index: 1001;
-  overflow: hidden;
 
   position: fixed;
   top: 300px;
@@ -341,7 +341,7 @@ canvas, img {
 }
 
 .tool-items{
-  z-index: 2001;
+  z-index: 2002;
   width: 53px;
   .btn{
     background-image: none;
@@ -353,7 +353,7 @@ canvas, img {
   }
   .mode-active{
     border-color: #000EB3;
-    background-color: #CFFFD6;
+    background-color: @active;
   }
 }
 
@@ -369,5 +369,39 @@ canvas, img {
     top: 50%;
   }
 
+}
+
+.toolbar-submenu{
+  background-color: @active;
+  color:black;
+  .rounded-corners(3px);
+  
+  position: absolute;
+  top: 25%;
+  left: 61px;
+  width: 45px;
+  
+  .submenu-controls{
+    margin-left: 15px;
+  }
+  
+  .output, .description{
+    font-size: 9px;
+    padding-left: -3px;
+
+  }
+}
+
+
+
+.toolbar-submenu-arrow{
+  position: absolute;
+  color:@active;
+  top: 26%;
+  left: 51px;
+}
+
+.toolbar-item{
+  position: relative;
 }
 

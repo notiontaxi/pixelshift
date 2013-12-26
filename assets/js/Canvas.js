@@ -162,25 +162,25 @@ define([], function() {
 
     Canvas.prototype.checkVisibleBoundaries = function(){
       var enclosement = this.CanvasEnclosesImage()
-      var width = Math.floor(this.imageWidth * this.currentScale)
-      var height = Math.floor(this.imageHeight * this.currentScale)           
-      var boundY = Math.floor((height - this.canvasHeight) / this.currentScale) 
-      var boundX = Math.floor((width - this.canvasWidth) / this.currentScale) 
 
-      if(enclosement.x){
-        this.visibleArea.x1 = 0
-      }else{
-        this.visibleArea.x1 = this.visibleArea.x1 < 0 ? 0 : this.visibleArea.x1
-        this.visibleArea.x1 = this.visibleArea.x1 > boundX ? boundX : this.visibleArea.x1
-      }
+        if(enclosement.x){
+          this.visibleArea.x1 = 0
+        }else{
+          var width = Math.floor(this.imageWidth * this.currentScale)
+          var boundX = Math.floor((width - this.canvasWidth) / this.currentScale) 
+          this.visibleArea.x1 = this.visibleArea.x1 < 0 ? 0 : this.visibleArea.x1
+          this.visibleArea.x1 = this.visibleArea.x1 > boundX ? boundX : this.visibleArea.x1
+        }
 
-      if(enclosement.y){
-        this.visibleArea.y1 = 0     
-      }
-      else{
-        this.visibleArea.y1 = this.visibleArea.y1 < 0 ? 0 : this.visibleArea.y1
-        this.visibleArea.y1 = this.visibleArea.y1 > boundY ? boundY : this.visibleArea.y1
-      }
+        if(enclosement.y){
+          this.visibleArea.y1 = 0     
+        }
+        else{
+          var height = Math.floor(this.imageHeight * this.currentScale) 
+          var boundY = Math.floor((height - this.canvasHeight) / this.currentScale) 
+          this.visibleArea.y1 = this.visibleArea.y1 < 0 ? 0 : this.visibleArea.y1
+          this.visibleArea.y1 = this.visibleArea.y1 > boundY ? boundY : this.visibleArea.y1
+        }
     }
 
     /**
@@ -245,7 +245,6 @@ define([], function() {
       var gPos = {x: pos.x * this.currentScale , y: pos.y * this.currentScale  }
       var pointSize = Math.ceil((this.currentScale*2) / 15)
       var color = 'red'
-      console.log(pixel.vertice)
 
       if(outline)
         color = 'green'
@@ -327,7 +326,7 @@ define([], function() {
           data.data[pos+3] -= 100
         }
       }
-      
+
       // vertical
       for(var h = 0; h < this.canvasHeight*4; h++){
         for(var yL = 0; yL <= xLines; yL++){

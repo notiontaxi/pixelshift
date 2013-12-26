@@ -190,7 +190,6 @@ img {
   left: 20%;
   top: 10%;
   z-index: 1001;
-  overflow: hidden;
   position: fixed;
   top: 300px;
   left: 50%;
@@ -259,7 +258,7 @@ img {
   float: left;
 }
 .tool-items {
-  z-index: 2001;
+  z-index: 2002;
   width: 53px;
 }
 .tool-items .btn {
@@ -275,7 +274,7 @@ img {
 }
 .tool-items .mode-active {
   border-color: #000EB3;
-  background-color: #CFFFD6;
+  background-color: #cfffd6;
 }
 .arrow {
   width: 0px;
@@ -287,4 +286,34 @@ img {
 .arrow.left {
   border-color: transparent #E9E5E5 transparent transparent;
   top: 50%;
+}
+.toolbar-submenu {
+  background-color: #cfffd6;
+  color: black;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -o-border-radius: 3px;
+  border-radius: 3px;
+  position: absolute;
+  top: 25%;
+  left: 61px;
+  width: 45px;
+}
+.toolbar-submenu .submenu-controls {
+  margin-left: 15px;
+}
+.toolbar-submenu .output,
+.toolbar-submenu .description {
+  font-size: 9px;
+  padding-left: -3px;
+}
+.toolbar-submenu-arrow {
+  position: absolute;
+  color: #cfffd6;
+  top: 26%;
+  left: 51px;
+}
+.toolbar-item {
+  position: relative;
 }

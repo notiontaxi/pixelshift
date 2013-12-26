@@ -71,20 +71,17 @@ var OutlineStrategy, _ref, module,
     }
      
 
-
-
     OutlineStrategy.prototype.initializeTools = function(){
 
       // threshold slider
-      $( "#slider-0" ).slider(
+      $( "#threshold-slider" ).slider(
         {
           range: "min",
           value: 50,
           min: 0,
           max: 100,
           slide: function( event, ui ) {
-            $( "#slider-0-output" ).html(ui.value);
-            this.updateThreshold(ui.value)
+            $( "#threshold-slider-output" ).html(ui.value);
           }.bind(this)
         }
       );
@@ -93,8 +90,8 @@ var OutlineStrategy, _ref, module,
       $("#action-automatic-threshold").click(
         function(event, ui){
           var treshhold = this.updateThreshold()/2.55
-          $( "#slider-0" ).slider('option',{value: Math.round(treshhold)});
-          $( "#slider-0-output" ).html(Math.round(treshhold));
+          $( "#threshold-slider" ).slider('option',{value: Math.round(treshhold)});
+          $( "#threshold-slider-output" ).html(Math.round(treshhold));
         }.bind(this)
       )
 

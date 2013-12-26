@@ -30,7 +30,7 @@ define(['text!templates/toolbar.html'], function(toolbarTemplate) {
     Toolbar.prototype.initialize = function(){
       $(this.containerIdentifier).append($(toolbarTemplate))
       this.toolbar = $("#toolbar")
-      this.toolbar.hide()
+      //this.toolbar.hide()
       this.toolbar.removeClass('hidden')
       this.toolbar.draggable()
     }
@@ -54,12 +54,24 @@ define(['text!templates/toolbar.html'], function(toolbarTemplate) {
 
     }
 
-    Toolbar.toggleActive = function(event){
+    Toolbar.toggleActive = function(event, obj){
       $(".action-switch-mode").each(function(){
         $(this).removeClass('mode-active')
       })
-      $('#toolbar').attr('mode', $(this).attr('mode'))
-      $(this).addClass('mode-active')
+      $('#toolbar').attr('mode', $(obj).attr('mode'))
+      $(obj).addClass('mode-active')
+    }
+
+    Toolbar.toggleSubmenu = function(submenu, arrow){
+      $(".toolbar-submenu").each(function(){
+        $(this).hide()
+      })
+      $('.toolbar-submenu-arrow').each(function(){
+        $(this).hide()
+      })
+      arrow.fadeIn(100)
+      submenu.fadeIn(100)
+
     }
 
     Toolbar.prototype.foregroundColor = function(){
