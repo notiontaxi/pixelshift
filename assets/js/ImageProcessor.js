@@ -32,6 +32,38 @@ define(['js/Histogram', 'js/helper/Colors', 'js/vectorizer/Vectorizer'], functio
     return imageData;
   }
 
+  ImageProcessor.prototype.processContrast = function(imageData, contrast) {
+
+    var data = imageData.data
+    var factor = (259 * (contrast + 255)) / (255 * (259 - contrast))
+
+    for(var i = 0; i < data.length; i += 4){
+        data[i] = (factor * ((data[i] - 128) + 128))
+        data[i+1] = (factor * ((data[i+1] - 128) + 128))
+        data[i+2] = (factor * ((data[i+2] - 128) + 128))
+    }
+    return imageData
+  }
+
+  ImageProcessor.prototype.processBrightness = function(imageData, brightness){
+
+    var data = imageData.data
+
+    if(brightness < 0){
+      for(var i=0;i<data.length;i+=4){
+        data[i] = data[i]+brightness <= 0 ? 0 : data[i]+brightness
+        data[i+1] = data[i+1]+brightness <= 0 ? 0 : data[i+1]+brightness
+        data[i+2] = data[i+2]+brightness <= 0 ? 0 : data[i+2]+brightness
+      }
+    }else if(brightness > 0){
+        data[i] = data[i]+brightness >= 255 ? 255 : data[i]+brightness
+        data[i+1] = data[i+1]+brightness >= 255 ? 255 : data[i+1]+brightness
+        data[i+2] = data[i+2]+brightness >= 255 ? 255 : data[i+2]+brightness
+    }
+
+    return imageData
+  }
+
   ImageProcessor.prototype.processThreshold = function(threshold, imageData){
     for (var i = 0; i < imageData.data.length; i+=4) {
       // get grey value for the current Pixel

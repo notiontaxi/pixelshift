@@ -36,7 +36,7 @@ var FloodfillStrategy, _ref, module,
     FloodfillStrategy.prototype.execute = function(state){
       
       var imgData = this.canvasOrigin.getImageData()
-      
+
       var processedImageData = this.imageProcessor.processFloodFill(
         imgData,
         this.canvasOrigin.imageWidth,

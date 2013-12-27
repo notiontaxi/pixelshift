@@ -28,11 +28,13 @@ var PencilStrategy, _ref, module,
       
       //$(containerIdentifier).append($(contentTemplate))
       this.init()
+      this.thickness = 10
     }
 
     PencilStrategy.prototype.execute = function(state){
-      console.log('execute pencil task')
-      console.log(state)
+      this.canvasOrigin.drawPoint(state.mouse, this.thickness, state.color)
+      //this.canvasOrigin.putImageData(processedImageData)
+      this.canvasOrigin.drawClones()
     }
 
     PencilStrategy.prototype.appendToToolbar = function(){
@@ -45,18 +47,23 @@ var PencilStrategy, _ref, module,
           range: "min",
           orientation: "vertical",
           value: 10,
-          min: 0,
+          min: 1,
           max: 100,
           slide: function( event, ui ) {
         
-           $( "#toolbar-pencil-submenu .output" ).html(ui.value+'%')
+           $( "#toolbar-pencil-submenu .output" ).html(ui.value+'px')
            this.thickness = ui.value
           }.bind(this)
         }
       )
 
       // TODO: compute this in a nicer way
-      var relPos = parseInt(this.button.offset().top - $('#toolbar').offset().top + this.button.height()/2 - $('#toolbar-pencil-submenu').height()/2 ,10)
+      var relPos = parseInt(
+                      this.button.offset().top
+                    - $('#toolbar').offset().top
+                    - $('#toolbar-pencil-submenu').height()/2
+                    + this.button.height()/2
+                     , 10 )
       this.submenu.css('top', relPos+'px')      
     }   
 
