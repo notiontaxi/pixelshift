@@ -29,11 +29,11 @@ var ImageProcessingStrategy, _ref, module,
       this.imageProcessor = imageProcessor
     }
 
-    ImageProcessingStrategy.prototype.init = function(){
+    ImageProcessingStrategy.prototype.init = function(label, name){
 
       this.initializeTools()
       if(this.type === ImageProcessingStrategy.TYPE_MENU){
-        this.appendToMenuBar()
+        this.appendToMenuBar(label, name)
         this.addMenuBarAction()
       }else if(this.type === ImageProcessingStrategy.TYPE_TOOLBAR){
         this.appendToToolbar()
@@ -55,8 +55,9 @@ var ImageProcessingStrategy, _ref, module,
     /**
     * Regular Menu bar
     */
-    ImageProcessingStrategy.prototype.appendToMenuBar = function(){
-      console.error("appendToMenuBar() not implementet jet")
+    ImageProcessingStrategy.prototype.appendToMenuBar = function(label, name){
+      this.appendToLGMenuBar(label, 'action-menu-'+name, 'image-actions-list')
+      this.appendToSDMenuBar(label, 'action-menu-'+name, 'image-actions-list-sd')  
     }
      /**
     * Click actions for slide in/out

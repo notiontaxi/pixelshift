@@ -46,7 +46,6 @@ define(['js/Histogram', 'js/helper/Colors', 'js/vectorizer/Vectorizer'], functio
   }
 
   ImageProcessor.prototype.processBrightness = function(imageData, brightness){
-
     var data = imageData.data
 
     if(brightness < 0){
@@ -56,9 +55,11 @@ define(['js/Histogram', 'js/helper/Colors', 'js/vectorizer/Vectorizer'], functio
         data[i+2] = data[i+2]+brightness <= 0 ? 0 : data[i+2]+brightness
       }
     }else if(brightness > 0){
+      for(var i=0;i<data.length;i+=4){
         data[i] = data[i]+brightness >= 255 ? 255 : data[i]+brightness
         data[i+1] = data[i+1]+brightness >= 255 ? 255 : data[i+1]+brightness
         data[i+2] = data[i+2]+brightness >= 255 ? 255 : data[i+2]+brightness
+      }
     }
 
     return imageData

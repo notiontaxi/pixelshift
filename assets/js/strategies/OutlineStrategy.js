@@ -18,6 +18,7 @@ var OutlineStrategy, _ref, module,
 // --------------------------------------
 
   OutlineStrategy.NAME = 'outline'
+  OutlineStrategy.LABEL = 'Bitmap-Tool'
 
     function OutlineStrategy(canvasOrigin, canvasStage, canvasShown,imageProcessor){
       this.name = OutlineStrategy.NAME
@@ -25,7 +26,7 @@ var OutlineStrategy, _ref, module,
 
       // render templates
       $(".controls-wrapper").append($(contentTemplate))
-      this.init()
+      this.init(OutlineStrategy.LABEL, OutlineStrategy.NAME)
     }
 
 
@@ -48,22 +49,18 @@ var OutlineStrategy, _ref, module,
 
       return threshold
     }
-
-    OutlineStrategy.prototype.appendToMenuBar = function(){
-      this.appendToLGMenuBar('Bitmap Tool', 'action-menu-outline', 'image-actions-list')
-      this.appendToSDMenuBar('Bitmap Tool', 'action-menu-outline', 'image-actions-list-sd')  
-    }      
+   
 
     OutlineStrategy.prototype.addMenuBarAction = function(){
-      $(".action-menu-outline").click(
+      $(".action-menu-"+OutlineStrategy.NAME).click(
       function(event, ui){
         event.stopPropagation()
         event.preventDefault()
         $(".dropdown").removeClass("open")
-        $(".outline-controls").slideToggle()
+        $("."+OutlineStrategy.NAME+"-controls").slideToggle()
       })
 
-      $(".outline-controls").click(function(){
+      $("."+OutlineStrategy.NAME+"-controls").click(function(){
         $(this).slideToggle()
       }).children().click(function(e) {
         return false; // prevent childs to do this action
@@ -81,7 +78,8 @@ var OutlineStrategy, _ref, module,
           min: 0,
           max: 100,
           slide: function( event, ui ) {
-            $( "#threshold-slider-output" ).html(ui.value);
+            $( "#threshold-slider-output" ).html(ui.value)
+            this.updateThreshold(ui.value)
           }.bind(this)
         }
       );

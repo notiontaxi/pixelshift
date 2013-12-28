@@ -835,10 +835,10 @@ define([], function() {
     * @param {Number} radius
     */
     Canvas.prototype.drawPoint = function(position, radius, color){
-      this.ctx.beginPath();
-      this.ctx.arc(position.x, position.y, radius, 0, 2 * Math.PI, false);
-      this.ctx.fillStyle = color;
-      this.ctx.fill();
+      this.ctx.beginPath()
+      this.ctx.arc(position.x, position.y, radius, 0, 2 * Math.PI, false)
+      this.ctx.fillStyle = "rgba("+color.r+", "+color.g+", "+color.b+", "+color.a+")"
+      this.ctx.fill()
     }
 
     /**

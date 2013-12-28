@@ -12,6 +12,8 @@ define(['text!templates/image-processing.html',
   'js/strategies/VectorizerStrategy', 
   'js/strategies/FloodfillStrategy',
   'js/strategies/PencilStrategy',
+  'js/strategies/BrightnessStrategy',
+  'js/strategies/ContrastStrategy',
   'js/CanvasGui', 
   'js/test/Test',
   'js/Toolbar',
@@ -19,7 +21,9 @@ define(['text!templates/image-processing.html',
     OutlineStrategy, 
     VectorizerStrategy, 
     FloodfillStrategy,
-    PencilStrategy, 
+    PencilStrategy,
+    BrightnessStrategy, 
+    ContrastStrategy,
     CanvasGui, 
     Test, 
     Toolbar,
@@ -51,6 +55,12 @@ var ImageProcessing, _ref, module,
 
     ImageProcessing.prototype.initContext = function(){
       this.context = new Context()
+
+      this.brightness = new BrightnessStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
+      this.context.addStrategy(this.brightness)      
+
+      this.contrast = new ContrastStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
+      this.context.addStrategy(this.contrast)       
 
       this.outline = new OutlineStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
       this.context.addStrategy(this.outline)
