@@ -1,5 +1,5 @@
 /*
-Class for outline and threshold class
+Initialization of the image processing functionalities
 
 Florian Wokurka (2013)
 https://github.com/notiontaxi
@@ -13,6 +13,7 @@ define(['text!templates/image-processing.html',
   'js/strategies/FloodfillStrategy',
   'js/strategies/PencilStrategy',
   'js/strategies/BrightnessStrategy',
+  'js/strategies/BlurStrategy',
   'js/strategies/ContrastStrategy',
   'js/CanvasGui', 
   'js/test/Test',
@@ -23,6 +24,7 @@ define(['text!templates/image-processing.html',
     FloodfillStrategy,
     PencilStrategy,
     BrightnessStrategy, 
+    BlurStrategy,
     ContrastStrategy,
     CanvasGui, 
     Test, 
@@ -65,6 +67,9 @@ var ImageProcessing, _ref, module,
       this.outline = new OutlineStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
       this.context.addStrategy(this.outline)
 
+      //this.blur = new BlurStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
+      //this.context.addStrategy(this.blur)
+
       this.vector = new VectorizerStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
       this.context.addStrategy(this.vector)
 
@@ -95,22 +100,11 @@ var ImageProcessing, _ref, module,
       var totalImagePosition = this.canvasStage.totalImagePosition(mouseCoords)
       return {
               color: this.toolbar.foregroundColor()
-            //, totalCoords: this.canvasShown.coordinateToUnzoomedSystem(event) 
             , mouse: mouseCoords
             , totalImagePosition: totalImagePosition
+            , totalCartesianImagePosition: this.canvasStage.totalCartesianImagePosition(mouseCoords)
           }
     }
-
-
-    /*
-    Canvas.prototype.clickAction = function(event){
-      var absoluteCoords = this.mouseCoords(event)
-      var relativeCoords = this.coordinateToUnzoomedSystem(absoluteCoords)
-      console.log(absoluteCoords)
-      console.log(relativeCoords)
-      this.drawPoint(absoluteCoords, 5)
-    }
-    }*/
 
     ImageProcessing.prototype.initColorPicker = function(){
 
@@ -126,15 +120,12 @@ var ImageProcessing, _ref, module,
       $(".action-close-color-picker").click(function(e){
         $('#color-picker-modal').hide()
         var color = $('#color-picker-color').css('background-color')
-        //color = color.replace('b', 'ba')  
-        //color = color.replace(')', ', 125)')  
         $('#toolbar-foreground-color').css({'background-color': color})
       })
 
       $("#color-picker-modal").draggable()
 
     }
-
 
 
 

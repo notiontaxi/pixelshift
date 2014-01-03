@@ -32,7 +32,7 @@ var PencilStrategy, _ref, module,
     }
 
     PencilStrategy.prototype.execute = function(state){
-      this.canvasOrigin.drawPoint(state.mouse, this.thickness, state.color)
+      this.canvasOrigin.drawPoint(state.totalCartesianImagePosition, this.thickness, state.color)
       //this.canvasOrigin.putImageData(processedImageData)
       this.canvasOrigin.drawClones()
     }

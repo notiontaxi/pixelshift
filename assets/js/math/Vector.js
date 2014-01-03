@@ -82,9 +82,9 @@ var Vector, _ref, module,
     }
 
     Vector.normalized = function(out) {
-        var iLen = 1 / this.length()
-        out.x = this.x * iLen
-        out.y = this.y * iLen
+        var iLen = 1 / out.length()
+        out.x = out.x * iLen
+        out.y = out.y * iLen
     }
 
     Vector.dot = function(v1, v2) {

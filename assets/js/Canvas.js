@@ -244,12 +244,12 @@ define([], function() {
       var pos = this.toImageGaussianCoords(pixel.vertice)
       var gPos = {x: pos.x * this.currentScale , y: pos.y * this.currentScale  }
       var pointSize = Math.ceil((this.currentScale*2) / 15)
-      var color = 'red'
+      var color
 
       if(outline)
-        color = 'green'
+        color = {r: 20, g: 150, b: 20, a: 255}
       else
-        color = 'blue'
+        color = {r: 20, g: 20, b: 230, a: 255}
       
       if(withLine){
         var pos2 = this.toImageGaussianCoords(secondPixel.vertice)
@@ -835,6 +835,7 @@ define([], function() {
     * @param {Number} radius
     */
     Canvas.prototype.drawPoint = function(position, radius, color){
+      console.log(position)
       this.ctx.beginPath()
       this.ctx.arc(position.x, position.y, radius, 0, 2 * Math.PI, false)
       this.ctx.fillStyle = "rgba("+color.r+", "+color.g+", "+color.b+", "+color.a+")"
@@ -849,7 +850,7 @@ define([], function() {
     */
     Canvas.prototype.drawLine = function(startPoint, endPoint, color){
       var oldStyle = this.ctx.strokeStyle 
-      this.ctx.strokeStyle = color
+      this.ctx.strokeStyle = "rgba("+color.r+", "+color.g+", "+color.b+", "+color.a+")"
       this.ctx.beginPath()
       this.ctx.moveTo(startPoint.x,startPoint.y)
       this.ctx.lineTo(endPoint.x,endPoint.y)
@@ -996,6 +997,14 @@ define([], function() {
       pos.y = pos.y > this.imageHeight ? this.imageHeight : pos.y 
 
       return (pos.y * this.imageWidth + pos.x) * 4
+    }    
+    Canvas.prototype.totalCartesianImagePosition = function(mousePos){
+      var pos = this.coordinateToUnzoomedGaussSystem(mousePos)
+
+      pos.x = pos.x > this.imageWidth ? this.imageWidth : pos.x
+      pos.y = pos.y > this.imageHeight ? this.imageHeight : pos.y 
+
+      return {x: pos.x, y: pos.y}
     }    
 
     /**
