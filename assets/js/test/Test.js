@@ -62,7 +62,25 @@ var Test, _ref, module,
       Vector.setToNull(testMe)
       msg = testMe.x == 0 && testMe.y == 0 && 
             testMe.position.x == 0 && testMe.position.y == 0 ? 'passed' : 'not passed'
-      console.log("setToNull: "+msg)                
+      console.log("setToNull: "+msg)         
+
+
+      var point1 = {x: 1, y: 3}
+      var point2 = {x: 3, y: 0.5}
+
+      var v = new Vector({x:0,y:0},{x:3,y:4})
+      var a = new Vector({x:0,y:0},{x:3,y:.5})
+
+      var normal = Vector.normal(point1, point2)  
+      Vector.normalizedPositive(normal)
+
+      var substracted = new Vector({x:0,y:0},{x:0,y:0})
+      Vector.substract(v,a,substracted)
+
+      var distance = Vector.dot(normal, substracted)
+
+      msg = distance == 2.186432666440485 ? 'passed' : 'not passed'
+      console.log("distance to line (includeing normalizedPositive, dot and substracted): "+msg)                
 
     }
 

@@ -34,7 +34,7 @@ var Vector, _ref, module,
   
 
     Vector.prototype.print = function(){
-      console.log('position: ('+this.position.x+','+this.position.y+')')
+      console.log('position: ('+this.position.x+','+this.position.y+')')  
       console.log('direction: ('+this.x+','+this.y+')')
     }
 
@@ -66,9 +66,9 @@ var Vector, _ref, module,
     /**
     * STATIC context
     */
-    Vector.subtract = function(v, out) {
-        out.x = this.x - v.x
-        out.y = this.y - v.y
+    Vector.substract = function(v1, v2, out) {
+        out.x = v1.x - v2.x
+        out.y = v1.y - v2.y
     }
 
     Vector.add = function(v, out) {
@@ -79,16 +79,25 @@ var Vector, _ref, module,
     Vector.scale = function(scale, out) {
         out.x = this.x * scale
         out.y = this.y * scale
+        return out
     }
 
-    Vector.normalized = function(out) {
+    Vector.normalizedPositive = function(out) {
         var iLen = 1 / out.length()
         out.x = out.x * iLen
         out.y = out.y * iLen
+        out.x = out.x < 0 ? out.x * -1 : out.x
+        out.y = out.y < 0 ? out.y * -1 : out.y
+        return out
     }
 
     Vector.dot = function(v1, v2) {
       return v1.x * v2.x + v1.y * v2.y
+    }
+
+    Vector.normal = function(p1, p2){
+      var vNew = new Vector({x:0,y:0}, {x:p2.y - p1.y, y: -(p2.x - p1.x)})
+      return vNew
     }
 
     /**

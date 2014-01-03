@@ -81,6 +81,8 @@ var ImageProcessing, _ref, module,
 
       this.initCanvasStrategies()
     }
+  
+
 
     ImageProcessing.prototype.initCanvasStrategies = function(){
       this.canvasShown.getElement().click(

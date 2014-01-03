@@ -78,7 +78,37 @@ var VectorizerStrategy, _ref, module,
           this.canvasStage.pathType = 'allowed'
           this.canvasStage.draw()
         }.bind(this)
-      )     
+      )
+
+      $( "#alpha-limit-slider" ).slider(
+        {
+          range: "min",
+          value: 0.55,
+          min: 0.1,
+          max: 2.0,
+          step: 0.01,
+          slide: function( event, ui ) {
+            $( "#alpha-limit-slider-output" ).html(ui.value)
+          this.canvasStage.alpha = ui.value
+          this.canvasStage.draw()
+          }.bind(this)
+        }
+      )   
+
+      $( "#curve-limit-slider" ).slider(
+        {
+          range: "min",
+          value: 1.0,
+          min: 0.1,
+          max: 1.4,
+          step: 0.01,
+          slide: function( event, ui ) {
+            $( "#curve-limit-slider-output" ).html(ui.value)
+          this.canvasStage.curveLimit = ui.value
+          this.canvasStage.draw()
+          }.bind(this)
+        }
+      )               
 
     }
 

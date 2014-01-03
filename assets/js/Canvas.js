@@ -67,6 +67,9 @@ define([], function() {
 
       this.gridZoomLevel = 5
 
+      this.curveLimit = 1.0
+      this.alpha = 0.55
+
       this.parent = null
     }
 
@@ -231,8 +234,10 @@ define([], function() {
       if(this.currentScale >= this.gridZoomLevel  && this.drawGrid){
         if(this.alphaGrid)
           this.drawGrid()
-        if(!!this.paths)
+        if(!!this.paths){
           this.drawPaths()
+          this.drawBezierPaths()
+        }
       }
 
       this.copyToClones(true)
@@ -264,7 +269,7 @@ define([], function() {
     }
 
     Canvas.prototype.drawPaths = function(){
-      console.log('draw paths')
+      //console.log('draw paths')
       var paths = this.paths
       var currentPath = null
       var currentPoints = null
@@ -285,6 +290,37 @@ define([], function() {
         }
       }
     }
+
+    Canvas.prototype.drawBezierPaths = function(){
+      //console.log('draw bezier')
+      var switched = Array()
+      var paths = this.paths
+      var currentPath 
+
+      for(var i = 0; i < paths.length; i++){
+        currentPath = paths[i].getBezierPath(this.alpha)
+        this.ctx.beginPath()
+
+        for(var p = 0; p < currentPath.length; p++){
+          this.ctx.moveTo((currentPath[p].p1.x-this.visibleArea.x1)*this.currentScale,(currentPath[p].p1.y-this.visibleArea.y1)*this.currentScale)
+          if(currentPath[p].alpha < this.curveLimit)
+            this.ctx.bezierCurveTo( (currentPath[p].cp1.x-this.visibleArea.x1)*this.currentScale, (currentPath[p].cp1.y-this.visibleArea.y1)*this.currentScale,
+                                    (currentPath[p].cp2.x-this.visibleArea.x1)*this.currentScale, (currentPath[p].cp2.y-this.visibleArea.y1)*this.currentScale,
+                                    (currentPath[p].p2.x-this.visibleArea.x1)*this.currentScale,  (currentPath[p].p2.y-this.visibleArea.y1)*this.currentScale
+                                  )
+          else
+            this.ctx.lineTo((currentPath[p].p2.x-this.visibleArea.x1)*this.currentScale,(currentPath[p].p2.y-this.visibleArea.y1)*this.currentScale)
+        }
+      this.ctx.closePath();
+      this.ctx.lineWidth = 5;
+      //this.ctx.fillStyle = '#8ED6FF';
+      //this.ctx.fill();
+      this.ctx.strokeStyle = paths[i].isOutline ? 'blue' : 'red'
+      this.ctx.stroke()
+
+      }
+
+    }    
 
     /**
     * pixel in image NOT in full data
@@ -400,7 +436,7 @@ define([], function() {
               allPixels.data[positionDestination] = area.pixels[positionSource]
               allPixels.data[positionDestination+1] = area.pixels[positionSource+1]
               allPixels.data[positionDestination+2] = area.pixels[positionSource+2]
-              allPixels.data[positionDestination+3] = area.pixels[positionSource+3]
+              allPixels.data[positionDestination+3] = 50//area.pixels[positionSource+3]
 
             }
           }
@@ -835,7 +871,6 @@ define([], function() {
     * @param {Number} radius
     */
     Canvas.prototype.drawPoint = function(position, radius, color){
-      console.log(position)
       this.ctx.beginPath()
       this.ctx.arc(position.x, position.y, radius, 0, 2 * Math.PI, false)
       this.ctx.fillStyle = "rgba("+color.r+", "+color.g+", "+color.b+", "+color.a+")"
