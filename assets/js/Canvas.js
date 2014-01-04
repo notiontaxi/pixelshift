@@ -65,7 +65,10 @@ define([], function() {
       this.alphaGrid = false
       this.points = null
 
-      this.gridZoomLevel = 5
+      this.gridZoomLevel = 1
+
+      this.originalIsBackground = false
+      this.filling = true
 
       this.curveLimit = 1.0
       this.alpha = 0.55
@@ -235,8 +238,8 @@ define([], function() {
         if(this.alphaGrid)
           this.drawGrid()
         if(!!this.paths){
-          this.drawPaths()
           this.drawBezierPaths()
+          this.drawPaths()
         }
       }
 
@@ -258,7 +261,7 @@ define([], function() {
       
       if(withLine){
         var pos2 = this.toImageGaussianCoords(secondPixel.vertice)
-        this.drawLine(gPos, {x: pos2.x * this.currentScale , y: pos2.y * this.currentScale }, color)
+        this.drawLine(gPos, {x: pos2.x * this.currentScale , y: pos2.y * this.currentScale }, 'black')
       }
 
       this.drawPoint(gPos, pointSize, color)
@@ -283,10 +286,11 @@ define([], function() {
           currentPoints = currentPath.getStraightPoints()
         else if(this.pathType == 'allowed')
           currentPoints = currentPath.getAllowedPoints()
-
-        for(var p = 0; p < currentPoints.length; p++){
-          if(p+1 < currentPoints.length )
-            this.drawSinglePixel(currentPoints[p], currentPath.isOutline,p , true, currentPoints[p+1])
+        if(this.pathType != 'none'){
+          for(var p = 0; p < currentPoints.length; p++){
+            if(p+1 < currentPoints.length )
+              this.drawSinglePixel(currentPoints[p], currentPath.isOutline,p , true, currentPoints[p+1])
+          }
         }
       }
     }
@@ -301,8 +305,8 @@ define([], function() {
         currentPath = paths[i].getBezierPath(this.alpha)
         this.ctx.beginPath()
 
-        for(var p = 0; p < currentPath.length; p++){
-          this.ctx.moveTo((currentPath[p].p1.x-this.visibleArea.x1)*this.currentScale,(currentPath[p].p1.y-this.visibleArea.y1)*this.currentScale)
+        this.ctx.moveTo((currentPath[0].p1.x-this.visibleArea.x1)*this.currentScale,(currentPath[0].p1.y-this.visibleArea.y1)*this.currentScale)
+        for(var p = 0; p < currentPath.length; p++){  
           if(currentPath[p].alpha < this.curveLimit)
             this.ctx.bezierCurveTo( (currentPath[p].cp1.x-this.visibleArea.x1)*this.currentScale, (currentPath[p].cp1.y-this.visibleArea.y1)*this.currentScale,
                                     (currentPath[p].cp2.x-this.visibleArea.x1)*this.currentScale, (currentPath[p].cp2.y-this.visibleArea.y1)*this.currentScale,
@@ -311,10 +315,12 @@ define([], function() {
           else
             this.ctx.lineTo((currentPath[p].p2.x-this.visibleArea.x1)*this.currentScale,(currentPath[p].p2.y-this.visibleArea.y1)*this.currentScale)
         }
-      this.ctx.closePath();
-      this.ctx.lineWidth = 5;
-      //this.ctx.fillStyle = '#8ED6FF';
-      //this.ctx.fill();
+      this.ctx.closePath()
+      this.ctx.lineWidth = 5
+      if(this.filling){
+        this.ctx.fillStyle = paths[i].isOutline ? 'black' : 'white'
+        this.ctx.fill()
+      }
       this.ctx.strokeStyle = paths[i].isOutline ? 'blue' : 'red'
       this.ctx.stroke()
 
@@ -436,8 +442,10 @@ define([], function() {
               allPixels.data[positionDestination] = area.pixels[positionSource]
               allPixels.data[positionDestination+1] = area.pixels[positionSource+1]
               allPixels.data[positionDestination+2] = area.pixels[positionSource+2]
-              allPixels.data[positionDestination+3] = 50//area.pixels[positionSource+3]
-
+              if(this.originalIsBackground)
+                allPixels.data[positionDestination+3] = 50
+              else
+                allPixels.data[positionDestination+3] = area.pixels[positionSource+3]
             }
           }
         }
@@ -885,11 +893,13 @@ define([], function() {
     */
     Canvas.prototype.drawLine = function(startPoint, endPoint, color){
       var oldStyle = this.ctx.strokeStyle 
-      this.ctx.strokeStyle = "rgba("+color.r+", "+color.g+", "+color.b+", "+color.a+")"
+      this.ctx.strokeStyle = color
+      //ythis.ctx.strokeStyle = "rgba("+color.r+", "+color.g+", "+color.b+", "+color.a+")"
       this.ctx.beginPath()
+      this.ctx.lineWidth = 1
       this.ctx.moveTo(startPoint.x,startPoint.y)
       this.ctx.lineTo(endPoint.x,endPoint.y)
-      this.ctx.closePath()
+      //this.ctx.closePath()
       this.ctx.stroke()
       this.ctx.strokeStyle = oldStyle
     }

@@ -121,14 +121,14 @@ var Path, _ref, module,
                             y: currentPointA.y + ((currentPointB.y - currentPointA.y)/2)
                          }
         bezierPointB   = {  
-                            x: currentPointB.x + ((currentPointC.x - currentPointB.x)/2), 
-                            y: currentPointB.y + ((currentPointC.y - currentPointB.y)/2)
+                            x: currentPointC.x + ((currentPointB.x - currentPointC.x)/2), 
+                            y: currentPointC.y + ((currentPointB.y - currentPointC.y)/2)
                          }
 
         v = new Vector({x:0,y:0},currentPointB)
-        a = new Vector({x:0,y:0},currentPointA)
+        a = new Vector({x:0,y:0},bezierPointA)
 
-        normal = Vector.normal(currentPointA, currentPointC)  
+        normal = Vector.normal(bezierPointA, bezierPointB)
         Vector.normalizedPositive(normal)
 
         substracted = new Vector({x:0,y:0},{x:0,y:0})
@@ -146,8 +146,8 @@ var Path, _ref, module,
                             y: bezierPointA.y + ((currentPointB.y - bezierPointA.y)*alpha)
                          }
         controllPointB   = {  
-                            x: bezierPointB.x - ((currentPointC.x - bezierPointB.x)*alpha), 
-                            y: bezierPointB.y - ((currentPointC.y - bezierPointB.y)*alpha)
+                            x: bezierPointB.x + ((currentPointB.x - bezierPointB.x)*alpha), 
+                            y: bezierPointB.y + ((currentPointB.y - bezierPointB.y)*alpha)
                          }
         /*                 
         console.log(currentPointA)

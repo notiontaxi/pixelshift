@@ -26,6 +26,7 @@ var VectorizerStrategy, _ref, module,
         
       $(".controls-wrapper").append($(contentTemplate))
       this.init()
+      this.filled = true
     }
 
     VectorizerStrategy.prototype.appendToMenuBar = function(){
@@ -55,9 +56,10 @@ var VectorizerStrategy, _ref, module,
       // Automatic threshold button
       $("#action-compute-paths").click(
         function(event, ui){
+          this.canvasStage.originalIsBackground = true
           var result = this.imageProcessor.processPathFinding(this.canvasOrigin.getImageData(), this.canvasOrigin.getImageWidth())
           this.canvasStage.paths = result.paths
-          this.canvasStage.pathType = 'full'
+          this.canvasStage.pathType = 'none'
           $("#path-count").html(result.message)
         }.bind(this)
       )
@@ -79,6 +81,19 @@ var VectorizerStrategy, _ref, module,
           this.canvasStage.draw()
         }.bind(this)
       )
+      $("#action-hide-paths").click(
+        function(event, ui){
+          this.canvasStage.pathType = 'none'
+          this.canvasStage.draw()
+        }.bind(this)
+      )
+      $("#action-toggle-filled").click(
+        function(event, ui){
+          this.filled = !this.filled
+          this.canvasStage.filling = this.filled
+          this.canvasStage.draw()
+        }.bind(this)
+      )            
 
       $( "#alpha-limit-slider" ).slider(
         {
@@ -91,6 +106,7 @@ var VectorizerStrategy, _ref, module,
             $( "#alpha-limit-slider-output" ).html(ui.value)
           this.canvasStage.alpha = ui.value
           this.canvasStage.draw()
+
           }.bind(this)
         }
       )   
