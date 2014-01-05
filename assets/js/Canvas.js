@@ -237,10 +237,15 @@ define([], function() {
       if(this.currentScale >= this.gridZoomLevel  && this.drawGrid){
         if(this.alphaGrid)
           this.drawGrid()
+
         if(!!this.paths){
+          this.originalIsBackground = true
           this.drawBezierPaths()
           this.drawPaths()
+        }else{
+          this.originalIsBackground = false
         }
+
       }
 
       this.copyToClones(true)
@@ -647,10 +652,10 @@ define([], function() {
     *
     */
     Canvas.prototype.drawImage = function(img, _this){
-
       if(!_this)
         var _this = this
 
+      _this.paths = null
       _this.imageHeight = 0
       _this.imageWidth = 0
 
@@ -736,6 +741,8 @@ define([], function() {
     * @param {Canvas} otherCanvas  the canvas this should be updated to
     */
     Canvas.prototype.copyImageProperties = function(otherCanvas){
+      this.paths        = otherCanvas.paths
+      this.originalIsBackground  = otherCanvas.originalIsBackground 
       this.imageHeight  = otherCanvas.imageHeight
       this.imageWidth   = otherCanvas.imageWidth
     }    

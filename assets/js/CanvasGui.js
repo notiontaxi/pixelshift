@@ -159,12 +159,11 @@ define(['text!templates/canvas-gui.html',
 
   CanvasGui.prototype.addEventListeners = function(){
 
-    // Outline button
+    // redirect click on own button to invisible input field
     $(".action-upload-image").click(
       function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        //this.canvasStage.zoomReset()
         $('input[type="file"]').click()
       }.bind(this))
 
@@ -175,18 +174,26 @@ define(['text!templates/canvas-gui.html',
         this.fileProcessor.saveCanvasToDisk(this.canvasOrigin.getHtmlElementCopy())
     
     }.bind(this))   
-       
-    document.getElementById('action-upload').addEventListener('change', 
-      function(evt){
-        var file = evt.target.files[0] // FileList object
-        this.fileProcessor.loadFileFromFilesystem(URL.createObjectURL(file), this.canvasOrigin.drawImage, this.canvasOrigin)
-      }.bind(this), false);
+
+    // load image, when filename was changed
+    var changeFile = function(evt){
+      var file = evt.target.files[0] // FileList object
+      this.canvasStage.zoomReset()
+      this.fileProcessor.loadFileFromFilesystem(URL.createObjectURL(file), this.canvasOrigin.drawImage, this.canvasOrigin)
+      // remove and add in order to load the same image again
+      $('#action-upload').remove()
+      $("<input type='file' name='image' id='action-upload' accept='image/*' class='hide' />").change(changeFile).appendTo($('#container'));
+    }.bind(this)
+
+    document.getElementById('action-upload').addEventListener('change', changeFile, this)
 
     window.onresize=function() {
       if (this.reset){clearTimeout(this.reset)};
         this.reset = setTimeout(function(){this.updateLayout()}.bind(this),200);
     }.bind(this)    
   }
+
+  
 
   CanvasGui.prototype.initializeTools = function(){
 
@@ -196,6 +203,7 @@ define(['text!templates/canvas-gui.html',
         event.preventDefault()
         var newImg = this.imageProcessor.processGrayscale(this.canvasOrigin.getImageData(), this.canvasOrigin.getImageWidth())
         this.canvasOrigin.putImageData(newImg)
+        this.canvasStage.draw()
     }.bind(this))    
 
     $(".action-bitmap").click(
@@ -204,6 +212,7 @@ define(['text!templates/canvas-gui.html',
         event.preventDefault()
         var newImg = this.imageProcessor.processThreshold(this.imageProcessor.computeThreshold(this.canvasOrigin.getImageData()) ,this.canvasOrigin.getImageData())
         this.canvasOrigin.putImageData(newImg)
+        this.canvasStage.draw()
     }.bind(this))  
 
     $(".action-invert").click(
@@ -212,6 +221,7 @@ define(['text!templates/canvas-gui.html',
         event.preventDefault()
         var newImg = this.imageProcessor.processInvertColors(this.canvasOrigin.getImageData(), this.canvasOrigin.getImageWidth())
         this.canvasOrigin.putImageData(newImg)
+        this.canvasStage.draw()
     }.bind(this))          
 
   }  

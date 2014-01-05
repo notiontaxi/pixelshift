@@ -56,7 +56,6 @@ var VectorizerStrategy, _ref, module,
       // Automatic threshold button
       $("#action-compute-paths").click(
         function(event, ui){
-          this.canvasStage.originalIsBackground = true
           var result = this.imageProcessor.processPathFinding(this.canvasOrigin.getImageData(), this.canvasOrigin.getImageWidth())
           this.canvasStage.paths = result.paths
           this.canvasStage.pathType = 'none'
