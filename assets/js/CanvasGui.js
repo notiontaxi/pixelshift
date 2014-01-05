@@ -224,6 +224,40 @@ define(['text!templates/canvas-gui.html',
         this.canvasStage.draw()
     }.bind(this))          
 
+    $(".action-emboss").click(
+      function(event, ui){
+        event.stopPropagation()
+        event.preventDefault()
+
+      var imgData = this.canvasOrigin.getFullImageData()
+
+      this.processedImageData = this.imageProcessor.convolute( imgData,
+        [ 1, 1, 1,
+          1, .7, -1,
+          -1, -1, -1 ]
+        ,0)
+
+        this.canvasOrigin.putImageData(this.processedImageData)
+        this.canvasStage.draw()
+    }.bind(this))   
+
+    $(".action-sharpen").click(
+      function(event, ui){
+        event.stopPropagation()
+        event.preventDefault()
+
+      var imgData = this.canvasOrigin.getFullImageData()
+
+      this.processedImageData = this.imageProcessor.convolute( imgData,
+        [ 0, -1, 0,
+          -1, 5, -1,
+          0, -1, 0 ]
+        ,0)
+
+        this.canvasOrigin.putImageData(this.processedImageData)
+        this.canvasStage.draw()
+    }.bind(this))       
+
   }  
 
   CanvasGui.prototype.initializeEditFunctionality = function(){

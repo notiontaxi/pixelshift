@@ -33,14 +33,13 @@ var BlurStrategy, _ref, module,
     BlurStrategy.prototype.updateBlur = function(blurFactor){
 
       var imgData = this.canvasOrigin.getFullImageData()
-      var val = 1/9
 
       this.processedImageData = this.imageProcessor.convolute( imgData,
-        [ 0, -1, 0,
-          -1, blurFactor, -1,
-          0, -1, 0 ]
+        [ 1/9, 1/9, 1/9,
+          1/9, 1/9, 1/9,
+          1/9, 1/9, 1/9 ]
         ,0)
-
+      
       this.canvasStage.draw(this.processedImageData)
     }
 
