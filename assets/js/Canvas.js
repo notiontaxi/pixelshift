@@ -388,7 +388,6 @@ define([], function() {
     }
 
     Canvas.prototype.getAreaPixels = function(visibleArea, allPixels){
-      console.log(allPixels)
       var pixels = Array()
 
       var start = this.canvasWidth * 4 * visibleArea.y1  + visibleArea.x1 * 4 

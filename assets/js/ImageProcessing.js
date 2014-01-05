@@ -67,8 +67,8 @@ var ImageProcessing, _ref, module,
       this.outline = new OutlineStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
       this.context.addStrategy(this.outline)
 
-      //this.blur = new BlurStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
-      //this.context.addStrategy(this.blur)
+      this.blur = new BlurStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
+      this.context.addStrategy(this.blur)
 
       this.vector = new VectorizerStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
       this.context.addStrategy(this.vector)

@@ -7,7 +7,7 @@ https://github.com/notiontaxi
 
 "use strict"
 
-define(['text!templates/task-blur.html','js/strategies/ImageProcessingStrategy'], function(contentTemplate, ImageProcessingStrategy) {
+define(['text!templates/task-blur.html','js/strategies/ImageProcessingStrategy', 'js/lib/StackBlur'], function(contentTemplate, ImageProcessingStrategy, StackBlur) {
 
 var BlurStrategy, _ref, module,
 
@@ -30,16 +30,8 @@ var BlurStrategy, _ref, module,
     }
 
 
-    BlurStrategy.prototype.updateBlur = function(blurFactor){
-
-      var imgData = this.canvasOrigin.getFullImageData()
-
-      this.processedImageData = this.imageProcessor.convolute( imgData,
-        [ 1/9, 1/9, 1/9,
-          1/9, 1/9, 1/9,
-          1/9, 1/9, 1/9 ]
-        ,0)
-      
+    BlurStrategy.prototype.updateBlur = function(blurRadius){
+      this.processedImageData = stackBlurImage( this.canvasOrigin, this.canvasStage, blurRadius, false );
       this.canvasStage.draw(this.processedImageData)
     }
 
@@ -65,9 +57,9 @@ var BlurStrategy, _ref, module,
       $( "#"+BlurStrategy.NAME+"-slider" ).slider(
         {
           range: "min",
-          value: 0,
+          value: 1,
           min: 0,
-          max: 255,
+          max: 180,
           slide: function( event, ui ) {
             $( "#"+BlurStrategy.NAME+"-slider-output" ).html(ui.value)
             this.updateBlur(ui.value)
