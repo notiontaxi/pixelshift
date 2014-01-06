@@ -18,7 +18,7 @@ define(['text!templates/image-processing.html',
   'js/CanvasGui', 
   'js/test/Test',
   'js/Toolbar',
-  'js/Context'], function(contentTemplate, 
+  'js/Context',], function(contentTemplate, 
     OutlineStrategy, 
     VectorizerStrategy, 
     FloodfillStrategy,
@@ -56,28 +56,28 @@ var ImageProcessing, _ref, module,
     }
 
     ImageProcessing.prototype.initContext = function(){
-      this.context = new Context()
+      this.context = new Context(this.canvasOrigin)
 
       this.brightness = new BrightnessStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
-      this.context.addStrategy(this.brightness)      
+      this.context.addStackableStrategy(this.brightness)
 
       this.contrast = new ContrastStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
-      this.context.addStrategy(this.contrast)       
+      this.context.addStackableStrategy(this.contrast)
 
       this.outline = new OutlineStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
-      this.context.addStrategy(this.outline)
+
 
       this.blur = new BlurStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
-      this.context.addStrategy(this.blur)
+      this.context.addStackableStrategy(this.blur)
 
       this.vector = new VectorizerStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
-      this.context.addStrategy(this.vector)
+
 
       this.floodfill = new FloodfillStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
-      this.context.addStrategy(this.floodfill)
+      this.context.addOneClickStrategies(this.floodfill)
 
       this.pencil = new PencilStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
-      this.context.addStrategy(this.pencil)
+      this.context.addOneClickStrategies(this.pencil)
 
       this.initCanvasStrategies()
     }
@@ -87,8 +87,8 @@ var ImageProcessing, _ref, module,
     ImageProcessing.prototype.initCanvasStrategies = function(){
       this.canvasShown.getElement().click(
         function(event){
-          // get strategy funcion (execute), call it and pass curent state
-            this.context.strategy(this.toolbar.mode()).execute(this.state(event))
+          // get strategy funcion (execute), call it and pass current state
+            this.context.oneClickStrategy(this.toolbar.mode()).execute(this.state(event))
         }.bind(this))
     }
 

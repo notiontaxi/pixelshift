@@ -91,7 +91,10 @@ define([], function() {
         if(this.pixelPerMove  > 4)
           this.pixelPerMove -= 4
 
-        this.draw()
+        if(this.previeMode)
+          this.draw(this.previewImageData)
+        else
+          this.draw()
       }
     }
 
@@ -104,8 +107,12 @@ define([], function() {
 
         if(this.currentScale === 1.00)
           this.zoomReset()
-        else
-          this.draw()
+        else{
+          if(this.previeMode)
+            this.draw(this.previewImageData)
+          else
+            this.draw()
+        }
       }
     }
 
@@ -115,7 +122,10 @@ define([], function() {
         this.computeVisibleArea()
         this.visibleArea.x1 = 0
         this.visibleArea.y1 = 0
-        this.draw()
+        if(this.previeMode)
+          this.draw(this.previewImageData)
+        else
+          this.draw()
     }
 
     /**
@@ -133,7 +143,6 @@ define([], function() {
             if(this.visibleArea.y1 > 0){
               this.visibleArea.y1 -= this.pixelPerMove
               this.visibleArea.y1 = this.visibleArea.y1 < 0 ? 0 : this.visibleArea.y1
-              this.draw()
             }
             break
           case "down":
@@ -142,14 +151,12 @@ define([], function() {
             if(this.visibleArea.y1 < bound){
               this.visibleArea.y1 += this.pixelPerMove
               this.visibleArea.y1 = this.visibleArea.y1 > bound ? bound : this.visibleArea.y1
-              this.draw()
             }
             break
           case "left":
             if(this.visibleArea.x1 > 0){
               this.visibleArea.x1 -= this.pixelPerMove
               this.visibleArea.x1 = this.visibleArea.x1 < 0 ? 0 : this.visibleArea.x1
-              this.draw()
             }
             break
           case "right":
@@ -157,11 +164,15 @@ define([], function() {
             if(this.visibleArea.x1 < bound){
               this.visibleArea.x1 += this.pixelPerMove
               this.visibleArea.x1 = this.visibleArea.x1 > bound ? bound : this.visibleArea.x1
-              this.draw()
             }
             break
         }
-      
+
+        if(this.previeMode)
+          this.draw(this.previewImageData)
+        else
+          this.draw()
+
         this.checkVisibleBoundaries()
       }
     }
@@ -224,11 +235,20 @@ define([], function() {
 
     /**
     * Updates the visible area depending on scale
+    * If an imagedata is passed it will be rendered instead of the parents image data.
+    * Use this argument for previes.
+    * @param {ImageData} imageData : the image data which will be drawn
     */
     Canvas.prototype.draw = function(imageData){
 
-      if(!imageData)
+      if(!imageData){
+        this.previeMode = false
         imageData = this.parent.getFullImageData()
+      }
+      else{
+        this.previeMode = true
+        this.previewImageData = imageData
+      }
 
       this.computeVisibleArea()
       var area = this.getAreaPixels(this.visibleArea, imageData)
@@ -424,25 +444,22 @@ define([], function() {
       // number of horizontal pixels in y direction 
       var xPixelAmount = area.width 
       // number of vertical pixels in x direction
-      var yPixelAmount = area.height 
+      var yPixelAmount = area.height
 
-      var jumpY = this.canvasWidth*4*this.currentScale
-      var jumpX = this.currentScale*4      
+      var pixelRepeat = this.currentScale*4  
       var positionSource = 0
       var positionDestination = 0
+      var yP, yRepeat, xP, xRepeat, currentY, currentX, currentYRepeat
 
-      var yP, yRepeat, xP, xRepeat, currentY, currentX, currentYRepeat, currentXRepeat
-
-      for(yP = 0; yP < yPixelAmount; yP++){
-        currentY = yP*this.canvasWidth*4*this.currentScale
-        for(yRepeat = 0; yRepeat < this.currentScale; yRepeat++){
-          currentYRepeat = yRepeat*this.canvasWidth*4
-          for(xP = 0; xP < xPixelAmount; xP++){
-            currentX = xP*this.currentScale*4
-            for(xRepeat = 0; xRepeat < this.currentScale; xRepeat++){
-              currentXRepeat = xRepeat*4
-              positionSource = yP*xPixelAmount*4 + xP*4
-              positionDestination = currentY + currentYRepeat + currentX + currentXRepeat
+      for(yP = 0; yP < yPixelAmount*4; yP+=4){
+        currentY = yP*this.canvasWidth*this.currentScale
+        for(yRepeat = 0; yRepeat < pixelRepeat; yRepeat+=4){
+          currentYRepeat = yRepeat*this.canvasWidth
+          for(xP = 0; xP < xPixelAmount*4; xP+=4){
+            currentX = xP*this.currentScale
+            for(xRepeat = 0; xRepeat < pixelRepeat; xRepeat+=4){
+              positionSource = yP*xPixelAmount + xP
+              positionDestination = currentY + currentYRepeat + currentX + xRepeat
 
               allPixels.data[positionDestination] = area.pixels[positionSource]
               allPixels.data[positionDestination+1] = area.pixels[positionSource+1]
@@ -694,11 +711,12 @@ define([], function() {
     * @param {Canvas} otherCanvas 
     * @param {boolean} doNotDraw 
     */
+    /*
     Canvas.prototype._copy = function(otherCanvas, doNotDraw){
         this.copy(otherCanvas)
         if(!doNotDraw)
           this.registerContentModification()
-    }
+    }*/
 
     /** 
     * Updates this canvas by the centent of the passed canvas

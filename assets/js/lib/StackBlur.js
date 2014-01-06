@@ -76,47 +76,23 @@ var shg_table = [
 		24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24,
 		24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24 ];
 
-function stackBlurImage( sourceCanvas, destinationCanvas, radius, blurAlphaChannel )
+function stackBlurImage( imageData, destinationCanvas, radius, blurAlphaChannel )
 {
-	if ( isNaN(radius) || radius < 1 ) return sourceCanvas.getFullImageData()
+	if ( isNaN(radius) || radius < 1 ) return imageData
 	
 	if ( blurAlphaChannel )
-		return stackBlurCanvasRGBA( destinationCanvas.ctx, sourceCanvas.getFullImageData(), 0, 0, destinationCanvas.canvasWidth, destinationCanvas.canvasHeight, radius );
+		return stackBlurCanvasRGBA( imageData, 0, 0, destinationCanvas.canvasWidth, destinationCanvas.canvasHeight, radius );
 	else 
-		return stackBlurCanvasRGB( destinationCanvas.ctx, sourceCanvas.getFullImageData(), 0, 0, destinationCanvas.canvasWidth, destinationCanvas.canvasHeight, radius );
+		return stackBlurCanvasRGB( imageData, 0, 0, destinationCanvas.canvasWidth, destinationCanvas.canvasHeight, radius );
 }
 
 
 
-function stackBlurCanvasRGB( context, originalImageData, top_x, top_y, width, height, radius )
+function stackBlurCanvasRGB( imageData, top_x, top_y, width, height, radius )
 {
 	if ( isNaN(radius) || radius < 1 ) return;
 	radius |= 0;
 	
-	var imageData;
-	
-	try {
-	  try {
-		imageData = originalImageData;
-	  } catch(e) {
-	  
-		// NOTE: this part is supposedly only needed if you want to work with local files
-		// so it might be okay to remove the whole try/catch block and just use
-		// imageData = context.getImageData( top_x, top_y, width, height );
-		try {
-			netscape.security.PrivilegeManager.enablePrivilege("UniversalBrowserRead");
-			imageData = context.getImageData( top_x, top_y, width, height );
-		} catch(e) {
-			alert("Cannot access local image");
-			throw new Error("unable to access local image data: " + e);
-			return;
-		}
-	  }
-	} catch(e) {
-	  alert("Cannot access image");
-	  throw new Error("unable to access image data: " + e);
-	}
-			
 	var pixels = imageData.data;
 			
 	var x, y, i, p, yp, yi, yw, r_sum, g_sum, b_sum,

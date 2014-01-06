@@ -27,64 +27,30 @@ var ContrastStrategy, _ref, module,
       // render templates
       $(".controls-wrapper").append($(contentTemplate))
       this.init(ContrastStrategy.LABEL, ContrastStrategy.NAME)
-    }
-
-
-    ContrastStrategy.prototype.updateContrast = function(contrast){
-
-      var imgData = this.canvasOrigin.getFullImageData()
-
-      this.processedImageData = this.imageProcessor.processContrast(imgData, contrast)
-      this.canvasStage.draw(this.processedImageData)
-    }
-
-      
-
-    ContrastStrategy.prototype.addMenuBarAction = function(){
-      $(".action-menu-"+ContrastStrategy.NAME).click(
-      function(event, ui){
-        event.stopPropagation()
-        event.preventDefault()
-        $(".dropdown").removeClass("open")
-        $("."+ContrastStrategy.NAME+"-controls").slideToggle()
-      })
-
-      $("."+ContrastStrategy.NAME+"-controls").click(function(){
-        $(this).slideToggle()
-      }).children().click(function(e) {
-        return false; // prevent childs to do this action
-      })
+      this.currentValue = 0
+      this.changed = false
+      this.onChangeAction = null      
     }
 
     ContrastStrategy.prototype.initializeTools = function(){
-
-      // brightness slider
-      $( "#"+ContrastStrategy.NAME+"-slider" ).slider(
-        {
-          range: "min",
-          value: 0,
-          min: -255,
-          max: 255,
-          slide: function( event, ui ) {
-            $( "#"+ContrastStrategy.NAME+"-slider-output" ).html(ui.value)
-            this.updateContrast(ui.value)
-          }.bind(this)
-        }
-      )
-
-      $("#"+ContrastStrategy.NAME+"-ok").click(
-        function(event, ui){
-          if(!!this.processedImageData)
-            this.canvasOrigin.putImageData(this.processedImageData)
-        }.bind(this)
-      )
-
-      $("#"+ContrastStrategy.NAME+"-nok").click(
-        function(event, ui){
-          this.canvasOrigin.drawClones()
-        }.bind(this)
-      )
+      this.initializeDefaultSlider(ContrastStrategy.NAME, 0, -255, 255)
     }
+
+    ContrastStrategy.prototype.execute = function(imgData, preview){
+
+      if(!imgData)
+        var imgData = this.canvasOrigin.getFullImageData()
+
+      this.processedImageData = this.imageProcessor.processContrast(imgData, this.currentValue)
+
+      if(!!preview)
+        this.canvasStage.draw(this.processedImageData)
+      else
+        this.canvasOrigin.putImageData(this.processedImageData)
+    }
+
+
+
 
 
 

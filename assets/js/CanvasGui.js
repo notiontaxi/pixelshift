@@ -356,24 +356,28 @@ define(['text!templates/canvas-gui.html',
     }.bind(this))    
 
     Mousetrap.bind('up', function(event, ui){
+        $('.ui-slider-handle').blur()
         event.stopPropagation()
         event.preventDefault()
         this.canvasStage.moveCanvas("up")
     }.bind(this))     
 
     Mousetrap.bind('down', function(event, ui){
+        $('.ui-slider-handle').blur()
         event.stopPropagation()
         event.preventDefault()
         this.canvasStage.moveCanvas("down")
     }.bind(this))  
 
     Mousetrap.bind('left', function(event, ui){
+        $('.ui-slider-handle').blur()
         event.stopPropagation()
         event.preventDefault()
         this.canvasStage.moveCanvas("left")
     }.bind(this))      
 
     Mousetrap.bind('right', function(event, ui){
+        $('.ui-slider-handle').blur()
         event.stopPropagation()
         event.preventDefault()
         this.canvasStage.moveCanvas("right")
