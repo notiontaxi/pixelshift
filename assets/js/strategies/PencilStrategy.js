@@ -27,7 +27,7 @@ var PencilStrategy, _ref, module,
       // render templates
       
       //$(containerIdentifier).append($(contentTemplate))
-      this.init()
+      this.init({})
       this.thickness = 10
     }
 
@@ -66,12 +66,6 @@ var PencilStrategy, _ref, module,
       this.submenu.css('top', relPos+'px')      
     }   
 
-
-    PencilStrategy.prototype.initializeTools = function(){
-
-
-
-    }
 
 
 // --------------------------------------

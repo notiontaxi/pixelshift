@@ -15,6 +15,7 @@ define(['text!templates/image-processing.html',
   'js/strategies/BrightnessStrategy',
   'js/strategies/BlurStrategy',
   'js/strategies/ContrastStrategy',
+  'js/strategies/CropStrategy',
   'js/CanvasGui', 
   'js/test/Test',
   'js/Toolbar',
@@ -26,6 +27,7 @@ define(['text!templates/image-processing.html',
     BrightnessStrategy, 
     BlurStrategy,
     ContrastStrategy,
+    CropStrategy,
     CanvasGui, 
     Test, 
     Toolbar,
@@ -58,26 +60,30 @@ var ImageProcessing, _ref, module,
     ImageProcessing.prototype.initContext = function(){
       this.context = new Context(this.canvasOrigin)
 
+      // Menubar
       this.brightness = new BrightnessStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
       this.context.addStackableStrategy(this.brightness)
 
       this.contrast = new ContrastStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
       this.context.addStackableStrategy(this.contrast)
 
-      this.outline = new OutlineStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
-
-
       this.blur = new BlurStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
       this.context.addStackableStrategy(this.blur)
+
+      this.outline = new OutlineStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
 
       this.vector = new VectorizerStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
 
 
+      // Toolbar
       this.floodfill = new FloodfillStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
-      this.context.addOneClickStrategies(this.floodfill)
+      this.context.addOneClickStrategy(this.floodfill)
 
       this.pencil = new PencilStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
-      this.context.addOneClickStrategies(this.pencil)
+      this.context.addOneClickStrategy(this.pencil)
+
+      this.crop = new CropStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
+      this.context.addOneClickStrategy(this.crop)      
 
       this.initCanvasStrategies()
     }

@@ -26,7 +26,7 @@ define([], function() {
   }
 
 
-  Context.prototype.addOneClickStrategies = function(strategy){
+  Context.prototype.addOneClickStrategy = function(strategy){
       this.oneClickStrategies.push(strategy)
   }
   Context.prototype.addStackableStrategy = function(strategy){

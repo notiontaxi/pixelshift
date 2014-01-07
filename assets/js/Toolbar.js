@@ -69,8 +69,11 @@ define(['text!templates/toolbar.html'], function(toolbarTemplate) {
       $('.toolbar-submenu-arrow').each(function(){
         $(this).hide()
       })
-      arrow.fadeIn(100)
-      submenu.fadeIn(100)
+      // show toolbar, if this tool has one  
+      if(!!submenu){
+        arrow.fadeIn(100)
+        submenu.fadeIn(100)
+      }
 
     }
 

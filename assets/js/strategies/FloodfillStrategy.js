@@ -28,7 +28,7 @@ var FloodfillStrategy, _ref, module,
       FloodfillStrategy.__super__.constructor(canvasOrigin, canvasStage, canvasShown, imageProcessor, ImageProcessingStrategy.TYPE_TOOLBAR)
       // render templates
       
-      this.init()
+      this.init({})
 
       this.variance = 0
     }
@@ -72,12 +72,6 @@ var FloodfillStrategy, _ref, module,
       // TODO: compute this in a nicer way
       var relPos = parseInt(this.button.offset().top - $('#toolbar').offset().top + this.button.height()/2 - $('#toolbar-floodfill-submenu').height()/2 ,10)
       this.submenu.css('top', relPos+'px')
-
-    }
-
-
-    FloodfillStrategy.prototype.initializeTools = function(){
-
 
     }
 

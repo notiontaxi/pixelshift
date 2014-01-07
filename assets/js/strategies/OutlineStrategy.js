@@ -26,7 +26,7 @@ var OutlineStrategy, _ref, module,
 
       // render templates
       $(".controls-wrapper").append($(contentTemplate))
-      this.init(OutlineStrategy.LABEL, OutlineStrategy.NAME)
+      this.init({label: OutlineStrategy.LABEL, name: OutlineStrategy.NAME})
     }
 
 

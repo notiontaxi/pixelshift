@@ -18,6 +18,7 @@ var VectorizerStrategy, _ref, module,
 // --------------------------------------
 
     VectorizerStrategy.NAME = 'vectorize'
+    VectorizerStrategy.LABEL = 'Vectorize'
 
     function VectorizerStrategy(containerIdentifier,canvasOrigin, canvasStage, canvasShown,imageProcessor){    
       this.name = VectorizerStrategy.NAME
@@ -25,7 +26,7 @@ var VectorizerStrategy, _ref, module,
       // render templates
         
       $(".controls-wrapper").append($(contentTemplate))
-      this.init()
+      this.init({label: VectorizerStrategy.LABEL, name: VectorizerStrategy.NAME})
       this.filled = true
     }
 

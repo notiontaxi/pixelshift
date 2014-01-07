@@ -362,10 +362,6 @@ define(['js/Histogram', 'js/helper/Colors', 'js/vectorizer/Vectorizer'], functio
 // add copyright !
 // http://www.html5rocks.com/en/tutorials/canvas/imagefilters/?redirect_from_locale=de#toc-convolution
 
-    ImageProcessor.prototype.createImageData = function(w,h) {
-      return this.tmpCtx.createImageData(w,h);
-    }
-
     ImageProcessor.prototype.filterImage = function(filter, image, var_args) {
       var args = [this.getPixels(image)]
  
@@ -376,10 +372,6 @@ define(['js/Histogram', 'js/helper/Colors', 'js/vectorizer/Vectorizer'], functio
       return filter.apply(null, args)
     }
 
-    ImageProcessor.prototype.createImageData = function(width, height) {
-      return this.tmpCtx.createImageData(width, height)
-    }    
-
     ImageProcessor.prototype.convolute = function(pixels, weights, opaque) {
       var side = Math.round(Math.sqrt(weights.length));
       var halfSide = Math.floor(side/2);
@@ -389,7 +381,7 @@ define(['js/Histogram', 'js/helper/Colors', 'js/vectorizer/Vectorizer'], functio
       // pad output by the convolution matrix
       var w = sw;
       var h = sh;
-      var output = this.createImageData(w, h);
+      var output = this.tmpCtx.createImageData(w, h)
       var dst = output.data;
       // go through the destination image pixels
       var alphaFac = opaque ? 1 : 0;

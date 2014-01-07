@@ -29,20 +29,20 @@ var ImageProcessingStrategy, _ref, module,
       this.imageProcessor = imageProcessor
     }
 
-    ImageProcessingStrategy.prototype.init = function(label, name){
 
-      this.initializeTools()
+    ImageProcessingStrategy.prototype.init = function(options){
+
       if(this.type === ImageProcessingStrategy.TYPE_MENU){
-        this.appendToMenuBar(label, name)
-        this.addMenuBarAction(name)
+        this.initializeTools()
+        this.appendToMenuBar(options.label, options.name)
+        this.addMenuBarAction(options.name)
       }else if(this.type === ImageProcessingStrategy.TYPE_TOOLBAR){
         this.appendToToolbar()
-        this.addToolbarAction()
+        this.addToolbarAction(options.onActiveAction)
       }else{
         console.error("invalid type")
       }
-
-    }   
+    }
 
     ImageProcessingStrategy.prototype.addMenuBarAction = function(name){
       $(".action-menu-"+name).click(
@@ -152,12 +152,6 @@ var ImageProcessingStrategy, _ref, module,
     ImageProcessingStrategy.prototype.appendToToolbar = function(){
       console.error("appendToToolbar() not implementet jet")
     }
-     /**
-    * Click actions for slide in/out
-    */
-    ImageProcessingStrategy.prototype.addToolbarAction = function(){
-      console.error("addToolbarAction() not implementet jet")
-    }
 
     ImageProcessingStrategy.prototype.addToToolbar = function(iconClass, id, mode, toolbar){
 
@@ -233,15 +227,18 @@ var ImageProcessingStrategy, _ref, module,
         ).appendTo(button)
 
       li.appendTo('.'+typeName)
-    }  
+    }
 
-    ImageProcessingStrategy.prototype.addToolbarAction = function(){
-      this.button.click({submenu: this.submenu, arrow: this.arrow},this.activeAction)
+    ImageProcessingStrategy.prototype.addToolbarAction = function(onActiveAction){
+      this.button.click({submenu: this.submenu, arrow: this.arrow, onActiveAction: onActiveAction},this.activeAction)
     }
 
     ImageProcessingStrategy.prototype.activeAction = function(event){
       Toolbar.toggleActive(event, this)
       Toolbar.toggleSubmenu(event.data.submenu, event.data.arrow)
+
+      if(!!event.data.onActiveAction)
+        event.data.onActiveAction()
     }           
 
 
