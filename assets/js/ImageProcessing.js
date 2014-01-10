@@ -76,13 +76,13 @@ var ImageProcessing, _ref, module,
 
 
       // Toolbar
-      this.floodfill = new FloodfillStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
+      this.floodfill = new FloodfillStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor, this.toolbar)
       this.context.addOneClickStrategy(this.floodfill)
 
-      this.pencil = new PencilStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
+      this.pencil = new PencilStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor, this.toolbar)
       this.context.addOneClickStrategy(this.pencil)
 
-      this.crop = new CropStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
+      this.crop = new CropStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor, this.toolbar)
       this.context.addOneClickStrategy(this.crop)      
 
       this.initCanvasStrategies()

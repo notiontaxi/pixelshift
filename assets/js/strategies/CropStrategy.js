@@ -21,31 +21,18 @@ var CropStrategy, _ref, module,
 
     CropStrategy.NAME = 'crop'
 
-    function CropStrategy(canvasOrigin, canvasStage, canvasShown,imageProcessor){    
+    function CropStrategy(canvasOrigin, canvasStage, canvasShown,imageProcessor, toolbar){    
       this.name = CropStrategy.NAME
+      this.class = 'icon-crop'
+      this.toolbar = toolbar
       CropStrategy.__super__.constructor(canvasOrigin, canvasStage, canvasShown, imageProcessor, ImageProcessingStrategy.TYPE_TOOLBAR)
       // render templates
       var that = this
+      var minSize = Array()
+      minSize[0] = 1
+      minSize[1] = 1
       //$(containerIdentifier).append($(contentTemplate))
-      this.init(
-        {
-          onActiveAction: function(){
-            console.log('crop action')
-            this.canvasShown.getElement().Jcrop({
-              onChange: function(c){
-                that.selectedArea = {
-                    x1: c.x
-                  , y1: c.y
-                  , x2: c.x2
-                  , y2: c.y2
-                  , width: c.w
-                  , height: c.h
-                }
-              }
-            })
-          }.bind(this)
-      })
-      this.thickness = 10
+      this.init()
     }
 
     CropStrategy.prototype.execute = function(state){
@@ -54,12 +41,51 @@ var CropStrategy, _ref, module,
       //this.canvasOrigin.drawClones()
     }
 
-    CropStrategy.prototype.appendToToolbar = function(){
-      this.button = this.addToToolbar('icon-'+this.name, 'toolbar-'+this.name, this.name, '.tool-items')
-      //this.submenu = $('#toolbar-'+this.name+'-submenu').append($(Submenu))
-      this.arrow = $(this.button).find('.toolbar-submenu-arrow')
 
-    }   
+    CropStrategy.prototype.inactiveAction = function(){
+      this.jCropApi.release()
+      this.jCropApi.disable()
+      this.jCropApi.destroy()
+      this.canvasShown.getElement().show()
+      return true
+    }
+
+    CropStrategy.prototype.activeAction = function(){
+
+      this.clone = this.canvasShown.getElement().clone()
+      this.clone.attr('id', 'canvas-shown-clone')
+      this.canvasShown.getElement().parent().append(this.clone)
+      this.clone.css(
+        {
+            position: 'relative'
+          , left:  '0px'
+          , right: '0px'
+          , width: this.canvasShown.getElement().css('width')
+          , height:this.canvasShown.getElement().css('height') 
+        }
+      )
+      console.log(this.clone)
+      var destCtx = this.clone[0].getContext('2d')
+      destCtx.drawImage(this.canvasShown.getElement()[0], 0, 0)
+
+      this.canvasShown.getElement().hide()
+
+      this.jCropApi = $.Jcrop('#canvas-shown-clone',{
+        onChange: function(c){
+          this.selectedArea = {
+              x1: c.x
+            , y1: c.y
+            , x2: c.x2
+            , y2: c.y2
+          }
+        },
+        onRelease: function(){
+          $('.jcrop-keymgr').hide()
+        }
+      })
+      console.log(this.jCropApi)
+      return true
+    }
 
 
 

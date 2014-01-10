@@ -21,13 +21,15 @@ var PencilStrategy, _ref, module,
 
     PencilStrategy.NAME = 'pencil'
 
-    function PencilStrategy(canvasOrigin, canvasStage, canvasShown,imageProcessor){    
+    function PencilStrategy(canvasOrigin, canvasStage, canvasShown,imageProcessor, toolbar){    
       this.name = PencilStrategy.NAME
+      this.class = 'icon-pencil'
+      this.toolbar = toolbar
       PencilStrategy.__super__.constructor(canvasOrigin, canvasStage, canvasShown, imageProcessor, ImageProcessingStrategy.TYPE_TOOLBAR)
       // render templates
       
       //$(containerIdentifier).append($(contentTemplate))
-      this.init({})
+      this.init()
       this.thickness = 10
     }
 
@@ -37,8 +39,8 @@ var PencilStrategy, _ref, module,
       this.canvasOrigin.drawClones()
     }
 
-    PencilStrategy.prototype.appendToToolbar = function(){
-      this.button = this.addToToolbar('icon-pencil', 'toolbar-pencil', 'pencil', '.tool-items')
+    PencilStrategy.prototype.addSubmenu = function(){
+
       this.submenu = $('#toolbar-pencil-submenu').append($(Submenu))
       this.arrow = $(this.button).find('.toolbar-submenu-arrow')
 

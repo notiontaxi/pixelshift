@@ -23,12 +23,14 @@ var FloodfillStrategy, _ref, module,
 
     FloodfillStrategy.NAME = 'floodfill'
 
-    function FloodfillStrategy(canvasOrigin, canvasStage, canvasShown, imageProcessor){    
+    function FloodfillStrategy(canvasOrigin, canvasStage, canvasShown, imageProcessor, toolbar){    
       this.name = FloodfillStrategy.NAME
+      this.class = 'icon-paintroll'
+      this.toolbar = toolbar
       FloodfillStrategy.__super__.constructor(canvasOrigin, canvasStage, canvasShown, imageProcessor, ImageProcessingStrategy.TYPE_TOOLBAR)
       // render templates
       
-      this.init({})
+      this.init()
 
       this.variance = 0
     }
@@ -49,8 +51,7 @@ var FloodfillStrategy, _ref, module,
       this.canvasOrigin.drawClones()
     }
 
-    FloodfillStrategy.prototype.appendToToolbar = function(){
-      this.button = this.addToToolbar('icon-paintroll', 'toolbar-floodfill', 'floodfill', '.tool-items')
+    FloodfillStrategy.prototype.addSubmenu = function(){
       this.submenu = $('#toolbar-floodfill-submenu').append($(Submenu))
       this.arrow = $(this.button).find('.toolbar-submenu-arrow')
 

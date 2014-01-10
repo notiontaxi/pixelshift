@@ -30,15 +30,15 @@ var ImageProcessingStrategy, _ref, module,
     }
 
 
-    ImageProcessingStrategy.prototype.init = function(options){
+    ImageProcessingStrategy.prototype.init = function(){
 
       if(this.type === ImageProcessingStrategy.TYPE_MENU){
         this.initializeTools()
-        this.appendToMenuBar(options.label, options.name)
-        this.addMenuBarAction(options.name)
+        this.appendToMenuBar(this.label, this.name)
+        this.addMenuBarAction(this.name)
       }else if(this.type === ImageProcessingStrategy.TYPE_TOOLBAR){
         this.appendToToolbar()
-        this.addToolbarAction(options.onActiveAction)
+        this.addToolbarAction()
       }else{
         console.error("invalid type")
       }
@@ -150,7 +150,10 @@ var ImageProcessingStrategy, _ref, module,
     * Regular Menu bar
     */
     ImageProcessingStrategy.prototype.appendToToolbar = function(){
-      console.error("appendToToolbar() not implementet jet")
+      this.button = this.addToToolbar(this.class, 'toolbar-'+this.name, this.name, '.tool-items')
+
+      if(!!this.addSubmenu)
+        this.addSubmenu()
     }
 
     ImageProcessingStrategy.prototype.addToToolbar = function(iconClass, id, mode, toolbar){
@@ -229,17 +232,62 @@ var ImageProcessingStrategy, _ref, module,
       li.appendTo('.'+typeName)
     }
 
-    ImageProcessingStrategy.prototype.addToolbarAction = function(onActiveAction){
-      this.button.click({submenu: this.submenu, arrow: this.arrow, onActiveAction: onActiveAction},this.activeAction)
+    ImageProcessingStrategy.prototype.addToolbarAction = function(){
+      this.button.click({strategy: this, toolbar: this.toolbar}, this.toolbar.toggleActive)
+    } 
+
+
+    /**
+    * implement this method, when actions on activation are needed
+    * @return {bool} true, if action was successfull
+    */
+    ImageProcessingStrategy.prototype.activeAction = function(){
+      return true
     }
 
-    ImageProcessingStrategy.prototype.activeAction = function(event){
-      Toolbar.toggleActive(event, this)
-      Toolbar.toggleSubmenu(event.data.submenu, event.data.arrow)
+    ImageProcessingStrategy.prototype.setActive = function(){
 
-      if(!!event.data.onActiveAction)
-        event.data.onActiveAction()
-    }           
+      var aktivationSuccessfull = false
+
+      if(this.activeAction()){
+        // show toolbar, if this tool has one  
+        if(!!this.submenu){
+          this.arrow.fadeIn(100)
+          this.submenu.fadeIn(100)
+        }
+
+        this.button.addClass('mode-active')
+        aktivationSuccessfull = true
+      }
+
+      return aktivationSuccessfull
+    } 
+
+
+    /**
+    * implement this method, when actions on release are needed
+    * @return {bool} true, if action was successfull
+    */    
+    ImageProcessingStrategy.prototype.inactiveAction = function(){
+      return true
+    }    
+
+    ImageProcessingStrategy.prototype.setInactive = function(){
+      var deaktivationSuccessfull = false
+
+      if(this.inactiveAction()){
+
+        if(!!this.submenu){
+          this.arrow.hide()
+          this.submenu.hide()
+        }      
+
+        this.button.removeClass('mode-active')
+        deaktivationSuccessfull = true
+      }
+
+      return deaktivationSuccessfull
+    }              
 
 
 // --------------------------------------

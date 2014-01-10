@@ -25,6 +25,7 @@ define(['text!templates/toolbar.html'], function(toolbarTemplate) {
 
       this.initialize()
       this.addEventListeners()
+      this.lastActive = null
     }
 
     Toolbar.prototype.initialize = function(){
@@ -54,28 +55,27 @@ define(['text!templates/toolbar.html'], function(toolbarTemplate) {
 
     }
 
-    Toolbar.toggleActive = function(event, obj){
-      $(".action-switch-mode").each(function(){
-        $(this).removeClass('mode-active')
-      })
-      $('#toolbar').attr('mode', $(obj).attr('mode'))
-      $(obj).addClass('mode-active')
-    }
+    Toolbar.prototype.toggleActive = function(event){
 
-    Toolbar.toggleSubmenu = function(submenu, arrow){
-      $(".toolbar-submenu").each(function(){
-        $(this).hide()
-      })
-      $('.toolbar-submenu-arrow').each(function(){
-        $(this).hide()
-      })
-      // show toolbar, if this tool has one  
-      if(!!submenu){
-        arrow.fadeIn(100)
-        submenu.fadeIn(100)
+      var _this = event.data.toolbar
+      var strategy = event.data.strategy       
+
+
+      var deaktivationSuccessfull = true
+
+      if(!!_this.lastActive){
+        deaktivationSuccessfull = _this.lastActive.setInactive()
+      }
+
+      if(deaktivationSuccessfull){
+        console.log(strategy.name)
+        strategy.setActive()
+        $('#toolbar').attr('mode', strategy.name)
+        _this.lastActive = strategy
       }
 
     }
+
 
     Toolbar.prototype.foregroundColor = function(){
       var color = $(this.buttonIdent).css('background-color')
