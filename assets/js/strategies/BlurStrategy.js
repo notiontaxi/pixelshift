@@ -27,7 +27,7 @@ var BlurStrategy, _ref, module,
 
       // render templates
       $(".controls-wrapper").append($(contentTemplate))
-      this.init({label: BlurStrategy.LABEL, name: BlurStrategy.NAME})
+      this.init()
       this.currentValue = 0
       this.changed = false
       this.onChangeAction = null      

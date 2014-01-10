@@ -27,7 +27,7 @@ var ContrastStrategy, _ref, module,
 
       // render templates
       $(".controls-wrapper").append($(contentTemplate))
-      this.init({label: ContrastStrategy.LABEL, name: ContrastStrategy.NAME})
+      this.init()
       this.currentValue = 0
       this.changed = false
       this.onChangeAction = null      

@@ -27,7 +27,7 @@ var BrightnessStrategy, _ref, module,
 
       // render templates
       $(".controls-wrapper").append($(contentTemplate))
-      this.init({label: BrightnessStrategy.LABEL, name: BrightnessStrategy.NAME})
+      this.init()
       this.currentValue = 0
       this.changed = false
       this.onChangeAction = null

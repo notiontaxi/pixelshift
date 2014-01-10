@@ -37,6 +37,7 @@ define([], function() {
   Context.prototype.oneClickStrategy = function(mode){
     var result = null
 
+    // search for currently active strategy and return it
     for(var i = 0; i < this.oneClickStrategies.length; i++)
       if(this.oneClickStrategies[i].name === mode)
         result = this.oneClickStrategies[i]

@@ -26,7 +26,7 @@ var VectorizerStrategy, _ref, module,
       // render templates
         
       $(".controls-wrapper").append($(contentTemplate))
-      this.init({label: VectorizerStrategy.LABEL, name: VectorizerStrategy.NAME})
+      this.init()
       this.filled = true
     }
 

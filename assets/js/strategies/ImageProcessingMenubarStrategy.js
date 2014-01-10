@@ -19,7 +19,9 @@ var ImageProcessingMenubarStrategy, _ref, module,
 
 
     function ImageProcessingMenubarStrategy(canvases, imageProcessor){
+      this.className = "ImageProcessingMenubarStrategy"
       ImageProcessingMenubarStrategy.__super__.constructor(canvases, imageProcessor)
+      this.changed = false
     }
 
 
@@ -29,7 +31,8 @@ var ImageProcessingMenubarStrategy, _ref, module,
         this.addMenuBarAction(this.name)
     }
 
-    ImageProcessingMenubarStrategy.prototype.addMenuBarAction = function(name){
+    ImageProcessingMenubarStrategy.prototype.addMenuBarAction = function(){
+      var name = this.name
       $(".action-menu-"+name).click(
       function(event, ui){
         event.stopPropagation()
@@ -39,16 +42,22 @@ var ImageProcessingMenubarStrategy, _ref, module,
       })
 
       $("."+name+"-controls").click(function(){
-        $(this).slideToggle()
-      }).children().click(function(e) {
+        this.cancel()
+        this.slideToggle()
+      }.bind(this)).children().click(function(e) {
         return false; // prevent childs to do this action
       })
     }     
+
+    ImageProcessingStrategy.prototype.slideToggle = function(){
+      $("."+this.name+"-controls").slideToggle()
+    }
 
     ImageProcessingMenubarStrategy.prototype.initializeTools = function(){
       console.error("initalizeTools() not implementet jet")
     }
 
+    // is called in Context.js -> run over stacked startegies
     ImageProcessingMenubarStrategy.prototype.setOnChangeAction = function(action, obj){
       this.onChangeAction = action
       this.refObj = obj
@@ -83,40 +92,52 @@ var ImageProcessingMenubarStrategy, _ref, module,
 
       this.okButton.hide()
       this.okButton.removeClass('hidden')
-      this.okButton.click(
-        function(event, ui){
-          this.execute(null, false)
-          // reset all values to 0
-          this.currentValue = 0
-          $( "#"+name+"-slider" ).slider({value: this.currentValue})
-          $( "#"+name+"-slider-output" ).html(0)
-          this.changed = false
-
-          this.okButton.hide()
-          this.nokButton.hide()
-          
-        }.bind(this)
-      )
+      this.okButton.click({_this: this}, this.proceed)
 
       this.nokButton.hide()
       this.nokButton.removeClass('hidden')
-      // set all values to 0 and repaint with remaining filters
-      this.nokButton.click(
-        function(event, ui){
+      this.nokButton.click({_this: this}, this.cancel)
+    }
 
-          this.currentValue = 0
-          $( "#"+name+"-slider" ).slider({value: 0})
-          $( "#"+name+"-slider-output" ).html(0)
+    // set all values to 0 and repaint with remaining filters
+    ImageProcessingMenubarStrategy.prototype.cancel = function(event, ui){
 
-          if(!!this.onChangeAction)
-            this.onChangeAction(this.refObj, true)
+      var _this
+      if(this.className === 'ImageProcessingMenubarStrategy')
+        _this = this
+      else
+        _this = event.data._this
 
-          this.okButton.hide()
-          this.nokButton.hide()
+      _this.currentValue = 0
+      $( "#"+_this.name+"-slider" ).slider({value: 0})
+      $( "#"+_this.name+"-slider-output" ).html(0)
 
-          this.changed = false
-        }.bind(this)
-      )
+      if(!!_this.onChangeAction)
+       _this.onChangeAction(_this.refObj, true)
+
+      _this.okButton.hide()
+      _this.nokButton.hide()
+
+      _this.changed = false   
+    }
+
+    ImageProcessingMenubarStrategy.prototype.proceed = function(event, ui){   
+
+      var _this
+      if(this.className == 'ImageProcessingMenubarStrategy')
+        _this = this
+      else
+        _this = event.data._this
+
+      _this.execute(null, false)
+      // reset all values to 0
+      _this.currentValue = 0
+      $( "#"+_this.name+"-slider" ).slider({value: _this.currentValue})
+      $( "#"+_this.name+"-slider-output" ).html(0)
+      _this.changed = false
+
+      _this.okButton.hide()
+      _this.nokButton.hide()
     }
 
     /**
@@ -126,9 +147,6 @@ var ImageProcessingMenubarStrategy, _ref, module,
       this.appendToLGMenuBar(label, 'action-menu-'+name, 'image-actions-list')
       this.appendToSDMenuBar(label, 'action-menu-'+name, 'image-actions-list-sd')  
     }
-
-
-    
 
     ImageProcessingMenubarStrategy.prototype.appendToLGMenuBar = function(text, className, typeName){
       var li = $('<li/>')
