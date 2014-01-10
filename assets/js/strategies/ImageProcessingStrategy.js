@@ -21,11 +21,11 @@ var ImageProcessingStrategy, _ref, module,
     ImageProcessingStrategy.TYPE_MENU = 1
     ImageProcessingStrategy.TYPE_TOOLBAR = 2
 
-    function ImageProcessingStrategy(canvasOrigin, canvasStage, canvasShown, imageProcessor, type){
+    function ImageProcessingStrategy(canvases, imageProcessor, type){
       this.type = type
-      this.canvasOrigin = canvasOrigin  
-      this.canvasStage = canvasStage
-      this.canvasShown = canvasShown
+      this.canvasOrigin = canvases.canvasOrigin  
+      this.canvasStage = canvases.canvasStage
+      this.canvasShown = canvases.canvasShown
       this.imageProcessor = imageProcessor
     }
 
@@ -150,54 +150,13 @@ var ImageProcessingStrategy, _ref, module,
     * Regular Menu bar
     */
     ImageProcessingStrategy.prototype.appendToToolbar = function(){
-      this.button = this.addToToolbar(this.class, 'toolbar-'+this.name, this.name, '.tool-items')
+      this.button = this.toolbar.add(this.class, 'toolbar-'+this.name, this.name, '.tool-items')
 
       if(!!this.addSubmenu)
         this.addSubmenu()
     }
 
-    ImageProcessingStrategy.prototype.addToToolbar = function(iconClass, id, mode, toolbar){
-
-      var submenu = $('<div/>', 
-        {
-            class: 'toolbar-submenu hidden'
-          , id: id+'-submenu'
-        }   
-      ).appendTo(toolbar)
-
-      var container = $('<div/>', 
-          {
-            class: 'toolbar-item'
-          }
-        ).appendTo(toolbar)
-
-      var button = $('<button/>', 
-            {
-                 id: id
-              ,  mode: mode
-              , class: 'btn btn-default action-switch-mode'
-            }
-          ).prependTo(container)
-
-      var i = $('<i/>', 
-          {
-            class: iconClass
-          }
-        ).appendTo(button)
-
-      var arrow = $('<i/>', 
-          {
-            class: 'icon-play3 toolbar-submenu-arrow hidden'
-          }
-        ).appendTo(button)
-
-      arrow.hide()
-      arrow.removeClass('hidden')
-      submenu.hide()
-      submenu.removeClass('hidden')      
-
-      return button
-    }  
+    
 
     ImageProcessingStrategy.prototype.appendToLGMenuBar = function(text, className, typeName){
       var li = $('<li/>')

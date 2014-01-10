@@ -59,30 +59,36 @@ var ImageProcessing, _ref, module,
 
     ImageProcessing.prototype.initContext = function(){
       this.context = new Context(this.canvasOrigin)
+      var canvases = 
+        {
+            canvasOrigin: this.canvasOrigin
+          , canvasStage: this.canvasStage
+          , canvasShown: this.canvasShown
+        }
 
       // Menubar
-      this.brightness = new BrightnessStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
+      this.brightness = new BrightnessStrategy(canvases, this.imageProcessor)
       this.context.addStackableStrategy(this.brightness)
 
-      this.contrast = new ContrastStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
+      this.contrast = new ContrastStrategy(canvases, this.imageProcessor)
       this.context.addStackableStrategy(this.contrast)
 
-      this.blur = new BlurStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
+      this.blur = new BlurStrategy(canvases, this.imageProcessor)
       this.context.addStackableStrategy(this.blur)
 
-      this.outline = new OutlineStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
+      this.outline = new OutlineStrategy(canvases, this.imageProcessor)
 
-      this.vector = new VectorizerStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor)
+      this.vector = new VectorizerStrategy(canvases, this.imageProcessor)
 
 
       // Toolbar
-      this.floodfill = new FloodfillStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor, this.toolbar)
+      this.floodfill = new FloodfillStrategy(canvases, this.imageProcessor, this.toolbar)
       this.context.addOneClickStrategy(this.floodfill)
 
-      this.pencil = new PencilStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor, this.toolbar)
+      this.pencil = new PencilStrategy(canvases, this.imageProcessor, this.toolbar)
       this.context.addOneClickStrategy(this.pencil)
 
-      this.crop = new CropStrategy(this.canvasOrigin, this.canvasStage, this.canvasShown, this.imageProcessor, this.toolbar)
+      this.crop = new CropStrategy(canvases, this.imageProcessor, this.toolbar)
       this.context.addOneClickStrategy(this.crop)      
 
       this.initCanvasStrategies()

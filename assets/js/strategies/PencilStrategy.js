@@ -8,24 +8,24 @@ https://github.com/notiontaxi
 
 "use strict"
 
-define(['js/strategies/ImageProcessingStrategy',
-  'text!templates/pencilSubmenu.html'], function(ImageProcessingStrategy, Submenu) {
+define(['js/strategies/ImageProcessingToolbarStrategy',
+  'text!templates/pencilSubmenu.html'], function(ImageProcessingToolbarStrategy, Submenu) {
 
 var PencilStrategy, _ref, module,
 
 
   module = function() {}
   PencilStrategy = (function(_super){
-    __extends(PencilStrategy, ImageProcessingStrategy);
+    __extends(PencilStrategy, ImageProcessingToolbarStrategy);
 // --------------------------------------
 
     PencilStrategy.NAME = 'pencil'
 
-    function PencilStrategy(canvasOrigin, canvasStage, canvasShown,imageProcessor, toolbar){    
+    function PencilStrategy(canvases,imageProcessor, toolbar){    
       this.name = PencilStrategy.NAME
       this.class = 'icon-pencil'
-      this.toolbar = toolbar
-      PencilStrategy.__super__.constructor(canvasOrigin, canvasStage, canvasShown, imageProcessor, ImageProcessingStrategy.TYPE_TOOLBAR)
+
+      PencilStrategy.__super__.constructor(canvases, imageProcessor, toolbar)
       // render templates
       
       //$(containerIdentifier).append($(contentTemplate))

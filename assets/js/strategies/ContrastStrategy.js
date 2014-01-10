@@ -7,22 +7,23 @@ https://github.com/notiontaxi
 
 "use strict"
 
-define(['text!templates/task-contrast.html','js/strategies/ImageProcessingStrategy'], function(contentTemplate, ImageProcessingStrategy) {
+define(['text!templates/task-contrast.html','js/strategies/ImageProcessingMenubarStrategy'], function(contentTemplate, ImageProcessingMenubarStrategy) {
 
 var ContrastStrategy, _ref, module,
 
 
   module = function() {}
   ContrastStrategy = (function(_super){
-  __extends(ContrastStrategy, ImageProcessingStrategy)
+  __extends(ContrastStrategy, ImageProcessingMenubarStrategy)
 // --------------------------------------
 
   ContrastStrategy.NAME = 'contrast'
   ContrastStrategy.LABEL = 'Contrast'
 
-    function ContrastStrategy(canvasOrigin, canvasStage, canvasShown,imageProcessor){
+    function ContrastStrategy(canvases, imageProcessor){
       this.name = ContrastStrategy.NAME
-      ContrastStrategy.__super__.constructor(canvasOrigin, canvasStage ,canvasShown, imageProcessor, ImageProcessingStrategy.TYPE_MENU)
+      this.label = ContrastStrategy.LABEL
+      ContrastStrategy.__super__.constructor(canvases, imageProcessor)
 
       // render templates
       $(".controls-wrapper").append($(contentTemplate))

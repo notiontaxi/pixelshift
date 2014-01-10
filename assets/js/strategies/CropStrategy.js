@@ -8,24 +8,24 @@ https://github.com/notiontaxi
 
 "use strict"
 
-define(['js/strategies/ImageProcessingStrategy',
-  'js/lib/jCrop/jquery.Jcrop.min'], function(ImageProcessingStrategy, JCrop) {
+define(['js/strategies/ImageProcessingToolbarStrategy',
+  'js/lib/jCrop/jquery.Jcrop.min'], function(ImageProcessingToolbarStrategy, JCrop) {
 
 var CropStrategy, _ref, module,
 
 
   module = function() {}
   CropStrategy = (function(_super){
-    __extends(CropStrategy, ImageProcessingStrategy);
+    __extends(CropStrategy, ImageProcessingToolbarStrategy);
 // --------------------------------------
 
     CropStrategy.NAME = 'crop'
 
-    function CropStrategy(canvasOrigin, canvasStage, canvasShown,imageProcessor, toolbar){    
+    function CropStrategy(canvases,imageProcessor, toolbar){    
       this.name = CropStrategy.NAME
       this.class = 'icon-crop'
-      this.toolbar = toolbar
-      CropStrategy.__super__.constructor(canvasOrigin, canvasStage, canvasShown, imageProcessor, ImageProcessingStrategy.TYPE_TOOLBAR)
+
+      CropStrategy.__super__.constructor(canvases, imageProcessor, toolbar)
       // render templates
       var that = this
       var minSize = Array()
@@ -43,8 +43,6 @@ var CropStrategy, _ref, module,
 
 
     CropStrategy.prototype.inactiveAction = function(){
-      this.jCropApi.release()
-      this.jCropApi.disable()
       this.jCropApi.destroy()
       this.canvasShown.getElement().show()
       return true

@@ -7,22 +7,23 @@ https://github.com/notiontaxi
 
 "use strict"
 
-define(['text!templates/task-brightness.html','js/strategies/ImageProcessingStrategy'], function(contentTemplate, ImageProcessingStrategy) {
+define(['text!templates/task-brightness.html','js/strategies/ImageProcessingMenubarStrategy'], function(contentTemplate, ImageProcessingMenubarStrategy) {
 
 var BrightnessStrategy, _ref, module,
 
 
   module = function() {}
   BrightnessStrategy = (function(_super){
-  __extends(BrightnessStrategy, ImageProcessingStrategy)
+  __extends(BrightnessStrategy, ImageProcessingMenubarStrategy)
 // --------------------------------------
 
   BrightnessStrategy.NAME = 'brightness'
   BrightnessStrategy.LABEL = 'Brightness'
 
-    function BrightnessStrategy(canvasOrigin, canvasStage, canvasShown, imageProcessor){
+    function BrightnessStrategy(canvases, imageProcessor){
       this.name = BrightnessStrategy.NAME
-      BrightnessStrategy.__super__.constructor(canvasOrigin, canvasStage ,canvasShown, imageProcessor, ImageProcessingStrategy.TYPE_MENU)
+      this.label = BrightnessStrategy.LABEL
+      BrightnessStrategy.__super__.constructor(canvases, imageProcessor)
 
       // render templates
       $(".controls-wrapper").append($(contentTemplate))

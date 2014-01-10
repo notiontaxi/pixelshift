@@ -7,22 +7,23 @@ https://github.com/notiontaxi
 
 "use strict"
 
-define(['text!templates/task-outline.html','js/strategies/ImageProcessingStrategy'], function(contentTemplate, ImageProcessingStrategy) {
+define(['text!templates/task-outline.html','js/strategies/ImageProcessingMenubarStrategy'], function(contentTemplate, ImageProcessingMenubarStrategy) {
 
 var OutlineStrategy, _ref, module,
 
 
   module = function() {}
   OutlineStrategy = (function(_super){
-  __extends(OutlineStrategy, ImageProcessingStrategy)
+  __extends(OutlineStrategy, ImageProcessingMenubarStrategy)
 // --------------------------------------
 
   OutlineStrategy.NAME = 'outline'
   OutlineStrategy.LABEL = 'Bitmap-Tool'
 
-    function OutlineStrategy(canvasOrigin, canvasStage, canvasShown,imageProcessor){
+    function OutlineStrategy(canvases,imageProcessor){
       this.name = OutlineStrategy.NAME
-      OutlineStrategy.__super__.constructor(canvasOrigin, canvasStage ,canvasShown, imageProcessor, ImageProcessingStrategy.TYPE_MENU)
+      this.label = OutlineStrategy.LABEL
+      OutlineStrategy.__super__.constructor(canvases, imageProcessor)
 
       // render templates
       $(".controls-wrapper").append($(contentTemplate))

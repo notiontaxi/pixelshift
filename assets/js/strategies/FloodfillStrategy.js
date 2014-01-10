@@ -10,26 +10,24 @@ https://github.com/notiontaxi
 
 define([
   'text!templates/floodfillSubmenu.html',
-  'js/strategies/ImageProcessingStrategy', 
-  ], function(Submenu ,ImageProcessingStrategy) {
+  'js/strategies/ImageProcessingToolbarStrategy', 
+  ], function(Submenu ,ImageProcessingToolbarStrategy) {
 
 var FloodfillStrategy, _ref, module,
 
 
   module = function() {}
   FloodfillStrategy = (function(_super){
-    __extends(FloodfillStrategy, ImageProcessingStrategy);
+  __extends(FloodfillStrategy, ImageProcessingToolbarStrategy)
 // --------------------------------------
 
     FloodfillStrategy.NAME = 'floodfill'
 
-    function FloodfillStrategy(canvasOrigin, canvasStage, canvasShown, imageProcessor, toolbar){    
+    function FloodfillStrategy(canvases, imageProcessor, toolbar){    
       this.name = FloodfillStrategy.NAME
       this.class = 'icon-paintroll'
-      this.toolbar = toolbar
-      FloodfillStrategy.__super__.constructor(canvasOrigin, canvasStage, canvasShown, imageProcessor, ImageProcessingStrategy.TYPE_TOOLBAR)
-      // render templates
-      
+      FloodfillStrategy.__super__.constructor(canvases, imageProcessor, toolbar)
+
       this.init()
 
       this.variance = 0

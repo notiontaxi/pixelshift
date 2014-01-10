@@ -7,22 +7,22 @@ https://github.com/notiontaxi
 
 "use strict"
 
-define(['text!templates/task-vectorizer.html', 'js/strategies/ImageProcessingStrategy'], function(contentTemplate, ImageProcessingStrategy) {
+define(['text!templates/task-vectorizer.html', 'js/strategies/ImageProcessingMenubarStrategy'], function(contentTemplate, ImageProcessingMenubarStrategy) {
 
 var VectorizerStrategy, _ref, module,
 
 
   module = function() {}
   VectorizerStrategy = (function(_super){
-    __extends(VectorizerStrategy, ImageProcessingStrategy);
+    __extends(VectorizerStrategy, ImageProcessingMenubarStrategy);
 // --------------------------------------
 
     VectorizerStrategy.NAME = 'vectorize'
     VectorizerStrategy.LABEL = 'Vectorize'
 
-    function VectorizerStrategy(containerIdentifier,canvasOrigin, canvasStage, canvasShown,imageProcessor){    
+    function VectorizerStrategy(canvases, imageProcessor){    
       this.name = VectorizerStrategy.NAME
-      VectorizerStrategy.__super__.constructor(canvasOrigin, canvasStage, canvasShown, imageProcessor, ImageProcessingStrategy.TYPE_MENU)
+      VectorizerStrategy.__super__.constructor(canvases, imageProcessor)
       // render templates
         
       $(".controls-wrapper").append($(contentTemplate))

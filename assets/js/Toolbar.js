@@ -104,6 +104,49 @@ define(['text!templates/toolbar.html'], function(toolbarTemplate) {
       this.toolbar.fadeOut(100)    
     }
 
+    Toolbar.prototype.add = function(iconClass, id, mode, toolbar){
+
+      var submenu = $('<div/>', 
+        {
+            class: 'toolbar-submenu hidden'
+          , id: id+'-submenu'
+        }   
+      ).appendTo(toolbar)
+
+      var container = $('<div/>', 
+          {
+            class: 'toolbar-item'
+          }
+        ).appendTo(toolbar)
+
+      var button = $('<button/>', 
+            {
+                 id: id
+              ,  mode: mode
+              , class: 'btn btn-default action-switch-mode'
+            }
+          ).prependTo(container)
+
+      var i = $('<i/>', 
+          {
+            class: iconClass
+          }
+        ).appendTo(button)
+
+      var arrow = $('<i/>', 
+          {
+            class: 'icon-play3 toolbar-submenu-arrow hidden'
+          }
+        ).appendTo(button)
+
+      arrow.hide()
+      arrow.removeClass('hidden')
+      submenu.hide()
+      submenu.removeClass('hidden')      
+
+      return button
+    }     
+
 
 // --------------------------------------
     return Toolbar

@@ -7,22 +7,23 @@ https://github.com/notiontaxi
 
 "use strict"
 
-define(['text!templates/task-blur.html','js/strategies/ImageProcessingStrategy', 'js/lib/StackBlur'], function(contentTemplate, ImageProcessingStrategy, StackBlur) {
+define(['text!templates/task-blur.html','js/strategies/ImageProcessingMenubarStrategy', 'js/lib/StackBlur'], function(contentTemplate, ImageProcessingMenubarStrategy, StackBlur) {
 
 var BlurStrategy, _ref, module,
 
 
   module = function() {}
   BlurStrategy = (function(_super){
-  __extends(BlurStrategy, ImageProcessingStrategy)
+  __extends(BlurStrategy, ImageProcessingMenubarStrategy)
 // --------------------------------------
 
   BlurStrategy.NAME = 'blur'
   BlurStrategy.LABEL = 'Blur'
 
-    function BlurStrategy(canvasOrigin, canvasStage, canvasShown,imageProcessor){
+    function BlurStrategy(canvases, imageProcessor){
       this.name = BlurStrategy.NAME
-      BlurStrategy.__super__.constructor(canvasOrigin, canvasStage ,canvasShown, imageProcessor, ImageProcessingStrategy.TYPE_MENU)
+      this.label = BlurStrategy.LABEL
+      BlurStrategy.__super__.constructor(canvases, imageProcessor)
 
       // render templates
       $(".controls-wrapper").append($(contentTemplate))
