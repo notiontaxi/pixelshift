@@ -94,7 +94,7 @@ footer{
 .menu-bar{
   background-color: lightcyan;
   background-image: none;
-
+  z-index: 1002;
 }
 
 .menu-bar a, 
@@ -162,7 +162,7 @@ footer{
 
 }
 
-.menu-small-device{
+.small-device{
   padding-right: 5px;
   padding-left: 20px;
   padding-top: 5px;
@@ -190,11 +190,16 @@ background-image: black;
 }
 
 canvas, img {
-    image-rendering: optimizeSpeed;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: optimize-contrast;
-    -ms-interpolation-mode: nearest-neighbor;
+  image-rendering: optimizeSpeed;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: optimize-contrast;
+  -ms-interpolation-mode: nearest-neighbor;
+  z-index: 1001;
+}
+
+.jcrop-holder{
+  z-index: 1001; 
 }
 
 
@@ -242,14 +247,14 @@ canvas, img {
   position: fixed;
   
   width: 100%;
-  z-index: 1000;
+  z-index: 1002;
 }
 
 .modalbox-wrapper{
 
   left: 20%;
   top:10%;
-  z-index: 1001;
+  z-index: 1004;
 
   position: fixed;
   top: 300px;
@@ -405,3 +410,14 @@ canvas, img {
   position: relative;
 }
 
+#grey-panel, #grey-panel-menu{
+border-radius: 4px;
+position: absolute;
+background-color: rgba(0,0,0,0.5);
+z-index: 1000;
+display: none; 
+}
+
+#grey-panel-menu{
+  z-index: 1003;
+}

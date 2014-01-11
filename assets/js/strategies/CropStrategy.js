@@ -45,6 +45,10 @@ var CropStrategy, _ref, module,
     CropStrategy.prototype.inactiveAction = function(){
       this.jCropApi.destroy()
       this.canvasShown.getElement().show()
+
+      $('#grey-panel').hide()
+      $('#grey-panel-menu').hide()   
+
       return true
     }
 
@@ -81,7 +85,10 @@ var CropStrategy, _ref, module,
           $('.jcrop-keymgr').hide()
         }
       })
-      console.log(this.jCropApi)
+     
+      $('#grey-panel').show()
+      $('#grey-panel-menu').show()
+
       return true
     }
 

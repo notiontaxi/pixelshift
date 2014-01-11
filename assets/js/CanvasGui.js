@@ -77,6 +77,7 @@ define(['text!templates/canvas-gui.html',
 
   CanvasGui.prototype.updateLayout = function(){
     var width = window.outerWidth
+    var device = 'big'
 
     if(width < 992 && !this.wasSmallLayout){
       this.canvasShown.updateSize(400,320)
@@ -105,16 +106,34 @@ define(['text!templates/canvas-gui.html',
       this.canvasStage.copyToClones(true)
       //console.log("Setting layout to l")
     }
+
+    if(this.wasSmallLayout)
+      device = 'small'
+
+    $('#grey-panel').css({
+        "width":  $('#container').css('width')
+      , "height": $('#container').css('height')
+      , "left": $('#container').offset().left+"px"
+      , "top": $('#container').offset().top+"px"
+    })
+    console.log($('.menu-bar.'+device+'-device').offset().left+"px")
+    $('#grey-panel-menu').css({
+        "width":  $('.menu-bar.'+device+'-device').css('width')
+      , "height": $('.menu-bar.'+device+'-device').css('height')
+      , "left": $('.menu-bar.'+device+'-device').offset().left+"px"
+      , "top": $('.menu-bar.'+device+'-device').offset().top+"px"
+    })    
+
   }  
 
   CanvasGui.prototype.toggleMenu = function(){
     if(this.wasBigMenu){
       $(this.menuContainerIdentifier+" .big-device").hide()
-      $(this.menuContainerIdentifier+" .menu-small-device").show()
+      $(this.menuContainerIdentifier+" .small-device").show()
     }
     else{
       $(this.menuContainerIdentifier+" .big-device").show()
-      $(this.menuContainerIdentifier+" .menu-small-device").hide()
+      $(this.menuContainerIdentifier+" .small-device").hide()
     }
 
     this.wasBigMenu = !this.wasBigMenu 
@@ -154,7 +173,7 @@ define(['text!templates/canvas-gui.html',
       }.bind(this))
     $('.view-actions-list-sd').hide()        
 
-    $('.menu-small-device').hide()
+    $('.small-device').hide()
   }
 
   CanvasGui.prototype.addEventListeners = function(){

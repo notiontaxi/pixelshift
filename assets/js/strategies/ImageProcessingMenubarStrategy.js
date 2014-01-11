@@ -32,7 +32,9 @@ var ImageProcessingMenubarStrategy, _ref, module,
     }
 
     ImageProcessingMenubarStrategy.prototype.addMenuBarAction = function(){
+
       var name = this.name
+
       $(".action-menu-"+name).click(
       function(event, ui){
         event.stopPropagation()
@@ -42,12 +44,30 @@ var ImageProcessingMenubarStrategy, _ref, module,
       })
 
       $("."+name+"-controls").click(function(){
-        this.cancel()
-        this.slideToggle()
+        console.log('click')
+        if(this.isEnabled()){
+          this.cancel()
+          this.slideToggle()
+        }
       }.bind(this)).children().click(function(e) {
         return false; // prevent childs to do this action
       })
+
+      $("."+name+"-controls").parent().click(function(){
+        console.log('click')
+        event.stopPropagation()
+        event.preventDefault()
+        return false
+      })
     }     
+
+    ImageProcessingStrategy.prototype.isEnabled = function(){
+      return $("."+this.name+"-controls").attr("enabled") === "true" ? true : false
+    }
+
+    ImageProcessingStrategy.prototype.enable = function(enable){
+      $("."+this.name+"-controls").setAttribute("enabled", enable)
+    }         
 
     ImageProcessingStrategy.prototype.slideToggle = function(){
       $("."+this.name+"-controls").slideToggle()

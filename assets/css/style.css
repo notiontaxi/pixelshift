@@ -72,6 +72,7 @@ footer {
 .menu-bar {
   background-color: lightcyan;
   background-image: none;
+  z-index: 1002;
 }
 .menu-bar a,
 .menu-bar .caret {
@@ -121,7 +122,7 @@ footer {
 .menu-element-sd li button {
   font-size: 12px;
 }
-.menu-small-device {
+.small-device {
   padding-right: 5px;
   padding-left: 20px;
   padding-top: 5px;
@@ -150,6 +151,10 @@ img {
   image-rendering: -webkit-optimize-contrast;
   image-rendering: optimize-contrast;
   -ms-interpolation-mode: nearest-neighbor;
+  z-index: 1001;
+}
+.jcrop-holder {
+  z-index: 1001;
 }
 #canvas-container {
   margin-top: 20px;
@@ -184,12 +189,12 @@ img {
   top: 0;
   position: fixed;
   width: 100%;
-  z-index: 1000;
+  z-index: 1002;
 }
 .modalbox-wrapper {
   left: 20%;
   top: 10%;
-  z-index: 1001;
+  z-index: 1004;
   position: fixed;
   top: 300px;
   left: 50%;
@@ -316,4 +321,15 @@ img {
 }
 .toolbar-item {
   position: relative;
+}
+#grey-panel,
+#grey-panel-menu {
+  border-radius: 4px;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: none;
+}
+#grey-panel-menu {
+  z-index: 1003;
 }
