@@ -277,6 +277,15 @@ img {
   padding: 0px;
   height: 35px;
 }
+.tool-items .submenu-btn {
+  padding: 3px;
+  margin-top: 1px;
+  margin-bottom: 3px;
+  margin-left: 3px;
+  margin-right: 3px;
+  height: auto;
+  width: 38px;
+}
 .tool-items .mode-active {
   border-color: #000EB3;
   background-color: #cfffd6;
@@ -305,7 +314,7 @@ img {
   left: 61px;
   width: 45px;
 }
-.toolbar-submenu .submenu-controls {
+.toolbar-submenu .submenu-centered-controls {
   margin-left: 15px;
 }
 .toolbar-submenu .output,
