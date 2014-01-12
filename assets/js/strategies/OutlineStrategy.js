@@ -33,7 +33,7 @@ var OutlineStrategy, _ref, module,
 
     OutlineStrategy.prototype.updateThreshold = function(threshold){
 
-      var imgDataLeft = this.canvasOrigin.getFullImageData()
+      var imgDataLeft = this.canvasOrigin.getImageData()
 
       // compute threshold automatically, if not set          multiplycation cause input is 0-100
       if(typeof threshold === 'undefined'){

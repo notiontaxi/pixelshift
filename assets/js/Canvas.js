@@ -241,17 +241,7 @@ define([], function() {
     */
     Canvas.prototype.draw = function(imageData){
 
-      if(!imageData){
-        this.previeMode = false
-        imageData = this.parent.getFullImageData()
-      }
-      else{
-        this.previeMode = true
-        this.previewImageData = imageData
-      }
-
-      this.computeVisibleArea()
-      var area = this.getAreaPixels(this.visibleArea, imageData)
+      var area = this.getAreaPixels(imageData)
       this.setAreaPixels(area)
 
       if(this.currentScale >= this.gridZoomLevel  && this.drawGrid){
@@ -407,7 +397,21 @@ define([], function() {
       this._putFullImageData(data)
     }
 
-    Canvas.prototype.getAreaPixels = function(visibleArea, allPixels){
+    Canvas.prototype.getAreaPixels = function(allPixels, noAreaUpdate){
+
+      if(!noAreaUpdate)
+        this.computeVisibleArea()
+
+      if(!allPixels){
+        this.previeMode = false
+        allPixels = this.parent.getFullImageData()
+      }
+      else{
+        this.previeMode = true
+        this.previewImageData = allPixels
+      }
+
+      var visibleArea = this.visibleArea
       var pixels = Array()
 
       var start = this.canvasWidth * 4 * visibleArea.y1  + visibleArea.x1 * 4 
@@ -852,10 +856,13 @@ define([], function() {
     * Writes the passed imageData to this canvas, regarding the offsets
     */
     Canvas.prototype.putImageData = function(imageData){
+      this.gotNewImage = true
       this.clear()
-
-      this.getContext().putImageData(imageData,0,0)
+      this.imageHeight = imageData.height 
+      this.imageWidth = imageData.width
+      this.ctx.putImageData(imageData,0,0)
       this.registerContentModification()
+      this.drawClones()
     }
 
     /**

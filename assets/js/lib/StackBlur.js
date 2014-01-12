@@ -76,14 +76,11 @@ var shg_table = [
 		24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24,
 		24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24 ];
 
-function stackBlurImage( imageData, destinationCanvas, radius, blurAlphaChannel )
+function stackBlurImage( imageData, destinationCanvas, width, height, radius)
 {
 	if ( isNaN(radius) || radius < 1 ) return imageData
 	
-	if ( blurAlphaChannel )
-		return stackBlurCanvasRGBA( imageData, 0, 0, destinationCanvas.canvasWidth, destinationCanvas.canvasHeight, radius );
-	else 
-		return stackBlurCanvasRGB( imageData, 0, 0, destinationCanvas.canvasWidth, destinationCanvas.canvasHeight, radius );
+	return stackBlurCanvasRGB( imageData, 0, 0, width, height, radius );
 }
 
 

@@ -40,7 +40,7 @@ var ContrastStrategy, _ref, module,
     ContrastStrategy.prototype.execute = function(imgData, preview){
 
       if(!imgData)
-        var imgData = this.canvasOrigin.getFullImageData()
+        var imgData = this.canvasOrigin.getImageData()
 
       this.processedImageData = this.imageProcessor.processContrast(imgData, this.currentValue)
 

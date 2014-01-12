@@ -236,7 +236,7 @@ define(['text!templates/canvas-gui.html',
         event.stopPropagation()
         event.preventDefault()
 
-      var imgData = this.canvasOrigin.getFullImageData()
+      var imgData = this.canvasOrigin.getImageData()
 
       this.processedImageData = this.imageProcessor.convolute( imgData,
         [ 1, 1, 1,
@@ -253,7 +253,7 @@ define(['text!templates/canvas-gui.html',
         event.stopPropagation()
         event.preventDefault()
 
-      var imgData = this.canvasOrigin.getFullImageData()
+      var imgData = this.canvasOrigin.getImageData()
 
       this.processedImageData = this.imageProcessor.convolute( imgData,
         [ 0, -1, 0,

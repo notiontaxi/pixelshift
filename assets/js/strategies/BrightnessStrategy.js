@@ -40,7 +40,7 @@ var BrightnessStrategy, _ref, module,
     BrightnessStrategy.prototype.execute = function(imgData, preview){
 
       if(!imgData)
-        var imgData = this.canvasOrigin.getFullImageData()
+        var imgData = this.canvasOrigin.getImageData()
       
       this.processedImageData = this.imageProcessor.processBrightness(imgData, this.currentValue)
 

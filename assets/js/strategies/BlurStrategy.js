@@ -40,14 +40,14 @@ var BlurStrategy, _ref, module,
     BlurStrategy.prototype.execute = function(imgData, preview){
       
       if(!imgData)
-        var imgData = this.canvasOrigin.getFullImageData()
+        var imgData = this.canvasOrigin.getImageData()
       
       if(!!preview){
-        this.processedImageData = stackBlurImage(imgData, this.canvasStage, this.currentValue, false )
+        this.processedImageData = stackBlurImage(imgData, this.canvasStage, this.canvasStage.canvasWidth, this.canvasStage.canvasHeight, this.currentValue, false )
         this.canvasStage.draw(this.processedImageData)
       }
       else{
-        this.processedImageData = stackBlurImage(imgData, this.canvasOrigin, this.currentValue, false )
+        this.processedImageData = stackBlurImage(imgData, this.canvasOrigin, this.canvasOrigin.imageWidth, this.canvasOrigin.imageHeight, this.currentValue, false )
         this.canvasOrigin.putImageData(this.processedImageData)
       }
 

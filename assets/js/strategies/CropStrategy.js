@@ -41,12 +41,33 @@ var CropStrategy, _ref, module,
     }
 
     CropStrategy.prototype.execute = function(state){
-      this.canvasShown.getElement()
-      //this.canvasOrigin.putImageData(processedImageData)
-      //this.canvasOrigin.drawClones()
+
     }
 
     CropStrategy.prototype.addSubmenuActions = function(){
+
+      $('.'+this.name+'-submenu-content .btn-ok').click(function(){
+
+        var selectedArea = {
+            x1 : this.canvasStage.visibleArea.x1 + Math.floor(this.selectedArea.x1 / this.canvasStage.currentScale)
+          , y1 : this.canvasStage.visibleArea.y1 + Math.floor(this.selectedArea.y1 / this.canvasStage.currentScale)
+          , w :  Math.ceil(this.selectedArea.w / this.canvasStage.currentScale)
+          , h :  Math.ceil(this.selectedArea.h / this.canvasStage.currentScale)
+        }
+
+        var croppedArea = this.canvasOrigin.ctx.getImageData(
+            selectedArea.x1
+          , selectedArea.y1
+          , selectedArea.w
+          , selectedArea.h
+        )
+
+        this.canvasOrigin.putImageData(croppedArea)
+        this.canvasOrigin.copyToClones()
+        this.inactiveAction()
+        this.toolbar.lastActive.setInactive()
+
+      }.bind(this))
 
     }
 
@@ -80,13 +101,14 @@ var CropStrategy, _ref, module,
 
       this.canvasShown.getElement().hide()
 
+      var _that = this
       this.jCropApi = $.Jcrop('#canvas-shown-clone',{
         onChange: function(c){
-          this.selectedArea = {
+          _that.selectedArea = {
               x1: c.x
             , y1: c.y
-            , x2: c.x2
-            , y2: c.y2
+            , w: c.w
+            , h: c.h
           }
         },
         onRelease: function(){
