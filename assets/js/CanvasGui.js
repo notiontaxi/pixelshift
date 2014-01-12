@@ -110,19 +110,7 @@ define(['text!templates/canvas-gui.html',
     if(this.wasSmallLayout)
       device = 'small'
 
-    $('#grey-panel').css({
-        "width":  $('#container').css('width')
-      , "height": $('#container').css('height')
-      , "left": $('#container').offset().left+"px"
-      , "top": $('#container').offset().top+"px"
-    })
-    console.log($('.menu-bar.'+device+'-device').offset().left+"px")
-    $('#grey-panel-menu').css({
-        "width":  $('.menu-bar.'+device+'-device').css('width')
-      , "height": $('.menu-bar.'+device+'-device').css('height')
-      , "left": $('.menu-bar.'+device+'-device').offset().left+"px"
-      , "top": $('.menu-bar.'+device+'-device').offset().top+"px"
-    })    
+    updateGreyPanels()   
 
   }  
 

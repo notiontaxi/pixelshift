@@ -46,8 +46,7 @@ var CropStrategy, _ref, module,
       this.jCropApi.destroy()
       this.canvasShown.getElement().show()
 
-      $('#grey-panel').hide()
-      $('#grey-panel-menu').hide()   
+      hideGreyPanels()
 
       return true
     }
@@ -66,7 +65,7 @@ var CropStrategy, _ref, module,
           , height:this.canvasShown.getElement().css('height') 
         }
       )
-      console.log(this.clone)
+
       var destCtx = this.clone[0].getContext('2d')
       destCtx.drawImage(this.canvasShown.getElement()[0], 0, 0)
 
@@ -86,8 +85,7 @@ var CropStrategy, _ref, module,
         }
       })
      
-      $('#grey-panel').show()
-      $('#grey-panel-menu').show()
+      showGreyPanels()
 
       return true
     }

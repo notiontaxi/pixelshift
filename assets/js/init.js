@@ -59,6 +59,45 @@ function aArrayUnique(array) {
 };
 
 
+var greyPanelsAreHidden = true
+
+function hideGreyPanels(){
+  $('#grey-panel').hide()
+  $('#grey-panel-menu').hide() 
+  greyPanelsAreHidden = true
+}
+
+function showGreyPanels(){
+  greyPanelsAreHidden = false
+  updateGreyPanels()
+  $('#grey-panel').show()
+  $('#grey-panel-menu').show()
+}
+
+function updateGreyPanels(){
+
+  if(!greyPanelsAreHidden){
+
+    $('#grey-panel').css({
+        "width":  $('#container').css('width')
+      , "height": $('#container').css('height')
+      , "left": $('#container').offset().left+"px"
+      , "top": $('#container').offset().top+"px"
+    })
+
+    var device = window.outerWidth < 992 ? 'small' : 'big'
+
+    $('#grey-panel-menu').css({
+        "width":  $('.menu-bar.'+device+'-device').css('width')
+      , "height": $('.menu-bar.'+device+'-device').css('height')
+      , "left": $('.menu-bar.'+device+'-device').offset().left+"px"
+      , "top": $('.menu-bar.'+device+'-device').offset().top+"px"
+    }) 
+
+  }  
+}
+
+
 __hasProp = {}.hasOwnProperty,
 __extends = function(child, parent) { 
   for (var key in parent) { 
@@ -68,3 +107,4 @@ __extends = function(child, parent) {
     child.prototype = new ctor(); 
     child.__super__ = parent.prototype; 
     return child; };  
+

@@ -40,11 +40,10 @@ var ImageProcessingMenubarStrategy, _ref, module,
         event.stopPropagation()
         event.preventDefault()
         $(".dropdown").removeClass("open")
-        $("."+name+"-controls").slideToggle()
-      })
+        this.slideToggle()
+      }.bind(this))
 
       $("."+name+"-controls").click(function(){
-        console.log('click')
         if(this.isEnabled()){
           this.cancel()
           this.slideToggle()
@@ -53,12 +52,6 @@ var ImageProcessingMenubarStrategy, _ref, module,
         return false; // prevent childs to do this action
       })
 
-      $("."+name+"-controls").parent().click(function(){
-        console.log('click')
-        event.stopPropagation()
-        event.preventDefault()
-        return false
-      })
     }     
 
     ImageProcessingStrategy.prototype.isEnabled = function(){
@@ -70,7 +63,7 @@ var ImageProcessingMenubarStrategy, _ref, module,
     }         
 
     ImageProcessingStrategy.prototype.slideToggle = function(){
-      $("."+this.name+"-controls").slideToggle()
+      $("."+this.name+"-controls").slideToggle("fast", updateGreyPanels)
     }
 
     ImageProcessingMenubarStrategy.prototype.initializeTools = function(){

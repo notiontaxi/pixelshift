@@ -52,23 +52,6 @@ var OutlineStrategy, _ref, module,
     }
    
 
-    OutlineStrategy.prototype.addMenuBarAction = function(){
-      $(".action-menu-"+OutlineStrategy.NAME).click(
-      function(event, ui){
-        event.stopPropagation()
-        event.preventDefault()
-        $(".dropdown").removeClass("open")
-        $("."+OutlineStrategy.NAME+"-controls").slideToggle()
-      })
-
-      $("."+OutlineStrategy.NAME+"-controls").click(function(){
-        $(this).slideToggle()
-      }).children().click(function(e) {
-        return false; // prevent childs to do this action
-      });
-    }
-     
-
     OutlineStrategy.prototype.initializeTools = function(){
 
       // threshold slider
@@ -137,7 +120,9 @@ var OutlineStrategy, _ref, module,
 
     }
 
+    OutlineStrategy.prototype.cancel = function(event, ui){    
 
+    }
 
 // --------------------------------------
     return OutlineStrategy

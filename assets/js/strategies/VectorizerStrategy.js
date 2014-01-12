@@ -17,8 +17,8 @@ var VectorizerStrategy, _ref, module,
     __extends(VectorizerStrategy, ImageProcessingMenubarStrategy);
 // --------------------------------------
 
-    VectorizerStrategy.NAME = 'vectorize'
-    VectorizerStrategy.LABEL = 'Vectorize'
+    VectorizerStrategy.NAME = 'vectorizer'
+    VectorizerStrategy.LABEL = 'Vectorizer'
 
     function VectorizerStrategy(canvases, imageProcessor){    
       this.name = VectorizerStrategy.NAME
@@ -34,22 +34,6 @@ var VectorizerStrategy, _ref, module,
       this.appendToLGMenuBar('Vectorizer', 'action-menu-vectorizer', 'image-actions-list')
       this.appendToSDMenuBar('Vectorizer', 'action-menu-vectorizer', 'image-actions-list-sd')  
     }   
-
-    VectorizerStrategy.prototype.addMenuBarAction = function(){
-      $(".action-menu-vectorizer").click(
-      function(event, ui){
-        event.stopPropagation()
-        event.preventDefault()
-        $(".dropdown").removeClass("open")
-        $(".vectorizer-controls").slideToggle()
-      })
-
-      $(".vectorizer-controls").click(function(){
-        $(this).slideToggle()
-      }).children().click(function(e) {
-        return false; // prevent childs to do this action
-      });
-    }
 
 
     VectorizerStrategy.prototype.initializeTools = function(){
@@ -125,6 +109,10 @@ var VectorizerStrategy, _ref, module,
           }.bind(this)
         }
       )               
+
+    }
+
+    VectorizerStrategy.prototype.cancel = function(event, ui){    
 
     }
 

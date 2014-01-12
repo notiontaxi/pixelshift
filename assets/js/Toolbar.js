@@ -68,7 +68,6 @@ define(['text!templates/toolbar.html'], function(toolbarTemplate) {
       }
 
       if(deaktivationSuccessfull){
-        console.log(strategy.name)
         strategy.setActive()
         $('#toolbar').attr('mode', strategy.name)
         _this.lastActive = strategy
