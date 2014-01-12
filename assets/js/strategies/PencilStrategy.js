@@ -25,7 +25,7 @@ var PencilStrategy, _ref, module,
       this.name = PencilStrategy.NAME
       this.class = 'icon-pencil'
 
-      PencilStrategy.__super__.constructor(canvases, imageProcessor, toolbar)
+      PencilStrategy.__super__.constructor(canvases, imageProcessor, toolbar, Submenu)
       // render templates
       
       //$(containerIdentifier).append($(contentTemplate))
@@ -39,12 +39,9 @@ var PencilStrategy, _ref, module,
       this.canvasOrigin.drawClones()
     }
 
-    PencilStrategy.prototype.addSubmenu = function(){
+    PencilStrategy.prototype.addSubmenuActions = function(){
 
-      this.submenu = $('#toolbar-pencil-submenu').append($(Submenu))
-      this.arrow = $(this.button).find('.toolbar-submenu-arrow')
-
-      $('.pencil-submenu-content').slider(
+      $('.'+this.name+'-submenu-content').slider(
         {
           range: "min",
           orientation: "vertical",
@@ -56,18 +53,9 @@ var PencilStrategy, _ref, module,
            this.thickness = ui.value
           }.bind(this)
         }
-      )
+      )   
 
-      // TODO: compute this in a nicer way
-      var relPos = parseInt(
-                      this.button.offset().top
-                    - $('#toolbar').offset().top
-                    - $('#toolbar-pencil-submenu').height()/2
-                    + this.button.height()/2
-                     , 10 )
-      this.submenu.css('top', relPos+'px')      
-    }   
-
+    }
 
 
 // --------------------------------------

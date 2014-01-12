@@ -26,7 +26,7 @@ var FloodfillStrategy, _ref, module,
     function FloodfillStrategy(canvases, imageProcessor, toolbar){    
       this.name = FloodfillStrategy.NAME
       this.class = 'icon-paintroll'
-      FloodfillStrategy.__super__.constructor(canvases, imageProcessor, toolbar)
+      FloodfillStrategy.__super__.constructor(canvases, imageProcessor, toolbar, Submenu)
 
       this.init()
 
@@ -49,11 +49,9 @@ var FloodfillStrategy, _ref, module,
       this.canvasOrigin.drawClones()
     }
 
-    FloodfillStrategy.prototype.addSubmenu = function(){
-      this.submenu = $('#toolbar-floodfill-submenu').append($(Submenu))
-      this.arrow = $(this.button).find('.toolbar-submenu-arrow')
+    FloodfillStrategy.prototype.addSubmenuActions = function(){
 
-      $('.floodfill-submenu-content').slider(
+      $('.'+this.name+'-submenu-content').slider(
         {
           range: "min",
           orientation: "vertical",
@@ -67,10 +65,6 @@ var FloodfillStrategy, _ref, module,
           }.bind(this)
         }
       )
-
-      // TODO: compute this in a nicer way
-      var relPos = parseInt(this.button.offset().top - $('#toolbar').offset().top + this.button.height()/2 - $('#toolbar-floodfill-submenu').height()/2 ,10)
-      this.submenu.css('top', relPos+'px')
 
     }
 

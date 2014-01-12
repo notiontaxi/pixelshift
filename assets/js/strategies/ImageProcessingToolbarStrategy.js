@@ -20,8 +20,12 @@ var ImageProcessingToolbarStrategy, _ref, module,
     // is this a tool for the menu bar above or for the toolbar? 
 
 
-    function ImageProcessingToolbarStrategy(canvases, imageProcessor, toolbar){
+    function ImageProcessingToolbarStrategy(canvases, imageProcessor, toolbar, Submenu){
       ImageProcessingToolbarStrategy.__super__.constructor(canvases, imageProcessor)
+
+      this.implementsSubmenu = !!Submenu
+      this.submenuTemplate = Submenu
+
       this.toolbar = toolbar
     }
 
@@ -52,9 +56,31 @@ var ImageProcessingToolbarStrategy, _ref, module,
     ImageProcessingToolbarStrategy.prototype.appendToToolbar = function(){
       this.button = this.toolbar.add(this.class, 'toolbar-'+this.name, this.name, '.tool-items')
 
-      if(!!this.addSubmenu)
+      if(this.implementsSubmenu){
         this.addSubmenu()
+        this.positionSubmenu()
+        this.addSubmenuActions()
+      }
     }
+
+    ImageProcessingToolbarStrategy.prototype.addSubmenu = function(){
+
+      this.submenu = $('#toolbar-'+this.name+'-submenu').append($(this.submenuTemplate))
+      this.arrow = $(this.button).find('.toolbar-submenu-arrow')
+ 
+    }      
+
+    ImageProcessingToolbarStrategy.prototype.positionSubmenu = function(){
+
+      var relPos = parseInt(
+                      this.button.offset().top
+                    - $('#toolbar').offset().top
+                    - $('#toolbar-'+this.name+'-submenu').height()/2
+                    + this.button.height()/2
+                     , 10 )
+      this.submenu.css('top', relPos+'px')  
+    }  
+ 
 
     ImageProcessingToolbarStrategy.prototype.addToolbarAction = function(){
       this.button.click({strategy: this, toolbar: this.toolbar}, this.toolbar.toggleActive)

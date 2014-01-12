@@ -310,6 +310,8 @@ define(['text!templates/canvas-gui.html',
 
     $(".action-show-toolbar").click(
       function(event, ui){
+        event.stopPropagation()
+        event.preventDefault()
         this.toolbar.show()
     }.bind(this)) 
 

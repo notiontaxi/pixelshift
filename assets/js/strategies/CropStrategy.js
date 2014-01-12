@@ -8,8 +8,13 @@ https://github.com/notiontaxi
 
 "use strict"
 
-define(['js/strategies/ImageProcessingToolbarStrategy',
-  'js/lib/jCrop/jquery.Jcrop.min'], function(ImageProcessingToolbarStrategy, JCrop) {
+define([
+  'text!templates/cropSubmenu.html',
+  'js/strategies/ImageProcessingToolbarStrategy',
+  'js/lib/jCrop/jquery.Jcrop.min'], function(
+    Submenu,
+    ImageProcessingToolbarStrategy, 
+    JCrop) {
 
 var CropStrategy, _ref, module,
 
@@ -25,13 +30,13 @@ var CropStrategy, _ref, module,
       this.name = CropStrategy.NAME
       this.class = 'icon-crop'
 
-      CropStrategy.__super__.constructor(canvases, imageProcessor, toolbar)
+      CropStrategy.__super__.constructor(canvases, imageProcessor, toolbar, Submenu)
       // render templates
       var that = this
       var minSize = Array()
       minSize[0] = 1
       minSize[1] = 1
-      //$(containerIdentifier).append($(contentTemplate))
+
       this.init()
     }
 
@@ -39,6 +44,10 @@ var CropStrategy, _ref, module,
       this.canvasShown.getElement()
       //this.canvasOrigin.putImageData(processedImageData)
       //this.canvasOrigin.drawClones()
+    }
+
+    CropStrategy.prototype.addSubmenuActions = function(){
+
     }
 
 
@@ -89,7 +98,6 @@ var CropStrategy, _ref, module,
 
       return true
     }
-
 
 
 
