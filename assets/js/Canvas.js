@@ -241,8 +241,15 @@ define([], function() {
     */
     Canvas.prototype.draw = function(imageData){
 
-      var area = this.getAreaPixels(imageData)
-      this.setAreaPixels(area)
+      if(this.currentScale === 1){
+        if(!!imageData)
+          this.ctx.putImageData(imageData, 0, 0)
+        else        
+          this.ctx.putImageData(this.parent.getImageData(),0,0)
+      }else{
+        var area = this.getAreaPixels(imageData)
+        this.setAreaPixels(area)
+      }
 
       if(this.currentScale >= this.gridZoomLevel  && this.drawGrid){
         if(this.alphaGrid)
@@ -255,7 +262,6 @@ define([], function() {
         }else{
           this.originalIsBackground = false
         }
-
       }
 
       this.copyToClones(true)
@@ -397,10 +403,9 @@ define([], function() {
       this._putFullImageData(data)
     }
 
-    Canvas.prototype.getAreaPixels = function(allPixels, noAreaUpdate){
+    Canvas.prototype.getAreaPixels = function(allPixels){
 
-      if(!noAreaUpdate)
-        this.computeVisibleArea()
+      this.computeVisibleArea()
 
       if(!allPixels){
         this.previeMode = false

@@ -22,7 +22,6 @@ define(['text!templates/toolbar.html'], function(toolbarTemplate) {
       this.colorPickerColorIdent = "#color-picker-color"
       this.buttonIdent = "#toolbar-foreground-color"
 
-
       this.initialize()
       this.addEventListeners()
       this.lastActive = null

@@ -33,7 +33,7 @@ var FloodfillStrategy, _ref, module,
       this.variance = 0
     }
 
-    FloodfillStrategy.prototype.execute = function(state){
+    FloodfillStrategy.prototype.mousedown = function(state){
       
       var imgData = this.canvasOrigin.getImageData()
 
@@ -48,6 +48,12 @@ var FloodfillStrategy, _ref, module,
       this.canvasOrigin.putImageData(processedImageData)
       this.canvasOrigin.drawClones()
     }
+    FloodfillStrategy.prototype.mousemove = function(state){
+
+    }    
+    FloodfillStrategy.prototype.mouseup = function(state){
+
+    }      
 
     FloodfillStrategy.prototype.addSubmenuActions = function(){
 

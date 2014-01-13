@@ -97,11 +97,26 @@ var ImageProcessing, _ref, module,
 
 
     ImageProcessing.prototype.initCanvasStrategies = function(){
-      this.canvasShown.getElement().click(
+      // get matching strategy funcion, call it and pass current state
+
+      this.canvasShown.getElement().mousedown( 
         function(event){
-          // get strategy funcion (execute), call it and pass current state
-            this.context.oneClickStrategy(this.toolbar.mode()).execute(this.state(event))
+          if(!!this.toolbar.lastActive)
+            this.context.oneClickStrategy(this.toolbar.mode()).mousedown(this.state(event))
         }.bind(this))
+
+      this.canvasShown.getElement().mousemove( 
+        function(event){
+          if(!!this.toolbar.lastActive)
+            this.context.oneClickStrategy(this.toolbar.mode()).mousemove(this.state(event))
+        }.bind(this))
+
+      this.canvasShown.getElement().mouseup( 
+        function(event){
+          if(!!this.toolbar.lastActive)
+            this.context.oneClickStrategy(this.toolbar.mode()).mouseup(this.state(event))
+        }.bind(this))   
+
     }
 
     ImageProcessing.prototype.runTests = function(){

@@ -31,13 +31,32 @@ var PencilStrategy, _ref, module,
       //$(containerIdentifier).append($(contentTemplate))
       this.init()
       this.thickness = 10
+      this.started = false
     }
 
-    PencilStrategy.prototype.execute = function(state){
-      this.canvasOrigin.drawPoint(state.totalCartesianImagePosition, this.thickness, state.color)
-      //this.canvasOrigin.putImageData(processedImageData)
-      this.canvasOrigin.drawClones()
+    PencilStrategy.prototype.mousedown = function(state){
+      //this.canvasOrigin.drawPoint(state.totalCartesianImagePosition, this.thickness, state.color)
+
+      this.canvasOrigin.ctx.beginPath()
+      this.canvasOrigin.ctx.moveTo(state.totalCartesianImagePosition.x, state.totalCartesianImagePosition.y)
+      this.canvasOrigin.ctx.lineWidth = this.thickness
+      this.canvasOrigin.ctx.strokeStyle = "rgba("+state.color.r+", "+state.color.g+", "+state.color.b+", "+state.color.a+")"
+      this.started = true
     }
+    PencilStrategy.prototype.mousemove = function(state){
+      if (this.started) {
+        this.canvasOrigin.ctx.lineTo(state.totalCartesianImagePosition.x, state.totalCartesianImagePosition.y)
+        this.canvasOrigin.ctx.stroke()
+        this.canvasOrigin.drawClones()
+      }
+    }    
+    PencilStrategy.prototype.mouseup = function(state){
+      if (this.started) {
+        this.started = false
+        this.canvasOrigin.ctx.closePath()
+        this.canvasOrigin.drawClones()
+      }
+    }    
 
     PencilStrategy.prototype.addSubmenuActions = function(){
 

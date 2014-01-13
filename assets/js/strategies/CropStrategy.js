@@ -40,7 +40,15 @@ var CropStrategy, _ref, module,
       this.init()
     }
 
-    CropStrategy.prototype.execute = function(state){
+
+    // not needed -> impemented in jcrop, happening on cloned canvas
+    CropStrategy.prototype.mousedown = function(state){
+
+    }
+    CropStrategy.prototype.mousemove = function(state){
+
+    }    
+    CropStrategy.prototype.mouseup = function(state){
 
     }
 
@@ -58,8 +66,9 @@ var CropStrategy, _ref, module,
         var croppedArea = this.canvasOrigin.ctx.getImageData(
             selectedArea.x1
           , selectedArea.y1
-          , selectedArea.w
-          , selectedArea.h
+            // check bounds for width and height
+          , selectedArea.x1 + selectedArea.w <= this.canvasStage.imageWidth ? selectedArea.w : this.canvasStage.imageWidth - selectedArea.x1
+          , selectedArea.y1 + selectedArea.h <= this.canvasStage.imageHeight ? selectedArea.h : this.canvasStage.imageHeight - selectedArea.y1
         )
 
         this.canvasOrigin.putImageData(croppedArea)
