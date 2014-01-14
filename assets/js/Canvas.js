@@ -242,10 +242,13 @@ define([], function() {
     Canvas.prototype.draw = function(imageData){
 
       if(this.currentScale === 1){
-        if(!!imageData)
+        if(!!imageData){
+          this.clear()
           this.ctx.putImageData(imageData,0,0)
-        else        
+        }else{     
+          this.clear()   
           this.ctx.putImageData(this.parent.getImageData(),0,0)
+        }
       }else{
         var area = this.getAreaPixels(imageData)
         this.setAreaPixels(area)

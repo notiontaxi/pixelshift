@@ -84,7 +84,7 @@ var CropStrategy, _ref, module,
     CropStrategy.prototype.inactiveAction = function(){
       this.jCropApi.destroy()
       this.canvasShown.getElement().show()
-
+      this.canvasCloneElement.show()
       hideGreyPanels()
 
       return true
@@ -93,13 +93,13 @@ var CropStrategy, _ref, module,
     CropStrategy.prototype.activeAction = function(){
 
       this.clone = this.canvasShown.getElement().clone()
-      this.clone.attr('id', 'canvas-shown-clone')
+      this.clone.attr('id', 'canvas-shown-crop-clone')
       this.canvasShown.getElement().parent().append(this.clone)
       this.clone.css(
         {
             position: 'relative'
           , left:  '0px'
-          , right: '0px'
+          , top: '0px'
           , width: this.canvasShown.getElement().css('width')
           , height:this.canvasShown.getElement().css('height') 
         }
@@ -108,9 +108,10 @@ var CropStrategy, _ref, module,
       var destCtx = this.clone[0].getContext('2d')
       destCtx.drawImage(this.canvasShown.getElement()[0], 0, 0)
       this.canvasShown.getElement().hide()
+      this.canvasCloneElement.hide()
       var _that = this
 
-      this.jCropApi = $.Jcrop('#canvas-shown-clone',{
+      this.jCropApi = $.Jcrop('#canvas-shown-crop-clone',{
         onChange: function(c){
           _that.selectedArea = {
               x1: c.x
