@@ -47,14 +47,15 @@ var PencilStrategy, _ref, module,
       if (this.started) {
         this.canvasOrigin.ctx.lineTo(state.totalCartesianImagePosition.x, state.totalCartesianImagePosition.y)
         this.canvasOrigin.ctx.stroke()
-        this.canvasOrigin.drawClones()
+        this.canvasOrigin.drawFirstClone()
       }
     }    
     PencilStrategy.prototype.mouseup = function(state){
       if (this.started) {
         this.started = false
         this.canvasOrigin.ctx.closePath()
-        this.canvasOrigin.drawClones()
+        this.canvasOrigin.drawFirstClone()
+        this.canvasOrigin.registerContentModification()
       }
     }    
 

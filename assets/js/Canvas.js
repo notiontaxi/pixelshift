@@ -243,7 +243,7 @@ define([], function() {
 
       if(this.currentScale === 1){
         if(!!imageData)
-          this.ctx.putImageData(imageData, 0, 0)
+          this.ctx.putImageData(imageData,0,0)
         else        
           this.ctx.putImageData(this.parent.getImageData(),0,0)
       }else{
@@ -1014,6 +1014,10 @@ define([], function() {
             this.clones[c].draw()
           }
     }
+    Canvas.prototype.drawFirstClone = function(){
+      this.clones[0].copyImageProperties(this)
+      this.clones[0].draw()
+    }    
 
     Canvas.prototype.coordinateToUnzoomedGaussSystem = function(absoluteCoords){
       return {
