@@ -107,10 +107,9 @@ var CropStrategy, _ref, module,
 
       var destCtx = this.clone[0].getContext('2d')
       destCtx.drawImage(this.canvasShown.getElement()[0], 0, 0)
-
       this.canvasShown.getElement().hide()
-
       var _that = this
+
       this.jCropApi = $.Jcrop('#canvas-shown-clone',{
         onChange: function(c){
           _that.selectedArea = {
@@ -124,7 +123,7 @@ var CropStrategy, _ref, module,
           $('.jcrop-keymgr').hide()
         }
       })
-     
+
       showGreyPanels()
 
       return true

@@ -23,6 +23,7 @@ var ContrastStrategy, _ref, module,
     function ContrastStrategy(canvases, imageProcessor){
       this.name = ContrastStrategy.NAME
       this.label = ContrastStrategy.LABEL
+      this.menuTyp = ImageProcessingMenubarStrategy.MENU_TYP_FILTER
       ContrastStrategy.__super__.constructor(canvases, imageProcessor)
 
       // render templates

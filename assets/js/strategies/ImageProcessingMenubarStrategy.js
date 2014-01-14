@@ -17,13 +17,14 @@ var ImageProcessingMenubarStrategy, _ref, module,
   __extends(ImageProcessingMenubarStrategy, ImageProcessingStrategy)
 // --------------------------------------
 
+    ImageProcessingMenubarStrategy.MENU_TYP_FILTER = 'image'
+    ImageProcessingMenubarStrategy.MENU_TYP_FILTER = 'filter'
 
     function ImageProcessingMenubarStrategy(canvases, imageProcessor){
       this.className = "ImageProcessingMenubarStrategy"
       ImageProcessingMenubarStrategy.__super__.constructor(canvases, imageProcessor)
       this.changed = false
     }
-
 
     ImageProcessingMenubarStrategy.prototype.init = function(){
         this.initializeTools()
@@ -157,8 +158,8 @@ var ImageProcessingMenubarStrategy, _ref, module,
     * Regular Menu bar
     */
     ImageProcessingMenubarStrategy.prototype.appendToMenuBar = function(label, name){
-      this.appendToLGMenuBar(label, 'action-menu-'+name, 'image-actions-list')
-      this.appendToSDMenuBar(label, 'action-menu-'+name, 'image-actions-list-sd')  
+      this.appendToLGMenuBar(label, 'action-menu-'+name, this.menuTyp+'-actions-list')
+      this.appendToSDMenuBar(label, 'action-menu-'+name, this.menuTyp+'-actions-list-sd')  
     }
 
     ImageProcessingMenubarStrategy.prototype.appendToLGMenuBar = function(text, className, typeName){

@@ -302,8 +302,11 @@ img {
   top: 50%;
 }
 .toolbar-submenu {
+  padding-left: 5px;
+  padding-right: 5px;
   background-color: #cfffd6;
   color: black;
+  font-size: 12px;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   -ms-border-radius: 3px;
@@ -312,14 +315,13 @@ img {
   position: absolute;
   top: 25%;
   left: 61px;
-  width: 45px;
+  width: 60px;
 }
 .toolbar-submenu .submenu-centered-controls {
-  margin-left: 15px;
+  margin-left: 18px;
 }
 .toolbar-submenu .output,
 .toolbar-submenu .description {
-  font-size: 9px;
   padding-left: -3px;
 }
 .toolbar-submenu-arrow {

@@ -16,6 +16,7 @@ define(['text!templates/image-processing.html',
   'js/strategies/BlurStrategy',
   'js/strategies/ContrastStrategy',
   'js/strategies/CropStrategy',
+  'js/strategies/ShapeStrategy',
   'js/CanvasGui', 
   'js/test/Test',
   'js/Toolbar',
@@ -28,6 +29,7 @@ define(['text!templates/image-processing.html',
     BlurStrategy,
     ContrastStrategy,
     CropStrategy,
+    ShapeStrategy,
     CanvasGui, 
     Test, 
     Toolbar,
@@ -64,6 +66,7 @@ var ImageProcessing, _ref, module,
             canvasOrigin: this.canvasOrigin
           , canvasStage: this.canvasStage
           , canvasShown: this.canvasShown
+          , canvasCloneElement : this.canvasShownClone
         }
 
       // Menubar
@@ -88,6 +91,9 @@ var ImageProcessing, _ref, module,
       this.pencil = new PencilStrategy(canvases, this.imageProcessor, this.toolbar)
       this.context.addOneClickStrategy(this.pencil)
 
+      this.shape = new ShapeStrategy(canvases, this.imageProcessor, this.toolbar)
+      this.context.addOneClickStrategy(this.shape)         
+
       this.crop = new CropStrategy(canvases, this.imageProcessor, this.toolbar)
       this.context.addOneClickStrategy(this.crop)      
 
@@ -99,19 +105,19 @@ var ImageProcessing, _ref, module,
     ImageProcessing.prototype.initCanvasStrategies = function(){
       // get matching strategy funcion, call it and pass current state
 
-      this.canvasShown.getElement().mousedown( 
+      this.canvasShownClone.mousedown( 
         function(event){
           if(!!this.toolbar.lastActive)
             this.context.oneClickStrategy(this.toolbar.mode()).mousedown(this.state(event))
         }.bind(this))
 
-      this.canvasShown.getElement().mousemove( 
+      this.canvasShownClone.mousemove( 
         function(event){
           if(!!this.toolbar.lastActive)
             this.context.oneClickStrategy(this.toolbar.mode()).mousemove(this.state(event))
         }.bind(this))
 
-      this.canvasShown.getElement().mouseup( 
+      this.canvasShownClone.mouseup( 
         function(event){
           if(!!this.toolbar.lastActive)
             this.context.oneClickStrategy(this.toolbar.mode()).mouseup(this.state(event))

@@ -44,6 +44,7 @@ define(['text!templates/canvas-gui.html',
     this.canvasOrigin = new Canvas(this.canvasOriginIdentifier, true)
     this.canvasStage = new Canvas(this.canvasStageIdentifier)
     this.canvasShown = new Canvas(this.canvasShownIdentifier)
+    this.canvasShownClone = this.canvasShown.createClone('canvas-shown-clone')
 
     this.canvasOrigin.addClone(this.canvasStage)
     this.canvasStage.addClone(this.canvasShown)
@@ -110,9 +111,9 @@ define(['text!templates/canvas-gui.html',
     if(this.wasSmallLayout)
       device = 'small'
 
-    updateGreyPanels()   
+    updateGreyPanels()
 
-  }  
+  }
 
   CanvasGui.prototype.toggleMenu = function(){
     if(this.wasBigMenu){
@@ -203,6 +204,14 @@ define(['text!templates/canvas-gui.html',
   
 
   CanvasGui.prototype.initializeTools = function(){
+
+    $(".action-clear").click(
+      function(event, ui){
+        event.stopPropagation()
+        event.preventDefault()
+        this.canvasOrigin.clearFull()
+        this.canvasStage.draw()
+    }.bind(this))  
 
     $(".action-grayscale").click(
       function(event, ui){

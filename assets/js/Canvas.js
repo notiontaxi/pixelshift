@@ -909,6 +909,12 @@ define([], function() {
       this.ctx.fillStyle="#888888"
       this.ctx.fillRect(0,0, this.ctx.canvas.width, this.ctx.canvas.height)
     }
+     Canvas.prototype.clearFull = function(){
+      this.ctx.fillStyle="#888888"
+      this.ctx.fillRect(0,0, this.ctx.canvas.width, this.ctx.canvas.height)
+      this.width = this.ctx.canvas.width
+      this.height = this.ctx.canvas.height
+    }    
 
     /**
     * Draws a point onto the canvas
@@ -1091,6 +1097,30 @@ define([], function() {
       pos.y = pos.y > this.imageHeight ? this.imageHeight : pos.y 
 
       return {x: pos.x, y: pos.y}
+    }    
+
+
+    Canvas.prototype.createClone = function(id){
+      this.clone = this.getElement().clone()
+      this.clone.removeClass('relative')
+      this.clone.attr('id', id)
+      this.getElement().parent().append(this.clone)
+      this.clone.css(
+        {
+            position: 'absolute'
+          , left:   '0px'
+          , top:    '0px'
+          , width:  this.canvasWidth
+          , height: this.canvasHeight
+          , zIndex: 1002 
+        }
+      )
+
+      return this.clone    
+    }
+
+    Canvas.prototype.destroyClone = function(id){
+      this.clone.destroy()
     }    
 
     /**

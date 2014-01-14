@@ -23,10 +23,11 @@ var BrightnessStrategy, _ref, module,
     function BrightnessStrategy(canvases, imageProcessor){
       this.name = BrightnessStrategy.NAME
       this.label = BrightnessStrategy.LABEL
+      this.menuTyp = ImageProcessingMenubarStrategy.MENU_TYP_FILTER
       BrightnessStrategy.__super__.constructor(canvases, imageProcessor)
 
       // render templates
-      $(".controls-wrapper").append($(contentTemplate))
+      //$(".controls-wrapper").append($(contentTemplate))
       this.init()
       this.currentValue = 0
       this.changed = false

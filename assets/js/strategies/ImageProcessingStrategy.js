@@ -26,6 +26,7 @@ var ImageProcessingStrategy, _ref, module,
       this.canvasOrigin = canvases.canvasOrigin  
       this.canvasStage = canvases.canvasStage
       this.canvasShown = canvases.canvasShown
+      this.canvasCloneElement = canvases.canvasCloneElement
       this.imageProcessor = imageProcessor
     }
 

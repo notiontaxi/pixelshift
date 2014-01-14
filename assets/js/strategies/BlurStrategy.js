@@ -23,6 +23,7 @@ var BlurStrategy, _ref, module,
     function BlurStrategy(canvases, imageProcessor){
       this.name = BlurStrategy.NAME
       this.label = BlurStrategy.LABEL
+      this.menuTyp = ImageProcessingMenubarStrategy.MENU_TYP_FILTER
       BlurStrategy.__super__.constructor(canvases, imageProcessor)
 
       // render templates
@@ -30,7 +31,7 @@ var BlurStrategy, _ref, module,
       this.init()
       this.currentValue = 0
       this.changed = false
-      this.onChangeAction = null      
+      this.onChangeAction = null
     }
 
     BlurStrategy.prototype.initializeTools = function(){

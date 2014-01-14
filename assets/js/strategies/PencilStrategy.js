@@ -69,7 +69,7 @@ var PencilStrategy, _ref, module,
           min: 1,
           max: 100,
           slide: function( event, ui ) {
-           $( "#toolbar-pencil-submenu .output" ).html(ui.value+'px')
+           $( '#toolbar-'+this.name+'-submenu .output' ).html(ui.value+'px')
            this.thickness = ui.value
           }.bind(this)
         }
