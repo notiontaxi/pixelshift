@@ -30,8 +30,10 @@ var shapeStrategy, _ref, module,
       
       //$(containerIdentifier).append($(contentTemplate))
       this.init()
+      this.thickness = 10
       this.shape = 'rectangle'
-      this.from = {x:0,y:0}
+      this.fromCartesian = {x:0,y:0}
+      this.fromCanvas = {x:0,y:0}
 
       this.filledCheckbox = $('#toolbar-shape-filled')[0]
     }
@@ -40,10 +42,15 @@ var shapeStrategy, _ref, module,
       //this.canvasOrigin.drawPoint(state.totalCartesianImagePosition, this.thickness, state.color)
 
       //this.canvasOrigin.ctx.beginPath()
-      this.from.x = state.totalCartesianImagePosition.x
-      this.from.y = state.totalCartesianImagePosition.y
+      this.fromCartesian.x = state.totalCartesianImagePosition.x
+      this.fromCartesian.y = state.totalCartesianImagePosition.y
 
-      this.cloneCtx.lineWidth = this.thickness
+
+
+      this.fromCanvas.x = state.mouse.x
+      this.fromCanvas.y = state.mouse.y
+      console.log(this.thickness * this.canvasStage.currentScale)
+      this.cloneCtx.lineWidth = this.thickness * this.canvasStage.currentScale
       this.cloneCtx.strokeStyle = "rgba("+state.color.r+", "+state.color.g+", "+state.color.b+", "+state.color.a+")"
       this.cloneCtx.fillStyle = "rgba("+state.color.r+", "+state.color.g+", "+state.color.b+", "+state.color.a+")"
 
@@ -51,10 +58,10 @@ var shapeStrategy, _ref, module,
     }
     shapeStrategy.prototype.mousemove = function(state){
       if (this.started) {
-          this.x = Math.min(state.totalCartesianImagePosition.x,  this.from.x),
-          this.y = Math.min(state.totalCartesianImagePosition.y,  this.from.y),
-          this.w = Math.abs(state.totalCartesianImagePosition.x - this.from.x),
-          this.h = Math.abs(state.totalCartesianImagePosition.y - this.from.y)
+          this.x = Math.min(state.mouse.x,  this.fromCanvas.x),
+          this.y = Math.min(state.mouse.y,  this.fromCanvas.y),
+          this.w = Math.abs(state.mouse.x - this.fromCanvas.x),
+          this.h = Math.abs(state.mouse.y - this.fromCanvas.y)
 
         this.cloneCtx.clearRect(0, 0, this.canvasCloneElement[0].width, this.canvasCloneElement[0].height)
 
@@ -64,11 +71,15 @@ var shapeStrategy, _ref, module,
           else
             this.cloneCtx.strokeRect(this.x, this.y, this.w, this.h)
         }
-        
       }
-    }    
+    }
     shapeStrategy.prototype.mouseup = function(state){
       if (this.started) {
+
+        this.x = Math.min(state.totalCartesianImagePosition.x,  this.fromCartesian.x),
+        this.y = Math.min(state.totalCartesianImagePosition.y,  this.fromCartesian.y),
+        this.w = Math.abs(state.totalCartesianImagePosition.x - this.fromCartesian.x),
+        this.h = Math.abs(state.totalCartesianImagePosition.y - this.fromCartesian.y)        
 
         if (!!this.w && !!this.h){
           if(this.filledCheckbox.checked){
