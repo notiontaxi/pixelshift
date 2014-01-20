@@ -36,28 +36,64 @@ var PencilStrategy, _ref, module,
 
     PencilStrategy.prototype.mousedown = function(state){
       //this.canvasOrigin.drawPoint(state.totalCartesianImagePosition, this.thickness, state.color)
-
-      this.canvasOrigin.ctx.beginPath()
-      this.canvasOrigin.ctx.moveTo(state.totalCartesianImagePosition.x, state.totalCartesianImagePosition.y)
-      this.canvasOrigin.ctx.lineWidth = this.thickness
-      this.canvasOrigin.ctx.strokeStyle = "rgba("+state.color.r+", "+state.color.g+", "+state.color.b+", "+state.color.a+")"
+      this.recordMouseState(state)
+      this.cloneCtx.beginPath()
+      this.cloneCtx.moveTo(state.mouse.x, state.mouse.y)
+      this.cloneCtx.lineWidth = this.thickness * this.canvasStage.currentScale
+      this.cloneCtx.strokeStyle = "rgba("+state.color.r+", "+state.color.g+", "+state.color.b+", "+state.color.a+")"
       this.started = true
     }
+
     PencilStrategy.prototype.mousemove = function(state){
       if (this.started) {
-        this.canvasOrigin.ctx.lineTo(state.totalCartesianImagePosition.x, state.totalCartesianImagePosition.y)
-        this.canvasOrigin.ctx.stroke()
-        this.canvasOrigin.drawFirstClone()
+       this.cloneCtx.lineTo(state.mouse.x, state.mouse.y)
+       this.recordMouseState(state)
+       this.cloneCtx.stroke()
       }
     }    
     PencilStrategy.prototype.mouseup = function(state){
       if (this.started) {
         this.started = false
-        this.canvasOrigin.ctx.closePath()
-        this.canvasOrigin.drawFirstClone()
-        this.canvasOrigin.registerContentModification()
+        this.cloneCtx.closePath()
+        this.cloneCtx.clearRect(0, 0, this.canvasCloneElement[0].width, this.canvasCloneElement[0].height)     
+        this.drawLineOnOrigin()   
       }
-    }    
+    }   
+
+    PencilStrategy.prototype.drawLineOnOrigin = function(){
+
+      var currentState = this.recordedMouseStates.pop()
+
+      this.canvasOrigin.ctx.lineWidth = this.thickness
+      this.canvasOrigin.ctx.strokeStyle = "rgba("+currentState.color.r+", "+currentState.color.g+", "+currentState.color.b+", "+currentState.color.a+")"
+      this.canvasOrigin.ctx.beginPath()
+      this.canvasOrigin.ctx.moveTo(currentState.totalCartesianImagePosition.x, currentState.totalCartesianImagePosition.y)
+
+      if(this.recordedMouseStates.length === 1){
+        this.canvasOrigin.ctx.arc(currentState.totalCartesianImagePosition.x, currentState.totalCartesianImagePosition.y, Math.round(this.thickness/2), 0, 2 * Math.PI, false)
+        this.canvasOrigin.ctx.fillStyle = "rgba("+currentState.color.r+", "+currentState.color.g+", "+currentState.color.b+", "+currentState.color.a+")"
+        this.canvasOrigin.ctx.fill()
+      }else{
+        do{
+          this.canvasOrigin.ctx.lineTo(currentState.totalCartesianImagePosition.x, currentState.totalCartesianImagePosition.y)
+          this.canvasOrigin.ctx.stroke()       
+        }while(currentState = this.recordedMouseStates.pop())
+      }
+
+      this.canvasOrigin.ctx.closePath()
+      this.canvasOrigin.registerContentModification()
+      this.canvasOrigin.drawFirstClone()
+      this.clearRecordedMouseStates()
+    } 
+
+
+
+    PencilStrategy.prototype.activeAction = function(){
+
+      this.cloneCtx = this.canvasCloneElement[0].getContext('2d')
+
+      return true
+    }
 
     PencilStrategy.prototype.addSubmenuActions = function(){
 
