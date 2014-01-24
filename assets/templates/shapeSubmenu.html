@@ -5,14 +5,39 @@
 <div class="output centered">10px</div>
 </br>
 <form>
-  Shape
-  <select name="shape">
-  <option value="rectangle"><i class="icon-github4"></i>R</option>
-  <option value="ellypse"><svg width="400" height="110">
-  <rect width="300" height="100" style="fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)" />
-</svg></option>
-  </select> 
-  </br></br>
+  <table>
+    <tr>
+      <td>
+        <input type="radio" name="shape" value="1" id="shape-rectangle" checked="checked"/>
+      </td>
+      <td style= "padding-top: 5px; padding-left: 5px;">
+        <svg width="20" height="20">
+          <rect width="20" height="20" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)" />
+        </svg>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <input type="radio" name="shape" value="2" id="shape-circle" />
+      </td>
+      <td style= "padding-top: 5px; padding-left: 5px;">
+        <svg width="20" height="20">
+          <circle cx="10" cy="10" r="10" stroke="black" stroke-width="1" fill="white" />
+        </svg>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <input type="radio" name="shape" value="3" id="shape-line" />
+      </td>
+      <td style= "padding-top: 5px; padding-left: 5px;">
+        <svg width="20" height="20">
+          <line x1="0" y1="0" x2="20" y2="20" style="stroke:rgb(0,0,0);stroke-width:2" />
+        </svg>
+      </td>
+    </tr>    
+  </table>
+
   <input id='toolbar-shape-filled' type="checkbox" name="filled" value="filled"> Filled
 </form>
 </br>
