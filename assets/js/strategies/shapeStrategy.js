@@ -26,30 +26,16 @@ var shapeStrategy, _ref, module,
       this.class = 'icon-checkbox-unchecked'
 
       shapeStrategy.__super__.constructor(canvases, imageProcessor, toolbar, Submenu)
-      // render templates
-      
-      //$(containerIdentifier).append($(contentTemplate))
       this.init()
       this.thickness = 10
       this.shape = 'rectangle'
-      this.fromCartesian = {x:0,y:0}
-      this.fromCanvas = {x:0,y:0}
 
       this.filledCheckbox = $('#toolbar-shape-filled')[0]
     }
 
     shapeStrategy.prototype.mousedown = function(state){
-      //this.canvasOrigin.drawPoint(state.totalCartesianImagePosition, this.thickness, state.color)
+      this.setFromCoordinates(state)
 
-      //this.canvasOrigin.ctx.beginPath()
-      this.fromCartesian.x = state.totalCartesianImagePosition.x
-      this.fromCartesian.y = state.totalCartesianImagePosition.y
-
-
-
-      this.fromCanvas.x = state.mouse.x
-      this.fromCanvas.y = state.mouse.y
-      console.log(this.thickness * this.canvasStage.currentScale)
       this.cloneCtx.lineWidth = this.thickness * this.canvasStage.currentScale
       this.cloneCtx.strokeStyle = "rgba("+state.color.r+", "+state.color.g+", "+state.color.b+", "+state.color.a+")"
       this.cloneCtx.fillStyle = "rgba("+state.color.r+", "+state.color.g+", "+state.color.b+", "+state.color.a+")"
@@ -74,8 +60,8 @@ var shapeStrategy, _ref, module,
       }
     }
     shapeStrategy.prototype.mouseup = function(state){
+      
       if (this.started) {
-
         this.x = Math.min(state.totalCartesianImagePosition.x,  this.fromCartesian.x),
         this.y = Math.min(state.totalCartesianImagePosition.y,  this.fromCartesian.y),
         this.w = Math.abs(state.totalCartesianImagePosition.x - this.fromCartesian.x),
@@ -104,9 +90,6 @@ var shapeStrategy, _ref, module,
     shapeStrategy.prototype.activeAction = function(){
 
       this.cloneCtx = this.canvasCloneElement[0].getContext('2d')
-      //destCtx.drawImage(this.canvasShown.getElement()[0], 0, 0)
-      //this.canvasShown.getElement().hide()
-
       return true
     }
 

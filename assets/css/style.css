@@ -72,7 +72,7 @@ footer {
 .menu-bar {
   background-color: lightcyan;
   background-image: none;
-  z-index: 1002;
+  z-index: 1003;
 }
 .menu-bar a,
 .menu-bar .caret {

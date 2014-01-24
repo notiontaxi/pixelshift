@@ -340,6 +340,7 @@ define(['text!templates/canvas-gui.html',
     }.bind(this))  
 
     Mousetrap.bind('command+y', function(event, ui){
+      console.log("y")
         event.stopPropagation()
         event.preventDefault()
         this.canvasOrigin.redo()

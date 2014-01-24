@@ -23,8 +23,14 @@ var ImageProcessingToolbarStrategy, _ref, module,
     function ImageProcessingToolbarStrategy(canvases, imageProcessor, toolbar, Submenu){
       ImageProcessingToolbarStrategy.__super__.constructor(canvases, imageProcessor)
 
+      // for mouse inputs
+      this.fromCartesian = {x:0,y:0}
+      this.fromCanvas = {x:0,y:0}
+      this.recordedPositions = Array()
       this.implementsSubmenu = !!Submenu
       this.submenuTemplate = Submenu
+
+      this.recordedMouseStates = Array()
 
       this.toolbar = toolbar
     }
@@ -137,7 +143,23 @@ var ImageProcessingToolbarStrategy, _ref, module,
       }
 
       return deaktivationSuccessfull
-    }              
+    } 
+
+    ImageProcessingToolbarStrategy.prototype.setFromCoordinates = function(state){
+      this.fromCartesian.x = state.totalCartesianImagePosition.x
+      this.fromCartesian.y = state.totalCartesianImagePosition.y
+
+      this.fromCanvas.x = state.mouse.x
+      this.fromCanvas.y = state.mouse.y     
+    }             
+
+    ImageProcessingToolbarStrategy.prototype.recordMouseState = function(state){
+      this.recordedMouseStates.push(state) 
+    }
+
+    ImageProcessingToolbarStrategy.prototype.clearRecordedMouseStates = function(){
+      this.recordedMouseStates = Array()
+    }
 
 
 // --------------------------------------

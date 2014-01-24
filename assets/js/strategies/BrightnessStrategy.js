@@ -27,7 +27,7 @@ var BrightnessStrategy, _ref, module,
       BrightnessStrategy.__super__.constructor(canvases, imageProcessor)
 
       // render templates
-      //$(".controls-wrapper").append($(contentTemplate))
+      $(".controls-wrapper").append($(contentTemplate))
       this.init()
       this.currentValue = 0
       this.changed = false
