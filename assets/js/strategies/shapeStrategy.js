@@ -35,6 +35,11 @@ var shapeStrategy, _ref, module,
       this.thickness = 10
       this.shape = 'rectangle'
 
+      this.delta = {
+          x: 0
+        , y: 0
+      }
+
       this.addKeyHandlings()
 
       this.filledCheckbox = $('#toolbar-shape-filled')[0]
@@ -48,48 +53,35 @@ var shapeStrategy, _ref, module,
       this.cloneCtx.lineWidth = this.thickness * this.canvasStage.currentScale
       this.cloneCtx.strokeStyle = "rgba("+state.color.r+", "+state.color.g+", "+state.color.b+", "+state.color.a+")"
       this.cloneCtx.fillStyle = "rgba("+state.color.r+", "+state.color.g+", "+state.color.b+", "+state.color.a+")"
-      
+
+      this.canvasOrigin.ctx.lineWidth = this.thickness
+      this.canvasOrigin.ctx.fillStyle = "rgba("+state.color.r+", "+state.color.g+", "+state.color.b+", "+state.color.a+")"
+      this.canvasOrigin.ctx.strokeStyle = "rgba("+state.color.r+", "+state.color.g+", "+state.color.b+", "+state.color.a+")"      
 
       this.started = true
     }
     shapeStrategy.prototype.mousemove = function(state){
       if (this.started) {
-          this.x = Math.min(state.mouse.x,  this.fromCanvas.x),
-          this.y = Math.min(state.mouse.y,  this.fromCanvas.y),
-          this.w = Math.abs(state.mouse.x - this.fromCanvas.x),
-          this.h = Math.abs(state.mouse.y - this.fromCanvas.y)
+          this.updateCurrentPosition(state)
+
+          if(this.moveShape){
+            this.correctStartPositions(state)    
+          }else{
+            this.updateWidthAndHeight(state)
+          }
 
         this.cloneCtx.clearRect(0, 0, this.canvasCloneElement[0].width, this.canvasCloneElement[0].height)
         
         if (!!this.w && !!this.h){
-            if(this.shape == shapeStrategy.RECTANGLE)
-              this.handleRectangleDraw(this.filledCheckbox.checked, this.moveShape, this.x, this.y, this.w, this.h)
-            else if(this.shape == shapeStrategy.CIRCLE)
-              this.handleCircleDraw(this.filledCheckbox.checked, this.moveShape, this.x, this.y, this.w, this.h)
-            else if(this.shape == shapeStrategy.ELLYPSE)
-              this.handleEllypseDraw(this.filledCheckbox.checked, this.moveShape, this.x, this.y, this.w, this.h)
-            else if(this.shape == shapeStrategy.LINE)
-              this.handleLineDraw(this.filledCheckbox.checked, this.moveShape, this.x, this.y, this.w, this.h)
+          this.handleDrawing(false)
         }
       }
     }
     shapeStrategy.prototype.mouseup = function(state){
-      if (this.started) {
-        this.x = Math.min(state.totalCartesianImagePosition.x,  this.fromCartesian.x),
-        this.y = Math.min(state.totalCartesianImagePosition.y,  this.fromCartesian.y),
-        this.w = Math.abs(state.totalCartesianImagePosition.x - this.fromCartesian.x),
-        this.h = Math.abs(state.totalCartesianImagePosition.y - this.fromCartesian.y)        
+      if (this.started) {       
 
         if (!!this.w && !!this.h){
-          if(this.filledCheckbox.checked){
-            this.canvasOrigin.ctx.fillStyle = "rgba("+state.color.r+", "+state.color.g+", "+state.color.b+", "+state.color.a+")" 
-            this.canvasOrigin.ctx.fillRect(this.x, this.y, this.w, this.h)
-          }
-          else{
-            this.canvasOrigin.ctx.lineWidth = this.thickness
-            this.canvasOrigin.ctx.strokeStyle = "rgba("+state.color.r+", "+state.color.g+", "+state.color.b+", "+state.color.a+")"            
-            this.canvasOrigin.ctx.strokeRect(this.x, this.y, this.w, this.h)
-          }
+          this.handleDrawing(true, state)
         }
 
         this.started = false
@@ -100,29 +92,65 @@ var shapeStrategy, _ref, module,
       }
     } 
 
-    shapeStrategy.prototype.handleRectangleDraw = function(filled, move, x, y, w, h){
-      if(filled)
-        this.cloneCtx.fillRect(this.x, this.y, this.w, this.h)
-      else
-        this.cloneCtx.strokeRect(this.x, this.y, this.w, this.h)
-    }
-    shapeStrategy.prototype.handleCircleDraw = function(filled, move, x, y, w, h){
-      this.cloneCtx.beginPath()
+    shapeStrategy.prototype.handleDrawing = function(finalDraw, state){
 
-      if(move){
-        this.fromCanvas.x += w
-        this.fromCanvas.y += h
+      var ctx
+
+      if(finalDraw){
+        // needs to be fixed
+        this.x = Math.min(state.totalCartesianImagePosition.x,  this.fromCartesian.x)
+        this.y = Math.min(state.totalCartesianImagePosition.y,  this.fromCartesian.y)
+        this.w = Math.abs(state.totalCartesianImagePosition.x - this.fromCartesian.x)
+        this.h = Math.abs(state.totalCartesianImagePosition.y - this.fromCartesian.y)
+        ctx = this.canvasOrigin.ctx 
+      }else{
+        ctx = this.cloneCtx
       }
 
-      this.cloneCtx.arc(this.fromCanvas.x,this.fromCanvas.y,this.w,0,2*Math.PI)
-      this.cloneCtx.closePath()
+      if(this.shape == shapeStrategy.RECTANGLE)
+        this.handleRectangleDraw(this.filledCheckbox.checked, ctx)
+      else if(this.shape == shapeStrategy.CIRCLE)
+        this.handleCircleDraw(this.filledCheckbox.checked, ctx)
+      else if(this.shape == shapeStrategy.ELLYPSE)
+        this.handleEllypseDraw(this.filledCheckbox.checked, ctx)
+      else if(this.shape == shapeStrategy.LINE)
+        this.handleLineDraw(this.filledCheckbox.checked, ctx)     
+
+    }
+    shapeStrategy.prototype.handleRectangleDraw = function(filled, ctx){
+      if(filled)
+        ctx.fillRect(this.x, this.y, this.w, this.h)
+      else
+        ctx.strokeRect(this.x, this.y, this.w, this.h)
+    }  
+    shapeStrategy.prototype.handleCircleDraw = function(filled, ctx){
+
+      ctx.beginPath()
+      ctx.arc(this.fromCanvas.x,this.fromCanvas.y,this.w,0,2*Math.PI)
+      ctx.closePath()
 
       if(filled){
-        this.cloneCtx.fill()
+        ctx.fill()
+      }else{
+        ctx.stroke()
       }
-      else{
-        this.cloneCtx.stroke()
-      }
+    }
+
+    shapeStrategy.prototype.correctStartPositions = function(state){
+      this.delta.x = state.mouse.x - (this.w + this.fromCanvas.x)
+      this.delta.y = state.mouse.y - (this.h + this.fromCanvas.y)
+      this.fromCanvas.x += this.delta.x    
+      this.fromCanvas.y += this.delta.y
+      this.fromCartesian.x += this.delta.x * this.canvasStage.currentScale
+      this.fromCartesian.y += this.delta.y * this.canvasStage.currentScale        
+    }
+    shapeStrategy.prototype.updateWidthAndHeight = function(state){
+      this.w = Math.abs(state.mouse.x - this.fromCanvas.x)
+      this.h = Math.abs(state.mouse.y - this.fromCanvas.y)      
+    }
+    shapeStrategy.prototype.updateCurrentPosition = function(state){
+      this.x = Math.min(state.mouse.x,  this.fromCanvas.x)
+      this.y = Math.min(state.mouse.y,  this.fromCanvas.y)      
     }
 
     shapeStrategy.prototype.drawEllipse = function(ctx, x, y, w, h) {
