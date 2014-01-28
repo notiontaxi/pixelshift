@@ -39,6 +39,10 @@ var shapeStrategy, _ref, module,
           x: 0
         , y: 0
       }
+      this.lastMousePosition = {
+          x: 0
+        , y: 0
+      }      
 
       this.addKeyHandlings()
 
@@ -63,17 +67,18 @@ var shapeStrategy, _ref, module,
     shapeStrategy.prototype.mousemove = function(state){
       if (this.started) {
 
-        if(this.moveShape){
-          this.correctStartPositions(state)    
-        }else{
-          this.updateWidthAndHeight(state)
-        }
+        this.updateDirection(state)
+
+        if(this.moveShape)
+          this.correctStartPositions(state)  
+        else{
+          this.updateSize(state)
+        }  
 
         this.cloneCtx.clearRect(0, 0, this.canvasCloneElement[0].width, this.canvasCloneElement[0].height)
         
-        if (!!this.w && !!this.h){
-          this.handleDrawing(false)
-        }
+        this.handleDrawing(false, state)
+
       }
     }
     shapeStrategy.prototype.mouseup = function(state){
@@ -96,21 +101,21 @@ var shapeStrategy, _ref, module,
       var ctx
 
       if(finalDraw){
-        // needs to be fixed
-        this.x = this.fromCartesian.x
-        this.y = this.fromCartesian.y
-        this.w /= this.canvasStage.currentScale //Math.abs(state.totalCartesianImagePosition.x - this.fromCartesian.x)
-        this.h /= this.canvasStage.currentScale //Math.abs(state.totalCartesianImagePosition.y - this.fromCartesian.y)
         ctx = this.canvasOrigin.ctx 
-        console.log(this.canvasOrigin.ctx.lineWidth)
-        console.log(this.x)
-        console.log(this.y)
-        console.log(this.w)
-        console.log(this.h)        
+        // compute width & height for origin cavas
+        this.w /= this.canvasStage.currentScale 
+        this.h /= this.canvasStage.currentScale 
+        // set start position
+        this.x = this.switchStartX ? this.fromCartesian.x - this.w : this.fromCartesian.x
+        this.y = this.switchStartY ? this.fromCartesian.y - this.h : this.fromCartesian.y         
       }else{
-        this.x = this.fromCanvas.x - (this.fromCanvas.x%this.canvasStage.currentScale)
-        this.y = this.fromCanvas.y - (this.fromCanvas.y%this.canvasStage.currentScale)      
         ctx = this.cloneCtx
+        // set start position
+        this.x = this.switchStartX ? this.fromCanvas.x - this.w : this.fromCanvas.x
+        this.y = this.switchStartY ? this.fromCanvas.y - this.h : this.fromCanvas.y 
+        // remove half pixel position
+        this.x -= (this.x%this.canvasStage.currentScale)
+        this.y -= (this.y%this.canvasStage.currentScale)  
       }
 
       if(this.shape == shapeStrategy.RECTANGLE)
@@ -142,17 +147,28 @@ var shapeStrategy, _ref, module,
       }
     }
 
+    shapeStrategy.prototype.updateSize = function(state){
+      this.w = Math.floor(Math.abs(state.mouse.x - this.fromCanvas.x))
+      this.h = Math.floor(Math.abs(state.mouse.y - this.fromCanvas.y))       
+    }
+
     shapeStrategy.prototype.correctStartPositions = function(state){
-      this.delta.x = state.mouse.x - (this.w + this.fromCanvas.x)
-      this.delta.y = state.mouse.y - (this.h + this.fromCanvas.y)
+      this.delta.x = Math.abs(state.mouse.x - this.x) - this.w
+      this.delta.y = Math.abs(state.mouse.y - this.y) - this.h
       this.fromCanvas.x += this.delta.x    
       this.fromCanvas.y += this.delta.y
       this.fromCartesian.x += (this.delta.x / this.canvasStage.currentScale)
       this.fromCartesian.y += (this.delta.y / this.canvasStage.currentScale)        
     }
-    shapeStrategy.prototype.updateWidthAndHeight = function(state){
-      this.w = Math.floor(Math.abs(state.mouse.x - this.fromCanvas.x))
-      this.h = Math.floor(Math.abs(state.mouse.y - this.fromCanvas.y))      
+    shapeStrategy.prototype.updateDirection = function(state){ 
+      if(state.mouse.x < this.fromCanvas.x)
+        this.switchStartX = true
+      else
+        this.switchStartX = false
+      if(state.mouse.y < this.fromCanvas.y)
+        this.switchStartY = true
+      else
+        this.switchStartY = false    
     }
 
     shapeStrategy.prototype.drawEllipse = function(ctx, x, y, w, h) {
