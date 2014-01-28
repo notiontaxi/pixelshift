@@ -47,8 +47,10 @@ var BrightnessStrategy, _ref, module,
 
       if(!!preview)
         this.canvasStage.draw(this.processedImageData)
-      else
+      else{
         this.canvasOrigin.putImageData(this.processedImageData)
+        this.updateAllStrategies(this.canvasOrigin.getImageData(), true)
+      }
     }
 
 

@@ -98,7 +98,7 @@ var ImageProcessingMenubarStrategy, _ref, module,
             this.nokButton.show()
 
             if(!!this.onChangeAction)
-              this.onChangeAction(this.refObj, true)
+              this.updateAllStrategies(true)
 
           }.bind(this)
         }
@@ -111,6 +111,10 @@ var ImageProcessingMenubarStrategy, _ref, module,
       this.nokButton.hide()
       this.nokButton.removeClass('hidden')
       this.nokButton.click({_this: this}, this.cancel)
+    }
+
+    ImageProcessingMenubarStrategy.prototype.updateAllStrategies = function(preview){
+      this.onChangeAction(this.refObj, preview)
     }
 
     // set all values to 0 and repaint with remaining filters
@@ -143,12 +147,14 @@ var ImageProcessingMenubarStrategy, _ref, module,
       else
         _this = event.data._this
 
+      _this.changed = false
+
       _this.execute(null, false)
       // reset all values to 0
       _this.currentValue = 0
       $( "#"+_this.name+"-slider" ).slider({value: _this.currentValue})
       $( "#"+_this.name+"-slider-output" ).html(0)
-      _this.changed = false
+      
 
       _this.okButton.hide()
       _this.nokButton.hide()

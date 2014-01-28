@@ -30,6 +30,7 @@ var BlurStrategy, _ref, module,
       $(".controls-wrapper").append($(contentTemplate))
       this.init()
       this.currentValue = 0
+      // will be updated in superclass (cancel() and proceed())
       this.changed = false
       this.onChangeAction = null
     }
@@ -39,17 +40,18 @@ var BlurStrategy, _ref, module,
     }
 
     BlurStrategy.prototype.execute = function(imgData, preview){
-      
+      console.log(imgData)
       if(!imgData)
         var imgData = this.canvasOrigin.getImageData()
       
       if(!!preview){
-        this.processedImageData = stackBlurImage(imgData, this.canvasStage, this.canvasStage.canvasWidth, this.canvasStage.canvasHeight, this.currentValue, false )
+        this.processedImageData = stackBlurImage(imgData, this.canvasStage.imageWidth, this.canvasStage.imageHeight, this.currentValue, false )
         this.canvasStage.draw(this.processedImageData)
       }
       else{
-        this.processedImageData = stackBlurImage(imgData, this.canvasOrigin, this.canvasOrigin.imageWidth, this.canvasOrigin.imageHeight, this.currentValue, false )
+        this.processedImageData = stackBlurImage(imgData, this.canvasOrigin.imageWidth, this.canvasOrigin.imageHeight, this.currentValue, false )
         this.canvasOrigin.putImageData(this.processedImageData)
+        this.updateAllStrategies(this.canvasOrigin.getImageData(), true)
       }
 
     }

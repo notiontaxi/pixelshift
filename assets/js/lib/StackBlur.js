@@ -76,7 +76,7 @@ var shg_table = [
 		24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24,
 		24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24 ];
 
-function stackBlurImage( imageData, destinationCanvas, width, height, radius)
+function stackBlurImage( imageData, width, height, radius)
 {
 	if ( isNaN(radius) || radius < 1 ) return imageData
 	
