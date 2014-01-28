@@ -62,13 +62,12 @@ var shapeStrategy, _ref, module,
     }
     shapeStrategy.prototype.mousemove = function(state){
       if (this.started) {
-          this.updateCurrentPosition(state)
 
-          if(this.moveShape){
-            this.correctStartPositions(state)    
-          }else{
-            this.updateWidthAndHeight(state)
-          }
+        if(this.moveShape){
+          this.correctStartPositions(state)    
+        }else{
+          this.updateWidthAndHeight(state)
+        }
 
         this.cloneCtx.clearRect(0, 0, this.canvasCloneElement[0].width, this.canvasCloneElement[0].height)
         
@@ -98,12 +97,19 @@ var shapeStrategy, _ref, module,
 
       if(finalDraw){
         // needs to be fixed
-        this.x = Math.min(state.totalCartesianImagePosition.x,  this.fromCartesian.x)
-        this.y = Math.min(state.totalCartesianImagePosition.y,  this.fromCartesian.y)
-        this.w = Math.abs(state.totalCartesianImagePosition.x - this.fromCartesian.x)
-        this.h = Math.abs(state.totalCartesianImagePosition.y - this.fromCartesian.y)
+        this.x = this.fromCartesian.x
+        this.y = this.fromCartesian.y
+        this.w /= this.canvasStage.currentScale //Math.abs(state.totalCartesianImagePosition.x - this.fromCartesian.x)
+        this.h /= this.canvasStage.currentScale //Math.abs(state.totalCartesianImagePosition.y - this.fromCartesian.y)
         ctx = this.canvasOrigin.ctx 
+        console.log(this.canvasOrigin.ctx.lineWidth)
+        console.log(this.x)
+        console.log(this.y)
+        console.log(this.w)
+        console.log(this.h)        
       }else{
+        this.x = this.fromCanvas.x - (this.fromCanvas.x%this.canvasStage.currentScale)
+        this.y = this.fromCanvas.y - (this.fromCanvas.y%this.canvasStage.currentScale)      
         ctx = this.cloneCtx
       }
 
@@ -119,14 +125,14 @@ var shapeStrategy, _ref, module,
     }
     shapeStrategy.prototype.handleRectangleDraw = function(filled, ctx){
       if(filled)
-        ctx.fillRect(this.x, this.y, this.w, this.h)
+        ctx.fillRect(this.x,this.y, this.w, this.h)
       else
-        ctx.strokeRect(this.x, this.y, this.w, this.h)
+        ctx.strokeRect(this.x,this.y, this.w, this.h)
     }  
     shapeStrategy.prototype.handleCircleDraw = function(filled, ctx){
 
       ctx.beginPath()
-      ctx.arc(this.fromCanvas.x,this.fromCanvas.y,this.w,0,2*Math.PI)
+      ctx.arc(this.x,this.y,this.w,0,2*Math.PI)
       ctx.closePath()
 
       if(filled){
@@ -141,16 +147,12 @@ var shapeStrategy, _ref, module,
       this.delta.y = state.mouse.y - (this.h + this.fromCanvas.y)
       this.fromCanvas.x += this.delta.x    
       this.fromCanvas.y += this.delta.y
-      this.fromCartesian.x += this.delta.x * this.canvasStage.currentScale
-      this.fromCartesian.y += this.delta.y * this.canvasStage.currentScale        
+      this.fromCartesian.x += (this.delta.x / this.canvasStage.currentScale)
+      this.fromCartesian.y += (this.delta.y / this.canvasStage.currentScale)        
     }
     shapeStrategy.prototype.updateWidthAndHeight = function(state){
-      this.w = Math.abs(state.mouse.x - this.fromCanvas.x)
-      this.h = Math.abs(state.mouse.y - this.fromCanvas.y)      
-    }
-    shapeStrategy.prototype.updateCurrentPosition = function(state){
-      this.x = Math.min(state.mouse.x,  this.fromCanvas.x)
-      this.y = Math.min(state.mouse.y,  this.fromCanvas.y)      
+      this.w = Math.floor(Math.abs(state.mouse.x - this.fromCanvas.x))
+      this.h = Math.floor(Math.abs(state.mouse.y - this.fromCanvas.y))      
     }
 
     shapeStrategy.prototype.drawEllipse = function(ctx, x, y, w, h) {
