@@ -66,9 +66,7 @@ var shapeStrategy, _ref, module,
     }
     shapeStrategy.prototype.mousemove = function(state){
       if (this.started) {
-
         this.updateDirection(state)
-
         if(this.moveShape)
           this.correctStartPositions(state)  
         else{
@@ -106,13 +104,13 @@ var shapeStrategy, _ref, module,
         this.w /= this.canvasStage.currentScale 
         this.h /= this.canvasStage.currentScale 
         // set start position
-        this.x = this.switchStartX ? this.fromCartesian.x - this.w : this.fromCartesian.x
-        this.y = this.switchStartY ? this.fromCartesian.y - this.h : this.fromCartesian.y         
+        this.x =  this.fromCartesian.x
+        this.y =  this.fromCartesian.y         
       }else{
         ctx = this.cloneCtx
         // set start position
-        this.x = this.switchStartX ? this.fromCanvas.x - this.w : this.fromCanvas.x
-        this.y = this.switchStartY ? this.fromCanvas.y - this.h : this.fromCanvas.y 
+        this.x =  this.fromCanvas.x
+        this.y =  this.fromCanvas.y 
         // remove half pixel position
         this.x -= (this.x%this.canvasStage.currentScale)
         this.y -= (this.y%this.canvasStage.currentScale)  
@@ -122,10 +120,8 @@ var shapeStrategy, _ref, module,
         this.handleRectangleDraw(this.filledCheckbox.checked, ctx)
       else if(this.shape == shapeStrategy.CIRCLE)
         this.handleCircleDraw(this.filledCheckbox.checked, ctx)
-      else if(this.shape == shapeStrategy.ELLYPSE)
-        this.handleEllypseDraw(this.filledCheckbox.checked, ctx)
       else if(this.shape == shapeStrategy.LINE)
-        this.handleLineDraw(this.filledCheckbox.checked, ctx)     
+        this.handleLineDraw(ctx)     
 
     }
     shapeStrategy.prototype.handleRectangleDraw = function(filled, ctx){
@@ -137,7 +133,7 @@ var shapeStrategy, _ref, module,
     shapeStrategy.prototype.handleCircleDraw = function(filled, ctx){
 
       ctx.beginPath()
-      ctx.arc(this.x,this.y,this.w,0,2*Math.PI)
+      ctx.arc(this.x,this.y,Math.abs(this.w),0,2*Math.PI)
       ctx.closePath()
 
       if(filled){
@@ -146,15 +142,25 @@ var shapeStrategy, _ref, module,
         ctx.stroke()
       }
     }
+    shapeStrategy.prototype.handleLineDraw = function(ctx){
+      console.log(this)
+      ctx.beginPath()
+      ctx.moveTo(this.x,this.y)
+      ctx.lineTo(this.x+this.w, this.y+this.h)
+      ctx.closePath()
+      ctx.stroke()
+    }      
 
     shapeStrategy.prototype.updateSize = function(state){
-      this.w = Math.floor(Math.abs(state.mouse.x - this.fromCanvas.x))
-      this.h = Math.floor(Math.abs(state.mouse.y - this.fromCanvas.y))       
+      this.w = Math.floor((state.mouse.x - this.fromCanvas.x))
+      this.h = Math.floor((state.mouse.y - this.fromCanvas.y))       
     }
 
     shapeStrategy.prototype.correctStartPositions = function(state){
-      this.delta.x = Math.abs(state.mouse.x - this.x) - this.w
-      this.delta.y = Math.abs(state.mouse.y - this.y) - this.h
+      // calculate delta between current mouse position and start position
+      this.delta.x = state.mouse.x - this.x - this.w
+      this.delta.y = state.mouse.y - this.y - this.h 
+      // move start of the shape
       this.fromCanvas.x += this.delta.x    
       this.fromCanvas.y += this.delta.y
       this.fromCartesian.x += (this.delta.x / this.canvasStage.currentScale)
@@ -171,24 +177,6 @@ var shapeStrategy, _ref, module,
         this.switchStartY = false    
     }
 
-    shapeStrategy.prototype.drawEllipse = function(ctx, x, y, w, h) {
-      var kappa = .5522848,
-      ox = (w / 2) * kappa, // control point offset horizontal
-      oy = (h / 2) * kappa, // control point offset vertical
-      xe = x + w,           // x-end
-      ye = y + h,           // y-end
-      xm = x + w / 2,       // x-middle
-      ym = y + h / 2;       // y-middle
-
-      ctx.beginPath();
-      ctx.moveTo(x, ym);
-      ctx.bezierCurveTo(x, ym - oy, xm - ox, y, xm, y);
-      ctx.bezierCurveTo(xm + ox, y, xe, ym - oy, xe, ym);
-      ctx.bezierCurveTo(xe, ym + oy, xm + ox, ye, xm, ye);
-      ctx.bezierCurveTo(xm - ox, ye, x, ym + oy, x, ym);
-      ctx.closePath();
-      ctx.stroke();
-    }  
 
     shapeStrategy.prototype.setSelectedShape = function(){
 
