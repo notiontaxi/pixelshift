@@ -143,7 +143,6 @@ var shapeStrategy, _ref, module,
       }
     }
     shapeStrategy.prototype.handleLineDraw = function(ctx){
-      console.log(this)
       ctx.beginPath()
       ctx.moveTo(this.x,this.y)
       ctx.lineTo(this.x+this.w, this.y+this.h)

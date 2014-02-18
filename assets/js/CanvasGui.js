@@ -251,7 +251,7 @@ define(['text!templates/canvas-gui.html',
         [ 1, 1, 1,
           1, .7, -1,
           -1, -1, -1 ]
-        ,0)
+        )
 
         this.canvasOrigin.putImageData(this.processedImageData)
         this.canvasStage.draw()
@@ -268,16 +268,51 @@ define(['text!templates/canvas-gui.html',
         [ 0, -1, 0,
           -1, 5, -1,
           0, -1, 0 ]
-        ,0)
+        )
 
         this.canvasOrigin.putImageData(this.processedImageData)
         this.canvasStage.draw()
-    }.bind(this))       
+    }.bind(this))  
 
-  }  
+    $(".action-highpass").click(
+      function(event, ui){
+        event.stopPropagation()
+        event.preventDefault()
+
+      var imgData = this.canvasOrigin.getImageData()
+
+      // laplace sharpen
+      this.processedImageData = this.imageProcessor.convolute( imgData,
+        [ 0, -1, 0,
+          -1, 9, -1,
+          0, -1, 0 ]
+        )
+
+        this.canvasOrigin.putImageData(this.processedImageData)
+        this.canvasStage.draw()
+    }.bind(this)) 
+
+    $(".action-lowpass").click(
+      function(event, ui){
+        event.stopPropagation()
+        event.preventDefault()
+
+      var imgData = this.canvasOrigin.getImageData()
+      var sixteenthPart = 1/16
+
+      this.processedImageData = this.imageProcessor.convolute( imgData,
+        [ .025, .15, .025,
+          .15,  .3,  .15,
+          .025, .15, .025 ]
+        )
+
+        this.canvasOrigin.putImageData(this.processedImageData)
+        this.canvasStage.draw()
+    }.bind(this)) 
+
+
 
   CanvasGui.prototype.initializeEditFunctionality = function(){
-
     $(".action-undo").click(
       function(event, ui){
         event.stopPropagation()

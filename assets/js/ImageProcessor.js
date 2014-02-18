@@ -21,8 +21,8 @@ define(['js/Histogram', 'js/helper/Colors', 'js/vectorizer/Vectorizer'], functio
     this.histogram = new Histogram();
     this.imageData = null;
 
-    this.tmpCanvas = document.createElement('canvas')
-    this.tmpCtx = this.tmpCanvas.getContext('2d')    
+    this.dummyCanvas = document.createElement('canvas')
+    this.dummyContext = this.dummyCanvas.getContext('2d')    
   }
 
 
@@ -333,7 +333,6 @@ define(['js/Histogram', 'js/helper/Colors', 'js/vectorizer/Vectorizer'], functio
   /**
   * Helper
   */
-
   ImageProcessor.sameColor = function(imageData, position, color, variance){
     return  imageData.data[position]   >= color.r - variance && imageData.data[position]   <= color.r + variance &&
             imageData.data[position+1] >= color.g - variance && imageData.data[position+1] <= color.g + variance &&
@@ -357,64 +356,64 @@ define(['js/Histogram', 'js/helper/Colors', 'js/vectorizer/Vectorizer'], functio
     imageData.data[position+3] = color.a
   }
 
+  /**
+  * http://en.wikipedia.org/wiki/Kernel_(image_processing) 
+  *
+  */
+  ImageProcessor.prototype.convolute = function(pixels, weights) {
+
+    var input = pixels.data
+    var inputWidth = pixels.width
+    var inputHeight = pixels.height
+
+    // create new image data for output
+    var result = this.dummyContext.createImageData(inputWidth, inputHeight)
+    var output = result.data
+
+    // matrix quantity
+    var matrixSize = Math.round(Math.sqrt(weights.length))
+    var halfMatrixSize = Math.floor(matrixSize/2)
+
+    var currentR, currentG, currentB, currentA
 
 
-// add copyright !
-// http://www.html5rocks.com/en/tutorials/canvas/imagefilters/?redirect_from_locale=de#toc-convolution
+    // iteration over all pixels
+    for (var y=0; y<inputHeight; y++) {
+      for (var x=0; x<inputWidth; x++) {
+        var inputOffset = (y*inputWidth+x)*4;
+        // calculate the weighed sum of the source image pixels that
+        // fall under the convolution matrix
+        currentR=0, currentG=0, currentB=0, currentA=0
 
-    ImageProcessor.prototype.filterImage = function(filter, image, var_args) {
-      var args = [this.getPixels(image)]
- 
-      for (var i=2; i<arguments.length; i++) {
-        args.push(arguments[i])
-      }
-      
-      return filter.apply(null, args)
-    }
+        for (var matrixY=0; matrixY<matrixSize; matrixY++) {
+          for (var matrixX=0; matrixX<matrixSize; matrixX++) {
 
-    ImageProcessor.prototype.convolute = function(pixels, weights, opaque) {
-      var side = Math.round(Math.sqrt(weights.length));
-      var halfSide = Math.floor(side/2);
-      var src = pixels.data;
-      var sw = pixels.width;
-      var sh = pixels.height;
-      // pad output by the convolution matrix
-      var w = sw;
-      var h = sh;
-      var output = this.tmpCtx.createImageData(w, h)
-      var dst = output.data;
-      // go through the destination image pixels
-      var alphaFac = opaque ? 1 : 0;
-      for (var y=0; y<h; y++) {
-        for (var x=0; x<w; x++) {
-          var sy = y;
-          var sx = x;
-          var dstOff = (y*w+x)*4;
-          // calculate the weighed sum of the source image pixels that
-          // fall under the convolution matrix
-          var r=0, g=0, b=0, a=0;
-          for (var cy=0; cy<side; cy++) {
-            for (var cx=0; cx<side; cx++) {
-              var scy = sy + cy - halfSide;
-              var scx = sx + cx - halfSide;
-              if (scy >= 0 && scy < sh && scx >= 0 && scx < sw) {
-                var srcOff = (scy*sw+scx)*4;
-                var wt = weights[cy*side+cx];
-                r += src[srcOff] * wt;
-                g += src[srcOff+1] * wt;
-                b += src[srcOff+2] * wt;
-                a += src[srcOff+3] * wt;
-              }
+            // get current position for output data depending on matrix position
+            var smatrixY = y + matrixY - halfMatrixSize
+            var smatrixX = x + matrixX - halfMatrixSize
+
+            // if within image
+            if (smatrixY >= 0 && smatrixY < inputHeight && smatrixX >= 0 && smatrixX < inputWidth) {
+
+              var outputOffset = (smatrixY*inputWidth+smatrixX)*4
+              // get weight for current output position and multiply all values with it
+              var curentWeight = weights[matrixY*matrixSize+matrixX]
+              currentR += input[outputOffset] * curentWeight
+              currentG += input[outputOffset+1] * curentWeight
+              currentB += input[outputOffset+2] * curentWeight
+              currentA += input[outputOffset+3] * curentWeight
             }
           }
-          dst[dstOff] = r;
-          dst[dstOff+1] = g;
-          dst[dstOff+2] = b;
-          dst[dstOff+3] = a + alphaFac*(255-a);
         }
+        output[inputOffset]   = currentR
+        output[inputOffset+1] = currentG
+        output[inputOffset+2] = currentB
+        output[inputOffset+3] = currentA 
       }
-      return output;
-    };
+    }
+
+    return result
+  }
 
 
 
