@@ -309,10 +309,11 @@ define(['text!templates/canvas-gui.html',
         this.canvasOrigin.putImageData(this.processedImageData)
         this.canvasStage.draw()
     }.bind(this)) 
-
-
+                
+  }  
 
   CanvasGui.prototype.initializeEditFunctionality = function(){
+
     $(".action-undo").click(
       function(event, ui){
         event.stopPropagation()

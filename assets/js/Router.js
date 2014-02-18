@@ -13,10 +13,11 @@ require([], function() {
 
   }
 
-  Router.prototype.navigate = function(){
+  Router.prototype.navigate = function(location){
 
     // extract the location i.e. .../index.html#welcome ->welcome 
-    var location = $(window.location).attr('href').split('#')[1];
+    if(!location)
+      var location = $(window.location).attr('href').split('#')[1];
 
     // simulate location click OR refer to welcome if location wasn't set
     if(!location)
@@ -38,6 +39,6 @@ require([], function() {
 
   var router = new Router()
   router.bindEvents()
-  router.navigate()
+  router.navigate('image-processing')
 
 })
