@@ -217,6 +217,9 @@ define([], function() {
 
       width = width > this.imageWidth ? this.imageWidth : width
       height = height > this.imageHeight ? this.imageHeight : height
+
+      console.log(width)
+      console.log(height)
       
       var widthDiff = this.oldVisibleWidth - width
       var heightDiff = this.oldVisibleHeight - height

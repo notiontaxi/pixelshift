@@ -32,11 +32,17 @@ body {
 .content-container {
   background-color: #888888;
   border-radius: 4px;
-  margin: 5px;
-  padding: 10px;
   color: #aaaaaa;
   font-size: 14pt;
   min-width: 370px;
+}
+.content-container.big-device-options {
+  margin: 5px;
+  padding: 10px;
+}
+.content-container.small-device-options {
+  margin: 5px;
+  margin-top: 80px;
 }
 footer {
   margin: 10px;
@@ -122,7 +128,7 @@ footer {
 .menu-element-sd li button {
   font-size: 12px;
 }
-.small-device {
+.menu-bar.small-device {
   padding-right: 5px;
   padding-left: 20px;
   padding-top: 5px;
@@ -343,4 +349,32 @@ img {
 }
 #grey-panel-menu {
   z-index: 1003;
+}
+.small-device.controll-overlay {
+  background-color: aqua;
+  width: 100%;
+  z-index: 4001;
+  overflow: hidden;
+}
+.small-device.header-bar {
+  position: fixed;
+  top: 0px;
+  height: 80px;
+  -webkit-border-bottom-right-radius: 5px;
+  -webkit-border-bottom-left-radius: 5px;
+  -moz-border-radius-bottomright: 5px;
+  -moz-border-radius-bottomleft: 5px;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+.small-device.footer-bar {
+  position: fixed;
+  top: 90%;
+  height: 10%;
+  -webkit-border-top-right-radius: 5px;
+  -webkit-border-top-left-radius: 5px;
+  -moz-border-radius-topright: 5px;
+  -moz-border-radius-topleft: 5px;
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
 }

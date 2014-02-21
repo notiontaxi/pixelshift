@@ -10,11 +10,24 @@ https://github.com/notiontaxi
 define(['text!templates/canvas-gui.html', 
   'text!templates/menu-bar.html', 
   'text!templates/menu-bar-small-device.html', 
+  'text!templates/footer-small-device.html', 
+  'text!templates/header-small-device.html', 
   'js/FileProcessor', 
   'js/ImageProcessor', 
   'js/Canvas', 
   'js/DragNDrop',
-  'js/Toolbar'], function(canvasGuiTemplate, menuTemplate, menuTemplateSmallDevice,FileProcessor, ImageProcessor, Canvas, DragNDrop, Toolbar) {
+  'js/Toolbar'], 
+  function(
+    canvasGuiTemplate, 
+    menuTemplate, 
+    menuTemplateSmallDevice,
+    footerTemplateSmallDevice,
+    headerTemplateSmallDevice,
+    FileProcessor, 
+    ImageProcessor, 
+    Canvas, 
+    DragNDrop, 
+    Toolbar) {
 
   var CanvasGui, _ref, module;
   module = function() {}
@@ -27,6 +40,8 @@ define(['text!templates/canvas-gui.html',
   function CanvasGui(canvasContainerIdentifier){
 
     this.menuContainerIdentifier = "#menu-container"
+    this.containerIdentifier = "#container"
+    this.overlayElementsIdentifier = "#overlay-elements"
     this.canvasOriginIdentifier = "canvas-origin"
     this.canvasStageIdentifier = "canvas-stage"
     this.canvasShownIdentifier = "canvas-shown"
@@ -35,11 +50,16 @@ define(['text!templates/canvas-gui.html',
     this.toolbar =  new Toolbar('#toolbar .content')
 
     $(canvasContainerIdentifier).html($(canvasGuiTemplate))
+
     $(this.menuContainerIdentifier).html($(menuTemplate))
-    $(this.menuContainerIdentifier).append($(menuTemplateSmallDevice))
-    $(this.menuContainerIdentifier+" .small-device").hide()
+
+    
+    $(this.overlayElementsIdentifier).append($(headerTemplateSmallDevice))
+    $(this.overlayElementsIdentifier).append($(footerTemplateSmallDevice))
+    $(".header-bar.controll-overlay").append($(menuTemplateSmallDevice))
 
     this.wasBigMenu = true
+    this.wasSmallLayout = this.wasMediumLayout = this.wasSmallLayout = false
 
     this.canvasOrigin = new Canvas(this.canvasOriginIdentifier, true)
     this.canvasStage = new Canvas(this.canvasStageIdentifier)
@@ -78,51 +98,54 @@ define(['text!templates/canvas-gui.html',
 
   CanvasGui.prototype.updateLayout = function(){
     var width = window.outerWidth
-    var device = 'big'
 
     if(width < 992 && !this.wasSmallLayout){
-      this.canvasShown.updateSize(400,320)
-      $(this.canvasWrapId).css({"width":"400px", "height":"320px"})
-      this.toggleMenu() 
+      this.canvasShown.updateSize(400,600)
+      this.canvasStage.updateSize(400,600)
+      $(this.canvasWrapId).css({"width":"400px", "height":"600"})
+      this.toggleControlls() 
       this.wasSmallLayout = true
       this.wasMediumLayout = this.wasLargeLayout = false
       this.canvasStage.copyToClones(true)
       //console.log("Setting layout to s")
     } else if(width >= 992 && width < 1200 && !this.wasMediumLayout){
       this.canvasShown.updateSize(700,560)
+      this.canvasStage.updateSize(800,640)
       $(this.canvasWrapId).css({"width":"700px", "height":"560px"})
       if(this.wasSmallLayout)
-        this.toggleMenu() 
+        this.toggleControlls() 
       this.wasMediumLayout = true
       this.wasSmallLayout = this.wasLargeLayout = false
       this.canvasStage.copyToClones(true)
       //console.log("Setting layout to m")
     } else if(width >= 1200 && !this.wasLargeLayout){
       this.canvasShown.updateSize(800,640)
+      this.canvasStage.updateSize(800,640)
       $(this.canvasWrapId).css({"width":"800px", "height":"640px"})
       if(this.wasSmallLayout)
-        this.toggleMenu()
+        this.toggleControlls()
       this.wasLargeLayout = true
       this.wasSmallLayout = this.wasMediumLayout = false
       this.canvasStage.copyToClones(true)
       //console.log("Setting layout to l")
     }
 
-    if(this.wasSmallLayout)
-      device = 'small'
-
     updateGreyPanels()
 
   }
 
-  CanvasGui.prototype.toggleMenu = function(){
+  CanvasGui.prototype.toggleControlls = function(){
     if(this.wasBigMenu){
-      $(this.menuContainerIdentifier+" .big-device").hide()
-      $(this.menuContainerIdentifier+" .small-device").show()
+      $(".big-device").hide()
+      $(".small-device").show()
+      $(".content-container").removeClass("big-device-options")
+      $(".content-container").addClass("small-device-options")
     }
     else{
-      $(this.menuContainerIdentifier+" .big-device").show()
-      $(this.menuContainerIdentifier+" .small-device").hide()
+      $(".big-device").show()
+      $(".small-device").hide()
+      $(".content-container").removeClass("small-device-options")
+      $(".content-container").addClass("big-device-options")
     }
 
     this.wasBigMenu = !this.wasBigMenu 
