@@ -8,27 +8,32 @@ https://github.com/notiontaxi
 "use strict"
 
 define([
-  'text!templates/canvas-gui.html', 
-  'text!templates/menu-bar.html', 
-  'text!templates/menu-bar-small-device.html', 
-  'text!templates/footer-small-device.html', 
-  'text!templates/header-small-device.html', 
-  'js/FileProcessor', 
-  'js/ImageProcessor', 
-  'js/Canvas', 
-  'js/DragNDrop',
-  'js/Toolbar'], 
+    'text!templates/canvas-gui.html', 
+    'text!templates/menu-bar.html', 
+    'text!templates/menu-bar-small-device.html', 
+    'text!templates/footer-small-device.html', 
+    'text!templates/header-small-device.html', 
+    'text!templates/left-panel-small-device.html',     
+    'text!templates/right-panel-small-device.html', 
+    'js/FileProcessor', 
+    'js/ImageProcessor', 
+    'js/Canvas', 
+    'js/DragNDrop',
+    'js/Toolbar'], 
   function(
     canvasGuiTemplate, 
     menuTemplate, 
     menuTemplateSmallDevice,
     footerTemplateSmallDevice,
     headerTemplateSmallDevice,
+    leftPanelSmallDevice,
+    rightPanelSmallDevice,
     FileProcessor, 
     ImageProcessor, 
     Canvas, 
     DragNDrop, 
-    Toolbar) {
+    Toolbar
+    ) {
 
   var CanvasGui, _ref, module;
   module = function() {}
@@ -57,6 +62,9 @@ define([
     
     $(this.overlayElementsIdentifier).append($(headerTemplateSmallDevice))
     $(this.overlayElementsIdentifier).append($(footerTemplateSmallDevice))
+    $(this.overlayElementsIdentifier).append($(leftPanelSmallDevice))
+    $(this.overlayElementsIdentifier).append($(rightPanelSmallDevice))
+
     //$(".header-bar.controll-overlay").append($(menuTemplateSmallDevice))
 
     this.wasBigMenu = true
@@ -116,7 +124,7 @@ define([
     if(width < 992 && !this.wasSmallLayout){
       $("#footerLink").hide()
       width = Math.floor(this.viewport.width - 30)
-      height = Math.floor(this.viewport.height*.7 - 50)
+      height = Math.floor(this.viewport.height*.76 - 30)
 
       this.updateCanvasSizes(width,height)
       
@@ -218,7 +226,24 @@ define([
         event.preventDefault()
         $('.view-actions-list-sd').slideToggle()
       }.bind(this))
-    $('.view-actions-list-sd').hide()        
+    $('.view-actions-list-sd').hide()    
+
+    $('.action-open-small-device-left-panel').click(
+      function(event, ui){
+        var dir = $("#left-panel-small-device").position().left
+        var amount = dir < 0 ? '0%' : '-80%'
+        $("#left-panel-small-device").animate({left: amount});
+      }
+    )
+
+    $('.action-open-small-device-right-panel').click(
+      function(event, ui){
+        var dir = $("#right-panel-small-device").position().left
+        var amount = dir < 0 ? '20%' : '100%'
+        $("#right-panel-small-device").animate({left: amount});
+      }
+    )    
+
 
     $('.small-device').hide()
   }

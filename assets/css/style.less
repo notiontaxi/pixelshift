@@ -6,13 +6,21 @@
 @minWidth: 250px;
 @active: #CFFFD6;
 
+@smallDevicePanelWidth: 80%;
+@smallDeviceHeaderHeight: 12%;
+@smallDeviceFooterHeight: 10%;
+@smallDeviceLayoutBuffer: 1%;
+@smallDeviceInnerHeight: 100% - @smallDeviceHeaderHeight - @smallDeviceFooterHeight - 2*@smallDeviceLayoutBuffer;
+
 body {
   padding-top: 5px;
   padding-bottom: 5px;
   background-color: @darkGrey !important;
   color: @lightGrey;
+
+  // no scrolling on mobile devices
   overflow:hidden;
-width:100%;
+  width:100%;
 }
 
 #canvas-overlay-left, #canvas-overlay-right{
@@ -50,6 +58,7 @@ width:100%;
   color: @lightGrey;
   font-size: 14pt;
   min-width: @minWidth;   
+  
 
   &.big-device-options{
     margin: 10px;
@@ -57,12 +66,14 @@ width:100%;
   }
 
   &.small-device-options{
-    margin: 5px;
-    margin-top: 22%;
-    padding-top: 10px;
+    height: @smallDeviceInnerHeight;
+    margin-left: 5px;
+    margin-right: 5px;
+    top: 13%;
     padding-bottom: 10px;
     padding-left: 5px;
     padding-right: 5px;
+    position: absolute;
   }  
 
 }
@@ -422,8 +433,6 @@ canvas, img {
   }
 }
 
-
-
 .toolbar-submenu-arrow{
   position: absolute;
   color:@active;
@@ -458,16 +467,39 @@ display: none;
   &.header-bar{
       position: fixed;
       top: 0px;
-      height: 12%;
+      height: @smallDeviceHeaderHeight;
       .rounded-corners-bottom();
   }
 
   &.footer-bar{
     position: fixed;
     top: 90%;
-    height: 10%;
+    height: @smallDeviceFooterHeight;
     .rounded-corners-top();
   }  
+}
+
+
+.fade-over-panel{
+
+  height: @smallDeviceInnerHeight;
+  width: @smallDevicePanelWidth;
+  background-color: green;
+  top: @smallDeviceHeaderHeight + @smallDeviceLayoutBuffer;
+  z-index: 4011;
+  overflow: hidden;  
+  position: fixed;
+
+  &.left-sided{
+    left: -@smallDevicePanelWidth;
+    .rounded-corners-right();
+  }
+
+  &.right-sided{
+    left: 100%;
+    .rounded-corners-left();
+  }
+
 }
 
 .rounded-corners-bottom (@radius: 5px) {
@@ -486,5 +518,23 @@ display: none;
   -moz-border-radius-topleft: @radius;
   border-top-right-radius: @radius;
   border-top-left-radius: @radius;
+}
+
+.rounded-corners-left (@radius: 5px) {
+  -webkit-border-top-left-radius: @radius;
+  -webkit-border-bottom-left-radius: @radius;
+  -moz-border-radius-topleft: @radius;
+  -moz-border-radius-bottomleft: @radius;
+  border-bottom-left-radius: @radius;
+  border-top-left-radius: @radius;
+}
+
+.rounded-corners-right (@radius: 5px) {
+  -webkit-border-top-right-radius: @radius;
+  -webkit-border-bottom-right-radius: @radius;
+  -moz-border-radius-topright: @radius;
+  -moz-border-radius-bottomright: @radius;
+  border-bottom-right-radius: @radius;
+  border-top-right-radius: @radius;
 }
 
