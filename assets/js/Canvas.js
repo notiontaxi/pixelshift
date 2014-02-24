@@ -39,8 +39,8 @@ define([], function() {
         , x2: this.canvasWidth        
         , y2: this.canvasHeight
       }
-      this.oldVisibleWidth = 800
-      this.oldVisibleHeight = 640      
+      this.oldVisibleWidth = this.canvasWidth
+      this.oldVisibleHeight =  this.canvasHeight      
 
       this.pixelPerMove = 50 // change this value for bigger or smaller steps
 
@@ -217,9 +217,6 @@ define([], function() {
 
       width = width > this.imageWidth ? this.imageWidth : width
       height = height > this.imageHeight ? this.imageHeight : height
-
-      console.log(width)
-      console.log(height)
       
       var widthDiff = this.oldVisibleWidth - width
       var heightDiff = this.oldVisibleHeight - height
@@ -253,7 +250,8 @@ define([], function() {
           this.ctx.putImageData(this.parent.getImageData(),0,0)
         }
       }else{
-        var area = this.getAreaPixels(imageData)
+        this.previewImageData = imageData
+        var area = this.getAreaPixels(!!imageData)
         this.setAreaPixels(area)
       }
 
@@ -409,28 +407,30 @@ define([], function() {
       this._putFullImageData(data)
     }
 
-    Canvas.prototype.getAreaPixels = function(allPixels){
+    Canvas.prototype.getAreaPixels = function(previewMode){
 
+      this.previeMode = !!previewMode
+      var allPixels
       this.computeVisibleArea()
 
-      if(!allPixels){
-        this.previeMode = false
-        allPixels = this.parent.getFullImageData()
-      }
-      else{
-        this.previeMode = true
-        this.previewImageData = allPixels
+      if(this.previeMode){
+        allPixels = this.previewImageData
+        var rowIncrement = this.imageWidth * 4        
+      }else{
+        allPixels = this.parent.getImageData()
+        var rowIncrement = this.parent.imageWidth * 4
       }
 
       var visibleArea = this.visibleArea
       var pixels = Array()
-
-      var start = this.canvasWidth * 4 * visibleArea.y1  + visibleArea.x1 * 4 
+      
+      var start = rowIncrement * visibleArea.y1  + visibleArea.x1 * 4 
  
-      var end   = this.canvasWidth * 4 * (visibleArea.y2) + visibleArea.x2 * 4 
+      var end   = rowIncrement * (visibleArea.y2) + visibleArea.x2 * 4 
       var rowLength = (visibleArea.x2 - visibleArea.x1) * 4 + 4
-      var rowIncrement = this.canvasWidth * 4
+      
       var i, j
+      var test = 0
 
       var pixel = 0
       var rows = 0
@@ -439,6 +439,8 @@ define([], function() {
       for(i = start; i < end; i+=rowIncrement){
         for(j = i; j < i + rowLength; j++){
           pixels.push(allPixels.data[j])
+          if(allPixels.data[j] == 0)
+            test++
           width++
         }
         rows++
@@ -887,8 +889,8 @@ define([], function() {
     }    
 
     Canvas.prototype.updateSize = function(width, height) {  
-      this.ctx.canvas.width = this.canvasWidth = width
-      this.ctx.canvas.height = this.canvasHeight = height
+      this.ctx.canvas.width  = this.canvasWidth  = this.oldVisibleWidth  = width
+      this.ctx.canvas.height = this.canvasHeight = this.oldVisibleHeight = height       
     }
 
     /*
