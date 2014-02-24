@@ -3,6 +3,8 @@ body {
   padding-bottom: 5px;
   background-color: #333333;
   color: #aaaaaa;
+  overflow: hidden;
+  width: 100%;
 }
 #canvas-overlay-left,
 #canvas-overlay-right {
@@ -34,15 +36,19 @@ body {
   border-radius: 4px;
   color: #aaaaaa;
   font-size: 14pt;
-  min-width: 370px;
+  min-width: 250px;
 }
 .content-container.big-device-options {
-  margin: 5px;
+  margin: 10px;
   padding: 10px;
 }
 .content-container.small-device-options {
   margin: 5px;
-  margin-top: 80px;
+  margin-top: 22%;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 footer {
   margin: 10px;
@@ -163,7 +169,8 @@ img {
   z-index: 1001;
 }
 #canvas-container {
-  margin-top: 20px;
+  margin-top: 5px;
+  padding-bottom: 5px;
 }
 .center-block {
   display: block;
@@ -359,7 +366,7 @@ img {
 .small-device.header-bar {
   position: fixed;
   top: 0px;
-  height: 80px;
+  height: 12%;
   -webkit-border-bottom-right-radius: 5px;
   -webkit-border-bottom-left-radius: 5px;
   -moz-border-radius-bottomright: 5px;

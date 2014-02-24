@@ -9,6 +9,10 @@ require.config({
 
 $('.modalbox-overlay').hide()
 
+// hide while it is not in use
+jQuery.mobile.autoInitializePage = false
+
+
 // workaround for older safari versions
 if(!Function.prototype.bind){
   Function.prototype.bind = function (bind) {

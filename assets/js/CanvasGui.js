@@ -7,7 +7,8 @@ https://github.com/notiontaxi
 
 "use strict"
 
-define(['text!templates/canvas-gui.html', 
+define([
+  'text!templates/canvas-gui.html', 
   'text!templates/menu-bar.html', 
   'text!templates/menu-bar-small-device.html', 
   'text!templates/footer-small-device.html', 
@@ -56,10 +57,13 @@ define(['text!templates/canvas-gui.html',
     
     $(this.overlayElementsIdentifier).append($(headerTemplateSmallDevice))
     $(this.overlayElementsIdentifier).append($(footerTemplateSmallDevice))
-    $(".header-bar.controll-overlay").append($(menuTemplateSmallDevice))
+    //$(".header-bar.controll-overlay").append($(menuTemplateSmallDevice))
 
     this.wasBigMenu = true
     this.wasSmallLayout = this.wasMediumLayout = this.wasSmallLayout = false
+
+    var viewport
+    this.updateViewport()
 
     this.canvasOrigin = new Canvas(this.canvasOriginIdentifier, true)
     this.canvasStage = new Canvas(this.canvasStageIdentifier)
@@ -96,19 +100,35 @@ define(['text!templates/canvas-gui.html',
     var dragNDrop = new DragNDrop(this.canvasShown, this.canvasOrigin.drawImage, this.canvasOrigin)
   }
 
+  CanvasGui.prototype.updateViewport = function(){
+    this.viewport = {
+      width  : $(window).width(),
+      height : $(window).height()
+    }
+  }
+
   CanvasGui.prototype.updateLayout = function(){
     var width = window.outerWidth
+    var height
+
+    this.updateViewport()
 
     if(width < 992 && !this.wasSmallLayout){
-      this.canvasShown.updateSize(400,600)
-      this.canvasStage.updateSize(400,600)
-      $(this.canvasWrapId).css({"width":"400px", "height":"600"})
+      $("#footerLink").hide()
+      width = this.viewport.width - 30
+      height = this.viewport.height*.7 - 50
+      console.log(width)
+      console.log(height)
+      this.canvasShown.updateSize(width, height)
+      this.canvasStage.updateSize(width, height)
+      $(this.canvasWrapId).css({"width": ""+width+"px", "height":""+(height+20)+"px"})
       this.toggleControlls() 
       this.wasSmallLayout = true
       this.wasMediumLayout = this.wasLargeLayout = false
       this.canvasStage.copyToClones(true)
       //console.log("Setting layout to s")
     } else if(width >= 992 && width < 1200 && !this.wasMediumLayout){
+      $("#footerLink").show()
       this.canvasShown.updateSize(700,560)
       this.canvasStage.updateSize(800,640)
       $(this.canvasWrapId).css({"width":"700px", "height":"560px"})
@@ -119,6 +139,7 @@ define(['text!templates/canvas-gui.html',
       this.canvasStage.copyToClones(true)
       //console.log("Setting layout to m")
     } else if(width >= 1200 && !this.wasLargeLayout){
+      $("#footerLink").show()
       this.canvasShown.updateSize(800,640)
       this.canvasStage.updateSize(800,640)
       $(this.canvasWrapId).css({"width":"800px", "height":"640px"})
