@@ -115,44 +115,58 @@ define([
 
     if(width < 992 && !this.wasSmallLayout){
       $("#footerLink").hide()
-      width = this.viewport.width - 30
-      height = this.viewport.height*.7 - 50
-      console.log(width)
-      console.log(height)
-      this.canvasShown.updateSize(width, height)
-      this.canvasStage.updateSize(width, height)
+      width = Math.floor(this.viewport.width - 30)
+      height = Math.floor(this.viewport.height*.7 - 50)
+
+      this.updateCanvasSizes(width,height)
+      
       $(this.canvasWrapId).css({"width": ""+width+"px", "height":""+(height+20)+"px"})
       this.toggleControlls() 
       this.wasSmallLayout = true
       this.wasMediumLayout = this.wasLargeLayout = false
-      this.canvasStage.copyToClones(true)
+      
       //console.log("Setting layout to s")
     } else if(width >= 992 && width < 1200 && !this.wasMediumLayout){
       $("#footerLink").show()
-      this.canvasShown.updateSize(700,560)
-      this.canvasStage.updateSize(800,640)
+
+      this.updateCanvasSizes(700,560)
+
       $(this.canvasWrapId).css({"width":"700px", "height":"560px"})
       if(this.wasSmallLayout)
         this.toggleControlls() 
       this.wasMediumLayout = true
       this.wasSmallLayout = this.wasLargeLayout = false
-      this.canvasStage.copyToClones(true)
+      
       //console.log("Setting layout to m")
     } else if(width >= 1200 && !this.wasLargeLayout){
       $("#footerLink").show()
-      this.canvasShown.updateSize(800,640)
-      this.canvasStage.updateSize(800,640)
+
+      this.updateCanvasSizes(800,640)
+
       $(this.canvasWrapId).css({"width":"800px", "height":"640px"})
       if(this.wasSmallLayout)
         this.toggleControlls()
       this.wasLargeLayout = true
       this.wasSmallLayout = this.wasMediumLayout = false
-      this.canvasStage.copyToClones(true)
+      
       //console.log("Setting layout to l")
     }
 
+    this.canvasStage.draw()
+    this.canvasStage.copyToClones(true)
+
     updateGreyPanels()
 
+  }
+
+  CanvasGui.prototype.updateCanvasSizes = function(width, height){
+    this.canvasShown.updateSize(width, height)
+    this.canvasStage.updateSize(width, height)
+
+    $('#canvas-shown-clone').css({"width":""+width+"px", "height":""+height+"px"})
+    $('#canvas-shown-clone')[0].width = width
+    $('#canvas-shown-clone')[0].height = height
+    
   }
 
   CanvasGui.prototype.toggleControlls = function(){
