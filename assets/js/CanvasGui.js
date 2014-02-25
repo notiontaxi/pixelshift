@@ -65,7 +65,8 @@ define([
     $(this.overlayElementsIdentifier).append($(leftPanelSmallDevice))
     $(this.overlayElementsIdentifier).append($(rightPanelSmallDevice))
 
-    //$(".header-bar.controll-overlay").append($(menuTemplateSmallDevice))
+    $("#right-panel-small-device").append($(menuTemplateSmallDevice))
+    
 
     this.wasBigMenu = true
     this.wasSmallLayout = this.wasMediumLayout = this.wasSmallLayout = false
@@ -228,15 +229,15 @@ define([
       }.bind(this))
     $('.view-actions-list-sd').hide()    
 
-    $('.action-toggle-small-device-panel.left-panel').click(
+    $('.small-device-button.action-toggle-panel.left-panel').click(
       function(event, ui){
         var dir = $("#left-panel-small-device").position().left
         var amount = dir < 0 ? '0%' : '-80%'
-        $("#left-panel-small-device").animate({left: amount});
+        $("#left-panel-small-device").animate({left: amount})
       }
     )
 
-    $('.action-toggle-small-device-panel.right-panel').click(
+    $('.small-device-button.action-toggle-panel.right-panel').click(
       function(event, ui){
         var dir = $("#right-panel-small-device").position().left
         var amount = dir > $('body').width()/2 ? '20%' : '100%' 
