@@ -228,7 +228,7 @@ define([
       }.bind(this))
     $('.view-actions-list-sd').hide()    
 
-    $('.action-open-small-device-left-panel').click(
+    $('.action-toggle-small-device-panel.left-panel').click(
       function(event, ui){
         var dir = $("#left-panel-small-device").position().left
         var amount = dir < 0 ? '0%' : '-80%'
@@ -236,13 +236,13 @@ define([
       }
     )
 
-    $('.action-open-small-device-right-panel').click(
+    $('.action-toggle-small-device-panel.right-panel').click(
       function(event, ui){
         var dir = $("#right-panel-small-device").position().left
-        var amount = dir < 0 ? '20%' : '100%'
+        var amount = dir > $('body').width()/2 ? '20%' : '100%' 
         $("#right-panel-small-device").animate({left: amount});
       }
-    )    
+    )
 
 
     $('.small-device').hide()

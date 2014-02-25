@@ -1,11 +1,14 @@
 @darkGrey: #333333;
 @grey: #888888;
 @lightGrey: #aaaaaa;
+@whiteGrey: #dddddd;
 @lightGreen: #3cdd68;
 @lightRed: #f0002a;
 @minWidth: 250px;
+@middleCyan: #c7e5e5;
 @active: #CFFFD6;
 
+@smallDevicePanelHeight: 100% - @smallDeviceFooterHeight - @smallDeviceLayoutBuffer;
 @smallDevicePanelWidth: 80%;
 @smallDeviceHeaderHeight: 12%;
 @smallDeviceFooterHeight: 10%;
@@ -142,7 +145,7 @@ footer{
 }
 
 .controls{
-  background-color: lightblue;
+  background-color: @middleCyan;
   color: @darkGrey;
   font-size: 12pt;
   margin: 0px 5px 0px 5px;
@@ -300,7 +303,7 @@ canvas, img {
     height: 22px;
     font-size: 110%;
     color: @darkGrey;
-    background-color: lightblue;
+    background-color: @middleCyan;
     .padding(0px, 0px, 5px, 0px)
   }
   .content{
@@ -343,14 +346,6 @@ canvas, img {
 
 .left-float{
   float: left;
-}
-
-.rounded-corners (@radius: 5px) {
-  -webkit-border-radius: @radius;
-  -moz-border-radius: @radius;
-  -ms-border-radius: @radius;
-  -o-border-radius: @radius;
-  border-radius: @radius;
 }
 
 .padding(@top, @bottom, @left, @right){
@@ -458,7 +453,7 @@ display: none;
 
 .small-device{
   &.controll-overlay{
-    background-color: aqua;
+    background-color: lightcyan;
     width: 100%;
     z-index: 4001;
     overflow: hidden;
@@ -482,24 +477,65 @@ display: none;
 
 .fade-over-panel{
 
-  height: @smallDeviceInnerHeight;
+  height: @smallDevicePanelHeight;
   width: @smallDevicePanelWidth;
-  background-color: green;
+  background-color: @grey;
   top: @smallDeviceHeaderHeight + @smallDeviceLayoutBuffer;
   z-index: 4011;
   overflow: hidden;  
   position: fixed;
 
+  border-top: 2px solid @middleCyan;
+
   &.left-sided{
     left: -@smallDevicePanelWidth;
     .rounded-corners-right();
+    border-right: 2px solid @middleCyan;
   }
 
   &.right-sided{
     left: 100%;
     .rounded-corners-left();
+    border-left: 2px solid @middleCyan;
   }
 
+}
+
+.action-toggle-small-device-panel{
+
+  width: 12%;
+  height: 60%;
+
+  position: relative;
+  vertical-align: middle;
+
+  .rounded-corners(13px);
+
+  background-color: @middleCyan;
+  border: 1px solid @lightGrey;
+
+  font-size: 17px;
+
+  top: 20%;
+
+
+  &.left-panel{
+    left: 5%;
+  }
+
+  &.right-panel{
+    left: 100% - 24% - 5%;
+  }  
+
+}
+
+
+.rounded-corners (@radius: 5px) {
+  -webkit-border-radius: @radius;
+  -moz-border-radius: @radius;
+  -ms-border-radius: @radius;
+  -o-border-radius: @radius;
+  border-radius: @radius;
 }
 
 .rounded-corners-bottom (@radius: 5px) {

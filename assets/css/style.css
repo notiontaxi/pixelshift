@@ -103,7 +103,7 @@ footer {
   color: grey;
 }
 .controls {
-  background-color: lightblue;
+  background-color: #c7e5e5;
   color: #333333;
   font-size: 12pt;
   margin: 0px 5px 0px 5px;
@@ -230,7 +230,7 @@ img {
   height: 22px;
   font-size: 110%;
   color: #333333;
-  background-color: lightblue;
+  background-color: #c7e5e5;
   padding-top: 0px;
   padding-bottom: 0px;
   padding-left: 5px;
@@ -360,7 +360,7 @@ img {
   z-index: 1003;
 }
 .small-device.controll-overlay {
-  background-color: aqua;
+  background-color: lightcyan;
   width: 100%;
   z-index: 4001;
   overflow: hidden;
@@ -388,13 +388,14 @@ img {
   border-top-left-radius: 5px;
 }
 .fade-over-panel {
-  height: 76%;
+  height: 89%;
   width: 80%;
-  background-color: green;
+  background-color: #888888;
   top: 13%;
   z-index: 4011;
   overflow: hidden;
   position: fixed;
+  border-top: 2px solid #c7e5e5;
 }
 .fade-over-panel.left-sided {
   left: -80%;
@@ -404,6 +405,7 @@ img {
   -moz-border-radius-bottomright: 5px;
   border-bottom-right-radius: 5px;
   border-top-right-radius: 5px;
+  border-right: 2px solid #c7e5e5;
 }
 .fade-over-panel.right-sided {
   left: 100%;
@@ -413,4 +415,26 @@ img {
   -moz-border-radius-bottomleft: 5px;
   border-bottom-left-radius: 5px;
   border-top-left-radius: 5px;
+  border-left: 2px solid #c7e5e5;
+}
+.action-toggle-small-device-panel {
+  width: 12%;
+  height: 60%;
+  position: relative;
+  vertical-align: middle;
+  -webkit-border-radius: 13px;
+  -moz-border-radius: 13px;
+  -ms-border-radius: 13px;
+  -o-border-radius: 13px;
+  border-radius: 13px;
+  background-color: #c7e5e5;
+  border: 1px solid #aaaaaa;
+  font-size: 17px;
+  top: 20%;
+}
+.action-toggle-small-device-panel.left-panel {
+  left: 5%;
+}
+.action-toggle-small-device-panel.right-panel {
+  left: 71%;
 }
