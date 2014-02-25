@@ -124,13 +124,13 @@ define([
 
     if(width < 992 && !this.wasSmallLayout){
       $("#footerLink").hide()
-      width = Math.floor(this.viewport.width - 30)
+      width = Math.floor(this.viewport.width - 20)
       height = Math.floor(this.viewport.height*.76 - 30)
 
       this.updateCanvasSizes(width,height)
       
       $(this.canvasWrapId).css({"width": ""+width+"px", "height":""+(height+20)+"px"})
-      this.toggleControlls() 
+      this.toggleControlls()
       this.wasSmallLayout = true
       this.wasMediumLayout = this.wasLargeLayout = false
       
@@ -184,12 +184,18 @@ define([
       $(".small-device").show()
       $(".content-container").removeClass("big-device-options")
       $(".content-container").addClass("small-device-options")
+
+      $(".controls-wrapper").removeClass("big-device-options")
+      $(".controls-wrapper").addClass("small-device-options")      
     }
     else{
       $(".big-device").show()
       $(".small-device").hide()
       $(".content-container").removeClass("small-device-options")
       $(".content-container").addClass("big-device-options")
+
+      $(".controls-wrapper").removeClass("small-device-options")
+      $(".controls-wrapper").addClass("big-device-options")      
     }
 
     this.wasBigMenu = !this.wasBigMenu 

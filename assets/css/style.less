@@ -144,6 +144,25 @@ footer{
   color: grey;
 }
 
+
+.controls-wrapper{
+
+  &.small-device-options{
+    top: 100%;
+    position: absolute;
+    display: block;
+    z-index: 4012;
+    left: 13%;
+    width: 74%;
+    height: 20%;
+  }
+
+  &.big-device-options{
+   
+  }
+
+}
+
 .controls{
   background-color: @middleCyan;
   color: @darkGrey;
@@ -508,19 +527,19 @@ display: none;
     position: relative;
 
     background-color: @middleCyan;
-    border: 1px solid @lightGrey;
+    border: none;
 
-    font-size: 25px;
+    font-size: 22px;
 
     &.footer{
-      width: 18%;
-      height: 100%;
-      top: 0%;
+      width: 15%;
+      height: 80%;
+      top: 20%;
 
       &.action-undo{
         .rounded-button-left-bottom(100%);
         i{
-          top: 40%;
+          top: 45%;
           position: absolute;
           left: 25%;
         }
@@ -530,30 +549,29 @@ display: none;
         .rounded-button-right-bottom(75px);
         float: right;
         i{
-          top: 40%;
+          top: 45%;
           position: absolute;
-          left: 40%;
+          left: 45%;
         }        
       }
 
 
     }
 
-
-
     &.action-toggle-panel{
 
-      width: 12%;
-      height: 60%;
-      .rounded-corners(13px);
-      top: 20%;
+      width: 20%;
+      height: 80%;
+      top: 10%;
 
       &.left-panel{
-        left: 5%;
+        left: 0%;
+        .rounded-corners-right(10px);
       }
 
       &.right-panel{
-        left: 100% - 24% - 5%;
+        left: 100% - 40%;
+        .rounded-corners-left(10px);
       }  
   }
 

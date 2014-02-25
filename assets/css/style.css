@@ -102,6 +102,15 @@ footer {
 .menu-name {
   color: grey;
 }
+.controls-wrapper.small-device-options {
+  top: 100%;
+  position: absolute;
+  display: block;
+  z-index: 4012;
+  left: 13%;
+  width: 74%;
+  height: 20%;
+}
 .controls {
   background-color: #c7e5e5;
   color: #333333;
@@ -422,13 +431,13 @@ img {
 .small-device-button {
   position: relative;
   background-color: #c7e5e5;
-  border: 1px solid #aaaaaa;
-  font-size: 25px;
+  border: none;
+  font-size: 22px;
 }
 .small-device-button.footer {
-  width: 18%;
-  height: 100%;
-  top: 0%;
+  width: 15%;
+  height: 80%;
+  top: 20%;
 }
 .small-device-button.footer.action-undo {
   -webkit-border-top-right-radius: 100%;
@@ -439,7 +448,7 @@ img {
   border-top-right-radius: 100%;
 }
 .small-device-button.footer.action-undo i {
-  top: 40%;
+  top: 45%;
   position: absolute;
   left: 25%;
 }
@@ -453,23 +462,30 @@ img {
   float: right;
 }
 .small-device-button.footer.action-redo i {
-  top: 40%;
+  top: 45%;
   position: absolute;
-  left: 40%;
+  left: 45%;
 }
 .small-device-button.action-toggle-panel {
-  width: 12%;
-  height: 60%;
-  -webkit-border-radius: 13px;
-  -moz-border-radius: 13px;
-  -ms-border-radius: 13px;
-  -o-border-radius: 13px;
-  border-radius: 13px;
-  top: 20%;
+  width: 20%;
+  height: 80%;
+  top: 10%;
 }
 .small-device-button.action-toggle-panel.left-panel {
-  left: 5%;
+  left: 0%;
+  -webkit-border-top-right-radius: 10px;
+  -webkit-border-bottom-right-radius: 10px;
+  -moz-border-radius-topright: 10px;
+  -moz-border-radius-bottomright: 10px;
+  border-bottom-right-radius: 10px;
+  border-top-right-radius: 10px;
 }
 .small-device-button.action-toggle-panel.right-panel {
-  left: 71%;
+  left: 60%;
+  -webkit-border-top-left-radius: 10px;
+  -webkit-border-bottom-left-radius: 10px;
+  -moz-border-radius-topleft: 10px;
+  -moz-border-radius-bottomleft: 10px;
+  border-bottom-left-radius: 10px;
+  border-top-left-radius: 10px;
 }
