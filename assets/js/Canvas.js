@@ -102,7 +102,7 @@ define([], function() {
         else
           this.draw()
       }
-      console.log(this.currentScale)
+
     }
 
     Canvas.prototype.zoomOut = function(){
@@ -127,7 +127,7 @@ define([], function() {
             this.draw()
         }
       }
-      console.log(this.currentScale)
+
     }
 
 
@@ -842,11 +842,10 @@ define([], function() {
     Canvas.prototype.getImageData = function(scale){
       
       var imageData
-      console.log(scale)
+
       if(isNumber(scale) && scale !== 0){
         // compute scaled image data
         imageData = this.getScaledImageData(scale)
-        console.log(imageData)
       }else{
         imageData = this.getContext().getImageData(0,0,this.imageWidth, this.imageHeight)
       }
@@ -867,7 +866,7 @@ define([], function() {
 
       var canvasContext = newCanvas.getContext("2d")
       canvasContext.drawImage(img, 0, 0, width, height)
-      console.log(newCanvas)
+
       return canvasContext.getImageData(0,0,width,height)
     }
 
