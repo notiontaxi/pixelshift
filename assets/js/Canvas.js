@@ -54,7 +54,7 @@ define([], function() {
       this.gotNewImage = true
 
       this.scale = 1
-      this.currentScale = 1
+      this.currentScale = 1.0
 
       this.clones = new Array()
       this.undoStack = new Array()
@@ -86,24 +86,37 @@ define([], function() {
 
     Canvas.prototype.zoomIn = function(){
       if(this.currentScale < 50){
-        this.currentScale++
+
+        if(this.currentScale < 1)
+          this.currentScale = this.currentScale + 0.1
+        else
+          this.currentScale++
 
         if(this.pixelPerMove  > 4)
           this.pixelPerMove -= 4
+
+        this.currentScale = parseFloat(this.currentScale.toFixed(1))
 
         if(this.previeMode)
           this.draw(this.previewImageData)
         else
           this.draw()
       }
+      console.log(this.currentScale)
     }
 
     Canvas.prototype.zoomOut = function(){
-      if(this.currentScale > 1.00){
-        this.currentScale-- 
+      if(this.currentScale > .1){
+
+        if(this.currentScale <= 1)
+          this.currentScale -= .1
+        else
+          this.currentScale--
 
         if(this.pixelPerMove < 50 && this.currentScale < 13)
           this.pixelPerMove += 4
+
+        this.currentScale = parseFloat(this.currentScale.toFixed(1))
 
         if(this.currentScale === 1.00)
           this.zoomReset()
@@ -114,11 +127,12 @@ define([], function() {
             this.draw()
         }
       }
+      console.log(this.currentScale)
     }
 
 
     Canvas.prototype.zoomReset = function(){
-        this.currentScale = 1.00
+        this.currentScale = 1.0
         this.computeVisibleArea()
         this.visibleArea.x1 = 0
         this.visibleArea.y1 = 0
@@ -133,7 +147,6 @@ define([], function() {
     */
     Canvas.prototype.moveCanvas = function(direction){
 
-      if(this.currentScale !== 1){
         var canvas = this.getElement()
         var width = Math.floor(this.imageWidth * this.currentScale)
         var height = Math.floor(this.imageHeight * this.currentScale)        
@@ -174,7 +187,6 @@ define([], function() {
           this.draw()
 
         this.checkVisibleBoundaries()
-      }
     }
 
     Canvas.prototype.checkVisibleBoundaries = function(){
@@ -237,26 +249,23 @@ define([], function() {
     * Updates the visible area depending on scale
     * If an imagedata is passed it will be rendered instead of the parents image data.
     * Use this argument for previes.
-    * @param {ImageData} imageData : the image data which will be drawn
+    * @param {ImageData} imageData : the image data which will be drawn (used for previews)
     */
     Canvas.prototype.draw = function(imageData){
-      //console.log(imageData)
-      //console.log('id: '+this.id)
-      if(this.currentScale === 1){
-        if(!!imageData){
-          this.clear()
-          this.ctx.putImageData(imageData,0,0)
-        }else{     
-          this.clear()   
-          this.ctx.putImageData(this.parent.getImageData(),0,0)
-        }
-      }else if(this.currentScale > 1){
+
+      // positive zoom is implemented by pixe repetition, negative is calculated by parent via getImageData()
+      var zoomAmountToPass = this.currentScale >= 1 ? 0 : this.currentScale
+      var data = !!imageData ? imageData : this.parent.getImageData(zoomAmountToPass)
+
+      if(this.currentScale < 1){
+        this.clear()
+        this.ctx.putImageData(data,0,0)
+      }
+      //pixel repetation and pixels of viewport
+      else if(this.currentScale >= 1){
         this.previewImageData = imageData
         var area = this.getAreaPixels(!!imageData)
         this.setAreaPixels(area)
-      }else{
-        var data = !!imageData ? imageData : this.parent.getImageData()
-
       }
 
       if(this.currentScale >= this.gridZoomLevel  && this.drawGrid){
@@ -830,8 +839,36 @@ define([], function() {
     * Returns the ImageData of this canvas without the image borders (the pure image)
     * @returns {ImageData} ImageData without borders
     */
-    Canvas.prototype.getImageData = function(){
-      return this.getContext().getImageData(0,0,this.imageWidth, this.imageHeight)
+    Canvas.prototype.getImageData = function(scale){
+      
+      var imageData
+      console.log(scale)
+      if(isNumber(scale) && scale !== 0){
+        // compute scaled image data
+        imageData = this.getScaledImageData(scale)
+        console.log(imageData)
+      }else{
+        imageData = this.getContext().getImageData(0,0,this.imageWidth, this.imageHeight)
+      }
+
+      return imageData
+    }
+
+    Canvas.prototype.getScaledImageData = function(scale){
+
+      var img = $("#"+this.id)[0]
+
+      var width = Math.floor(this.imageWidth * scale)
+      var height = Math.floor(this.imageHeight * scale)
+
+      var newCanvas = $("<canvas>")
+          .attr("width", width)
+          .attr("height", height)[0]
+
+      var canvasContext = newCanvas.getContext("2d")
+      canvasContext.drawImage(img, 0, 0, width, height)
+      console.log(newCanvas)
+      return canvasContext.getImageData(0,0,width,height)
     }
 
     /**
