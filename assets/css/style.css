@@ -3,6 +3,8 @@ body {
   padding-bottom: 5px;
   background-color: #333333 !important;
   color: #aaaaaa;
+  overflow: hidden;
+  width: 100%;
 }
 #canvas-overlay-left,
 #canvas-overlay-right {
@@ -107,7 +109,7 @@ footer {
   z-index: 4012;
   left: 13%;
   width: 74%;
-  height: 20%;
+  height: 13%;
 }
 .controls {
   background-color: #c7e5e5;
