@@ -240,7 +240,8 @@ define([], function() {
     * @param {ImageData} imageData : the image data which will be drawn
     */
     Canvas.prototype.draw = function(imageData){
-
+      //console.log(imageData)
+      //console.log('id: '+this.id)
       if(this.currentScale === 1){
         if(!!imageData){
           this.clear()
@@ -249,10 +250,13 @@ define([], function() {
           this.clear()   
           this.ctx.putImageData(this.parent.getImageData(),0,0)
         }
-      }else{
+      }else if(this.currentScale > 1){
         this.previewImageData = imageData
         var area = this.getAreaPixels(!!imageData)
         this.setAreaPixels(area)
+      }else{
+        var data = !!imageData ? imageData : this.parent.getImageData()
+
       }
 
       if(this.currentScale >= this.gridZoomLevel  && this.drawGrid){
@@ -1031,7 +1035,7 @@ define([], function() {
     Canvas.prototype.drawFirstClone = function(){
       this.clones[0].copyImageProperties(this)
       this.clones[0].draw()
-    }    
+    }
 
     Canvas.prototype.coordinateToUnzoomedGaussSystem = function(absoluteCoords){
       return {

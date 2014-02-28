@@ -45,9 +45,7 @@ var ContrastStrategy, _ref, module,
 
       this.processedImageData = this.imageProcessor.processContrast(imgData, this.currentValue)
 
-      if(!!preview)
-        this.canvasStage.draw(this.processedImageData)
-      else{
+      if(!preview){
         this.canvasOrigin.putImageData(this.processedImageData)
         this.updateAllStrategies(this.canvasOrigin.getImageData(), true)
       }

@@ -19,8 +19,9 @@ define([], function() {
 
 
 
-  function Context(canvasOrigin){
+  function Context(canvasOrigin, canvasStage){
     this.canvasOrigin = canvasOrigin
+    this.canvasStage = canvasStage
     this.oneClickStrategies = Array()
     this.StackableStrategies = Array()
   }
@@ -60,7 +61,7 @@ define([], function() {
       if(_this.StackableStrategies[i].changed){
         _this.StackableStrategies[i].execute(_this.imageData, preview)
       }
-    
+      this.canvasStage.draw(_this.imageData)
   }
 
 

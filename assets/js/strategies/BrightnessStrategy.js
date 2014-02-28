@@ -39,18 +39,17 @@ var BrightnessStrategy, _ref, module,
     }
 
     BrightnessStrategy.prototype.execute = function(imgData, preview){
-
+      console.log('execute brightness strategy')
       if(!imgData)
         var imgData = this.canvasOrigin.getImageData()
       
       this.processedImageData = this.imageProcessor.processBrightness(imgData, this.currentValue)
 
-      if(!!preview)
-        this.canvasStage.draw(this.processedImageData)
-      else{
+      if(!preview){
         this.canvasOrigin.putImageData(this.processedImageData)
-        this.updateAllStrategies(this.canvasOrigin.getImageData(), true)
+        this.updateAllStrategies(this.canvasOrigin.getImageData(), true)        
       }
+
     }
 
 

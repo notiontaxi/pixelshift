@@ -60,7 +60,7 @@ var ImageProcessing, _ref, module,
     }
 
     ImageProcessing.prototype.initContext = function(){
-      this.context = new Context(this.canvasOrigin)
+      this.context = new Context(this.canvasOrigin, this.canvasStage)
       var canvases = 
         {
             canvasOrigin: this.canvasOrigin

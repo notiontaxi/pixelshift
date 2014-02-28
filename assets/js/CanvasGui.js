@@ -309,7 +309,6 @@ define([
         event.preventDefault()
         var newImg = this.imageProcessor.processGrayscale(this.canvasOrigin.getImageData(), this.canvasOrigin.getImageWidth())
         this.canvasOrigin.putImageData(newImg)
-        this.canvasStage.draw()
     }.bind(this))    
 
     $(".action-bitmap").click(
@@ -318,7 +317,6 @@ define([
         event.preventDefault()
         var newImg = this.imageProcessor.processThreshold(this.imageProcessor.computeThreshold(this.canvasOrigin.getImageData()) ,this.canvasOrigin.getImageData())
         this.canvasOrigin.putImageData(newImg)
-        this.canvasStage.draw()
     }.bind(this))  
 
     $(".action-invert").click(
@@ -327,7 +325,6 @@ define([
         event.preventDefault()
         var newImg = this.imageProcessor.processInvertColors(this.canvasOrigin.getImageData(), this.canvasOrigin.getImageWidth())
         this.canvasOrigin.putImageData(newImg)
-        this.canvasStage.draw()
     }.bind(this))          
 
     $(".action-emboss").click(
@@ -344,7 +341,6 @@ define([
         )
 
         this.canvasOrigin.putImageData(this.processedImageData)
-        this.canvasStage.draw()
     }.bind(this))   
 
     $(".action-sharpen").click(
@@ -361,7 +357,6 @@ define([
         )
 
         this.canvasOrigin.putImageData(this.processedImageData)
-        this.canvasStage.draw()
     }.bind(this))  
 
     $(".action-highpass").click(
@@ -379,7 +374,6 @@ define([
         )
 
         this.canvasOrigin.putImageData(this.processedImageData)
-        this.canvasStage.draw()
     }.bind(this)) 
 
     $(".action-lowpass").click(
@@ -397,7 +391,6 @@ define([
         )
 
         this.canvasOrigin.putImageData(this.processedImageData)
-        this.canvasStage.draw()
     }.bind(this)) 
                 
   }  
