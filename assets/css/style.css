@@ -3,8 +3,6 @@ body {
   padding-bottom: 5px;
   background-color: #333333 !important;
   color: #aaaaaa;
-  overflow: hidden;
-  width: 100%;
 }
 #canvas-overlay-left,
 #canvas-overlay-right {

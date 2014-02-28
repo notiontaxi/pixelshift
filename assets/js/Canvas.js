@@ -698,7 +698,7 @@ define([], function() {
     * @param {canvas} _this The canvas onto the image shall be drawn 
     *
     */
-    Canvas.prototype.drawImage = function(img, _this){
+    Canvas.prototype.drawImage = function(img, _this, scaleToCanvas){
       if(!_this)
         var _this = this
 
@@ -706,29 +706,43 @@ define([], function() {
       _this.imageHeight = 0
       _this.imageWidth = 0
 
-      if(img.width > img.height)
-      {
-        if(img.width >= _this.cv.width){
-          _this.imageHeight = Math.round(img.height * (_this.cv.width/img.width))
-          _this.imageWidth = _this.cv.width
-        }else{
-          _this.imageWidth = img.width
-          _this.imageHeight = img.height
-        }
-        
-      } else {
+      // ToDo: no maximum image size
+      // if(!!scaleToCanvas)
+      // {
+        if(img.width > img.height)
+        {
+          if(img.width >= _this.cv.width){
+            _this.imageHeight = Math.round(img.height * (_this.cv.width/img.width))
+            _this.imageWidth = _this.cv.width
+          }else{
+            _this.imageWidth = img.width
+            _this.imageHeight = img.height
+          }
+          
+        } else {
 
-        if(img.height >= _this.cv.height){
-          _this.imageHeight = _this.cv.height
-          _this.imageWidth = Math.round(img.width * (_this.cv.height/img.height))
-        }else{
-          _this.imageHeight = img.height
-          _this.imageWidth = img.width  
-        }   
-      }
+          if(img.height >= _this.cv.height){
+            _this.imageHeight = _this.cv.height
+            _this.imageWidth = Math.round(img.width * (_this.cv.height/img.height))
+          }else{
+            _this.imageHeight = img.height
+            _this.imageWidth = img.width  
+          }   
+        }
+      // }else{
+      //   _this.imageHeight = img.height
+      //   _this.imageWidth = img.width
+      // }
 
       _this.gotNewImage = true
       _this.clear()
+
+      $("#"+_this.id).css({
+          width: _this.imageWidth
+        , height: _this.imageHeight
+      })
+      _this.cv.width = _this.imageWidth
+      _this.cv.height = _this.imageHeight
       _this.getContext().drawImage(img, 0, 0, _this.imageWidth, _this.imageHeight)
       _this.registerContentModification()
       _this.drawClones()
@@ -866,6 +880,7 @@ define([], function() {
 
       var canvasContext = newCanvas.getContext("2d")
       canvasContext.drawImage(img, 0, 0, width, height)
+      //canvasContext.putImageData(,0,0,0,0,width,height)
 
       return canvasContext.getImageData(0,0,width,height)
     }

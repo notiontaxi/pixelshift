@@ -55,7 +55,9 @@ define([], function() {
     if(!_this)
       var _this = this
 
-    _this.imageData = _this.canvasOrigin.getImageData()
+     var zoomAmountToPass = _this.canvasStage.currentScale >= 1 ? 0 : _this.canvasStage.currentScale
+     console.log(zoomAmountToPass)
+    _this.imageData = _this.canvasOrigin.getImageData(zoomAmountToPass)
 
     for(var i = 0; i < _this.StackableStrategies.length; i++)
       if(_this.StackableStrategies[i].changed){
