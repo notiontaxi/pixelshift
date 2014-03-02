@@ -32,7 +32,7 @@ body {
   padding: 10px;
 }
 .content-container.small-device-options {
-  height: 71%;
+  height: 73%;
   margin-left: 5px;
   margin-right: 5px;
   top: 13%;
@@ -105,7 +105,6 @@ footer {
   color: #333333;
   font-size: 12pt;
   margin: 0px 5px 0px 5px;
-  padding: 5px 5px 10px 5px;
   -webkit-border-bottom-right-radius: 5px;
   -webkit-border-bottom-left-radius: 5px;
   -moz-border-radius-bottomright: 5px;
@@ -113,6 +112,49 @@ footer {
   border-bottom-right-radius: 5px;
   border-bottom-left-radius: 5px;
   display: none;
+}
+.controls.small-device-options {
+  padding-top: 15px;
+  padding-bottom: 30px;
+}
+.controls.small-device-options .slider-set {
+  margin: 0px;
+  padding: 0px;
+}
+.controls.small-device-options .my-slider {
+  margin: 0px 4% 0px 4%;
+}
+.controls.small-device-options .color-ok {
+  position: fixed;
+  width: 15%;
+  height: 10.4%;
+  top: 89.6%;
+  left: 85%;
+  -webkit-border-top-left-radius: 100%;
+  -webkit-border-bottom-left-radius: 0px;
+  -moz-border-radius-topleft: 100%;
+  -moz-border-radius-bottomleft: 0px;
+  border-bottom-left-radius: 0px;
+  border-top-left-radius: 100%;
+}
+.controls.small-device-options .color-nok {
+  position: fixed;
+  width: 15%;
+  height: 10.4%;
+  top: 89.6%;
+  left: 0px;
+  -webkit-border-top-right-radius: 100%;
+  -webkit-border-bottom-right-radius: 0px;
+  -moz-border-radius-topright: 100%;
+  -moz-border-radius-bottomright: 0px;
+  border-bottom-right-radius: 0px;
+  border-top-right-radius: 100%;
+}
+.controls.small-device-options .button-text {
+  top: 38%;
+  width: 100%;
+  position: absolute;
+  text-align: center;
 }
 .controls.small-device-options .slider-output {
   top: 7%;
@@ -133,6 +175,7 @@ footer {
 }
 .controls.big-device-options {
   border: 1px solid #aaaaaa;
+  padding: 5px 5px 10px 5px;
 }
 .controls.big-device-options .slider-set {
   border-width: 1px;
@@ -145,7 +188,6 @@ footer {
   margin-top: 5px;
   margin-bottom: 5px;
   height: auto;
-  min-height: 35px;
 }
 .hidden {
   display: none;
@@ -409,8 +451,8 @@ img {
 .small-device.footer-bar {
   overflow: hidden;
   position: fixed;
-  top: 85%;
-  height: 15%;
+  top: 87%;
+  height: 13%;
   -webkit-border-top-right-radius: 5px;
   -webkit-border-top-left-radius: 5px;
   -moz-border-radius-topright: 5px;
@@ -420,7 +462,7 @@ img {
 }
 .fade-over-panel {
   padding: 5px;
-  height: 84%;
+  height: 86%;
   width: 80%;
   background-color: #888888;
   top: 13%;

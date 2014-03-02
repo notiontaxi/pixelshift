@@ -11,7 +11,7 @@
 @smallDevicePanelHeight: 100% - @smallDeviceFooterHeight - @smallDeviceLayoutBuffer;
 @smallDevicePanelWidth: 80%;
 @smallDeviceHeaderHeight: 12%;
-@smallDeviceFooterHeight: 15%;
+@smallDeviceFooterHeight: 13%;
 @smallDeviceFooterTop: 100% - @smallDeviceFooterHeight;
 @smallDeviceLayoutBuffer: 1%;
 @smallDeviceInnerHeight: 100% - @smallDeviceHeaderHeight - @smallDeviceFooterHeight - 2*@smallDeviceLayoutBuffer;
@@ -162,8 +162,6 @@ footer{
   font-size: 12pt;
   margin: 0px 5px 0px 5px;
 
-  padding: 5px 5px 10px 5px;
-
   -webkit-border-bottom-right-radius: 5px;
   -webkit-border-bottom-left-radius: 5px;
   -moz-border-radius-bottomright: 5px;
@@ -174,12 +172,44 @@ footer{
   display: none;
 
   &.small-device-options{
-    .color-ok{
 
+    padding-top: 15px;
+    padding-bottom: 30px;
+
+    .slider-set{
+      margin: 0px;
+      padding: 0px;
+    }
+
+    .my-slider{
+      margin: 0px 4% 0px 4%;
+    }
+
+    .color-ok{
+      position: fixed;
+      width: @smallDeviceButtonWidth;
+      height: @smallDeviceFooterHeight * .8;
+      top: @smallDeviceFooterTop + @smallDeviceFooterHeight * .2;
+      left: 100% - @smallDeviceButtonWidth;
+
+      .rounded-button-right-bottom(100%); 
     }
 
     .color-nok{
+      position: fixed;
+      width: @smallDeviceButtonWidth;
+      height: @smallDeviceFooterHeight * .8;
+      top: @smallDeviceFooterTop + @smallDeviceFooterHeight * .2;
+      left: 0px;
 
+      .rounded-button-left-bottom(100%);
+    }
+
+    .button-text{
+      top: 38%;
+      width: 100%;
+      position: absolute;
+      text-align: center;
     }
 
     .slider-output{
@@ -204,7 +234,9 @@ footer{
   }
 
   &.big-device-options{
+
     border: 1px solid @lightGrey;
+    padding: 5px 5px 10px 5px;
 
     .color-ok{
 
@@ -233,7 +265,7 @@ footer{
   margin-bottom: 5px;
 
   height: auto; 
-  min-height: 35px;      
+  //min-height: 35px;      
 }    
 
 .hidden{
