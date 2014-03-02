@@ -20,17 +20,6 @@ body {
   display: table;
   clear: both;
 }
-.slider-set {
-  border-width: 1px;
-  border-style: solid;
-  border-color: #808080;
-  padding: 5px;
-  border-radius: 4px;
-  margin-top: 5px;
-  margin-bottom: 5px;
-  height: auto;
-  min-height: 35px;
-}
 .content-container {
   background-color: #888888;
   border-radius: 4px;
@@ -43,7 +32,7 @@ body {
   padding: 10px;
 }
 .content-container.small-device-options {
-  height: 76%;
+  height: 71%;
   margin-left: 5px;
   margin-right: 5px;
   top: 13%;
@@ -123,8 +112,40 @@ footer {
   -moz-border-radius-bottomleft: 5px;
   border-bottom-right-radius: 5px;
   border-bottom-left-radius: 5px;
-  border: 1px solid #aaaaaa;
   display: none;
+}
+.controls.small-device-options .slider-output {
+  top: 7%;
+  left: 15%;
+  position: fixed;
+  width: 70%;
+  text-align: center;
+}
+.controls.small-device-options .slider-set {
+  border: none;
+}
+.controls.small-device-options .control-name {
+  top: 1%;
+  left: 15%;
+  position: fixed;
+  width: 70%;
+  text-align: center;
+}
+.controls.big-device-options {
+  border: 1px solid #aaaaaa;
+}
+.controls.big-device-options .slider-set {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #808080;
+}
+.slider-set {
+  padding: 5px;
+  border-radius: 4px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  height: auto;
+  min-height: 35px;
 }
 .hidden {
   display: none;
@@ -388,8 +409,8 @@ img {
 .small-device.footer-bar {
   overflow: hidden;
   position: fixed;
-  top: 90%;
-  height: 10%;
+  top: 85%;
+  height: 15%;
   -webkit-border-top-right-radius: 5px;
   -webkit-border-top-left-radius: 5px;
   -moz-border-radius-topright: 5px;
@@ -399,7 +420,7 @@ img {
 }
 .fade-over-panel {
   padding: 5px;
-  height: 89%;
+  height: 84%;
   width: 80%;
   background-color: #888888;
   top: 13%;

@@ -55,6 +55,8 @@ var ImageProcessing, _ref, module,
       
       this.initContext()
       
+      this.initialize()
+      
       //this.runTests()
 
     }

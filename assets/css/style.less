@@ -11,9 +11,12 @@
 @smallDevicePanelHeight: 100% - @smallDeviceFooterHeight - @smallDeviceLayoutBuffer;
 @smallDevicePanelWidth: 80%;
 @smallDeviceHeaderHeight: 12%;
-@smallDeviceFooterHeight: 10%;
+@smallDeviceFooterHeight: 15%;
+@smallDeviceFooterTop: 100% - @smallDeviceFooterHeight;
 @smallDeviceLayoutBuffer: 1%;
 @smallDeviceInnerHeight: 100% - @smallDeviceHeaderHeight - @smallDeviceFooterHeight - 2*@smallDeviceLayoutBuffer;
+
+@smallDeviceButtonWidth: 15%;
 
 body {
   padding-top: 5px;
@@ -42,17 +45,6 @@ body {
   clear: both;
 }
 
-.slider-set{
-  .solid-border(grey);
-  padding: 5px;
-  border-radius: 4px;
-
-  margin-top: 5px;
-  margin-bottom: 5px;
-
-  height: auto; 
-  min-height: 35px;
-}
 
 .content-container{
 
@@ -164,6 +156,7 @@ footer{
 }
 
 .controls{
+
   background-color: @middleCyan;
   color: @darkGrey;
   font-size: 12pt;
@@ -178,10 +171,70 @@ footer{
   border-bottom-right-radius: 5px;
   border-bottom-left-radius: 5px;
 
-  border: 1px solid @lightGrey;
-
   display: none;
+
+  &.small-device-options{
+    .color-ok{
+
+    }
+
+    .color-nok{
+
+    }
+
+    .slider-output{
+      top: 7%;
+      left: @smallDeviceButtonWidth;
+      position: fixed;
+      width: 100% - 2*@smallDeviceButtonWidth;
+      text-align: center;
+    }
+
+    .slider-set{
+      border: none;
+    }
+
+    .control-name{
+      top: 1%;
+      left: @smallDeviceButtonWidth;
+      position: fixed;
+      width: 100% - 2*@smallDeviceButtonWidth;
+      text-align: center;
+    }
+  }
+
+  &.big-device-options{
+    border: 1px solid @lightGrey;
+
+    .color-ok{
+
+    }
+
+    .color-nok{
+
+    }
+
+    .slider-output{
+
+    }
+
+    .slider-set{
+      .solid-border(grey);    
+    }    
+  }
 }
+
+.slider-set{
+
+  padding: 5px;
+  border-radius: 4px;
+
+  margin-top: 5px;
+  margin-bottom: 5px;
+
+  height: auto; 
+  min-height: 35px;      
+}    
 
 .hidden{
   display: none;
@@ -488,7 +541,7 @@ display: none;
   &.footer-bar{
     overflow: hidden;
     position: fixed;
-    top: 90%;
+    top: @smallDeviceFooterTop;
     height: @smallDeviceFooterHeight;
     .rounded-corners-top();
   }  
@@ -532,7 +585,7 @@ display: none;
     font-size: 22px;
 
     &.footer{
-      width: 15%;
+      width: @smallDeviceButtonWidth;
       height: 80%;
       top: 20%;
 

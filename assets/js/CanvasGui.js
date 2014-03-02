@@ -95,8 +95,6 @@ define([
     this.addKeyBindings()
 
     this.initializeSmallDevicesMenu()
-
-    this.initialize()
   }
 
   CanvasGui.prototype.initialize = function(){
@@ -104,9 +102,9 @@ define([
     this.wasMediumLayout = false
     this.wasLargeLayout = false
 
-    this.updateLayout()
-
     var dragNDrop = new DragNDrop(this.canvasShown, this.canvasOrigin.drawImage, this.canvasOrigin)
+
+    this.updateLayout()
   }
 
   CanvasGui.prototype.updateViewport = function(){
@@ -125,7 +123,7 @@ define([
     if(width < 992 && !this.wasSmallLayout){
       $("#footerLink").hide()
       width = Math.floor(this.viewport.width - 20)
-      height = Math.floor(this.viewport.height*.76 - 30)
+      height = Math.floor(this.viewport.height*.71 - 30)
 
       this.updateCanvasSizes(width,height)
       
@@ -186,7 +184,10 @@ define([
       $(".content-container").addClass("small-device-options")
 
       $(".controls-wrapper").removeClass("big-device-options")
-      $(".controls-wrapper").addClass("small-device-options")      
+      $(".controls-wrapper").addClass("small-device-options")   
+
+      $(".controls").removeClass("big-device-options")
+      $(".controls").addClass("small-device-options")      
     }
     else{
       $(".big-device").show()
@@ -195,7 +196,10 @@ define([
       $(".content-container").addClass("big-device-options")
 
       $(".controls-wrapper").removeClass("small-device-options")
-      $(".controls-wrapper").addClass("big-device-options")      
+      $(".controls-wrapper").addClass("big-device-options")  
+
+      $(".controls").removeClass("small-device-options")
+      $(".controls").addClass("big-device-options")            
     }
 
     this.wasBigMenu = !this.wasBigMenu 
