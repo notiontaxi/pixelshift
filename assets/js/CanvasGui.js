@@ -10,7 +10,6 @@ https://github.com/notiontaxi
 define([
     'text!templates/canvas-gui.html', 
     'text!templates/menu-bar.html', 
-    'text!templates/menu-bar-small-device.html', 
     'text!templates/footer-small-device.html', 
     'text!templates/header-small-device.html', 
     'text!templates/left-panel-small-device.html',     
@@ -23,7 +22,6 @@ define([
   function(
     canvasGuiTemplate, 
     menuTemplate, 
-    menuTemplateSmallDevice,
     footerTemplateSmallDevice,
     headerTemplateSmallDevice,
     leftPanelSmallDevice,
@@ -65,8 +63,6 @@ define([
     $(this.overlayElementsIdentifier).append($(leftPanelSmallDevice))
     $(this.overlayElementsIdentifier).append($(rightPanelSmallDevice))
 
-    $("#right-panel-small-device").append($(menuTemplateSmallDevice))
-    
 
     this.wasBigMenu = true
     this.wasSmallLayout = this.wasMediumLayout = this.wasSmallLayout = false
@@ -94,6 +90,8 @@ define([
     this.initializeViewFunctionality()
     this.addKeyBindings()
 
+    this.initTabs()
+
     this.initializeSmallDevicesMenu()
   }
 
@@ -105,6 +103,13 @@ define([
     var dragNDrop = new DragNDrop(this.canvasShown, this.canvasOrigin.drawImage, this.canvasOrigin)
 
     this.updateLayout()
+  }
+
+  CanvasGui.prototype.initTabs = function(){
+    $('#menu-tab a').click(function (e) {
+      e.preventDefault()
+      $(this).tab('show')
+    })    
   }
 
   CanvasGui.prototype.updateViewport = function(){

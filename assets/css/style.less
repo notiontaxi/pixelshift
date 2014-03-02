@@ -268,6 +268,7 @@ footer{
   //min-height: 35px;      
 }    
 
+
 .hidden{
   display: none;
 }
@@ -577,6 +578,34 @@ display: none;
     height: @smallDeviceFooterHeight;
     .rounded-corners-top();
   }  
+
+  &.fade-over-panel{
+
+    .rounded-corners();
+
+    ul{
+      position: static;
+      background-color: lightcyan;
+      padding: 5px 5px 5px 10px;
+    }
+
+    .tab-content{
+      li{
+        padding: 5px 15px 5px 25px;
+        font-size: 14px;
+        list-style: none;
+      }
+      a{
+        color: @darkGrey;
+        text-decoration: none;
+      }
+      .divider{
+        height:1px;
+        background-color: lightGrey;
+        padding: 0px;
+      }
+    }
+  }
 }
 
 
