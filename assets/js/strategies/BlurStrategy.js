@@ -40,13 +40,16 @@ var BlurStrategy, _ref, module,
     }
 
     BlurStrategy.prototype.execute = function(imgData, preview){
-      if(!imgData)
-        var imgData = this.canvasOrigin.getImageData()
-      
+
       if(!!preview){
-        this.processedImageData = stackBlurImage(imgData, this.canvasStage.imageWidth, this.canvasStage.imageHeight, this.currentValue, false )
+        this.processedImageData = stackBlurImage(imgData, imgData.width, imgData.height, this.currentValue, false )
       }else{
-        this.processedImageData = stackBlurImage(imgData, this.canvasOrigin.imageWidth, this.canvasOrigin.imageHeight, this.currentValue, false )
+
+        // calculate relative blur value
+        var zoomAmountToPass = this.canvasStage.currentScale >= 1 ? 1 : 1/this.canvasStage.currentScale
+        var imgData = this.canvasOrigin.getImageData()
+
+        this.processedImageData = stackBlurImage(imgData, imgData.width, imgData.height, this.currentValue*zoomAmountToPass, false )
         this.canvasOrigin.putImageData(this.processedImageData)
         this.updateAllStrategies(this.canvasOrigin.getImageData(), true)
       }

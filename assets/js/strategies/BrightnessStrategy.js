@@ -39,7 +39,7 @@ var BrightnessStrategy, _ref, module,
     }
 
     BrightnessStrategy.prototype.execute = function(imgData, preview){
-      console.log('execute brightness strategy')
+
       if(!imgData)
         var imgData = this.canvasOrigin.getImageData()
       

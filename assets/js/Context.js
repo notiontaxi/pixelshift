@@ -52,6 +52,8 @@ define([], function() {
 
   Context.prototype.runStackedStrategies = function(_this, preview){
 
+    var changes = 0
+
     if(!_this)
       var _this = this
 
@@ -59,11 +61,19 @@ define([], function() {
      console.log(zoomAmountToPass)
     _this.imageData = _this.canvasOrigin.getImageData(zoomAmountToPass)
 
-    for(var i = 0; i < _this.StackableStrategies.length; i++)
+    for(var i = 0; i < _this.StackableStrategies.length; i++){
       if(_this.StackableStrategies[i].changed){
         _this.StackableStrategies[i].execute(_this.imageData, preview)
+        changes++
+      }else if(_this.StackableStrategies[i].reset){
+        _this.StackableStrategies[i].execute(_this.imageData, preview)
       }
+    }
+      
+    if(changes > 0)
       this.canvasStage.draw(_this.imageData)
+    else
+      this.canvasStage.draw()
   }
 
 

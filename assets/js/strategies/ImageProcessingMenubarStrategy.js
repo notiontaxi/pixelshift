@@ -130,13 +130,18 @@ var ImageProcessingMenubarStrategy, _ref, module,
       $( "#"+_this.name+"-slider" ).slider({value: 0})
       $( "#"+_this.name+"-slider-output" ).html(0)
 
-      if(!!_this.onChangeAction)
-       _this.onChangeAction(_this.refObj, true)
+      _this.reset = true
+      _this.changed = false
 
+      // run all filters whit this set to 0 (reset)
+      if(!!_this.onChangeAction){
+       _this.onChangeAction(_this.refObj, true)
+      }
+
+      _this.reset = false
       _this.okButton.hide()
       _this.nokButton.hide()
-
-      _this.changed = false   
+    
     }
 
     ImageProcessingMenubarStrategy.prototype.proceed = function(event, ui){   
@@ -149,6 +154,7 @@ var ImageProcessingMenubarStrategy, _ref, module,
 
       _this.changed = false
 
+      // execute filter on origin canvas and rund other filters in previewmode in execute()
       _this.execute(null, false)
       // reset all values to 0
       _this.currentValue = 0

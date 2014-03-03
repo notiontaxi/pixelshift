@@ -85,68 +85,67 @@ define([], function() {
 
 
     Canvas.prototype.zoomIn = function(){
-      if(this.currentScale < 50){
+      // workaround ToDo: fix issues with negative zoom
+      if(!this.previeMode){
+        if(this.currentScale < 50){
 
-        if(this.currentScale < 1)
-          this.currentScale = this.currentScale + 0.1
-        else
-          this.currentScale++
+          if(this.currentScale < 1)
+            this.currentScale = this.currentScale + 0.1
+          else
+            this.currentScale++
 
-        if(this.pixelPerMove  > 4)
-          this.pixelPerMove -= 4
+          if(this.pixelPerMove  > 4)
+            this.pixelPerMove -= 4
 
-        this.currentScale = parseFloat(this.currentScale.toFixed(1))
+          this.currentScale = parseFloat(this.currentScale.toFixed(1))
 
-        if(this.previeMode)
-          this.draw(this.previewImageData)
-        else
           this.draw()
+        }
       }
-
     }
 
     Canvas.prototype.zoomOut = function(){
-      if(this.currentScale > .1){
+      // workaround ToDo: fix issues with negative zoom
+      if(!this.previeMode){      
+        if(this.currentScale > .1){
 
-        if(this.currentScale <= 1)
-          this.currentScale -= .1
-        else
-          this.currentScale--
-
-        if(this.pixelPerMove < 50 && this.currentScale < 13)
-          this.pixelPerMove += 4
-
-        this.currentScale = parseFloat(this.currentScale.toFixed(1))
-
-        if(this.currentScale === 1.00)
-          this.zoomReset()
-        else{
-          if(this.previeMode)
-            this.draw(this.previewImageData)
+          if(this.currentScale <= 1)
+            this.currentScale -= .1
           else
-            this.draw()
+            this.currentScale--
+
+          if(this.pixelPerMove < 50 && this.currentScale < 13)
+            this.pixelPerMove += 4
+
+          this.currentScale = parseFloat(this.currentScale.toFixed(1))
+
+          if(this.currentScale === 1.00)
+            this.zoomReset()
+
+          this.draw()
         }
       }
-
     }
 
 
     Canvas.prototype.zoomReset = function(){
+      // workaround ToDo: fix issues with negative zoom
+      if(!this.previeMode){        
         this.currentScale = 1.0
         this.computeVisibleArea()
         this.visibleArea.x1 = 0
         this.visibleArea.y1 = 0
-        if(this.previeMode)
-          this.draw(this.previewImageData)
-        else
-          this.draw()
+
+        this.draw()
+      }
     }
 
     /**
     * Moves the zoomed canvas (till the edge is reached)
     */
     Canvas.prototype.moveCanvas = function(direction){
-
+      // workaround ToDo: fix issues with negative zoom
+      if(!this.previeMode){
         var canvas = this.getElement()
         var width = Math.floor(this.imageWidth * this.currentScale)
         var height = Math.floor(this.imageHeight * this.currentScale)        
@@ -179,14 +178,12 @@ define([], function() {
               this.visibleArea.x1 = this.visibleArea.x1 > bound ? bound : this.visibleArea.x1
             }
             break
-        }
+          }
 
-        if(this.previeMode)
-          this.draw(this.previewImageData)
-        else
           this.draw()
 
-        this.checkVisibleBoundaries()
+          this.checkVisibleBoundaries()
+      }
     }
 
     Canvas.prototype.checkVisibleBoundaries = function(){
@@ -254,17 +251,23 @@ define([], function() {
     Canvas.prototype.draw = function(imageData){
 
       // positive zoom is implemented by pixe repetition, negative is calculated by parent via getImageData()
-      var zoomAmountToPass = this.currentScale >= 1 ? 0 : this.currentScale
-      var data = !!imageData ? imageData : this.parent.getImageData(zoomAmountToPass)
+
+      if(!!imageData){
+        this.previewImageData = imageData
+        this.previeMode = true
+      }else{
+        var zoomAmountToPass = this.currentScale >= 1 ? 0 : this.currentScale
+        imageData = this.parent.getImageData(zoomAmountToPass)
+        this.previeMode = false
+      }
 
       if(this.currentScale < 1){
         this.clear()
-        this.ctx.putImageData(data,0,0)
+        this.ctx.putImageData(imageData,0,0)
       }
       //pixel repetation and pixels of viewport
       else if(this.currentScale >= 1){
-        this.previewImageData = imageData
-        var area = this.getAreaPixels(!!imageData)
+        var area = this.getAreaPixels()
         this.setAreaPixels(area)
       }
 
@@ -420,9 +423,8 @@ define([], function() {
       this._putFullImageData(data)
     }
 
-    Canvas.prototype.getAreaPixels = function(previewMode){
+    Canvas.prototype.getAreaPixels = function(){
 
-      this.previeMode = !!previewMode
       var allPixels
       this.computeVisibleArea()
 

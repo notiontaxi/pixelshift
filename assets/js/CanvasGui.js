@@ -136,6 +136,7 @@ define([
       this.toggleControlls()
       this.wasSmallLayout = true
       this.wasMediumLayout = this.wasLargeLayout = false
+      window.isMobile = true
       
       //console.log("Setting layout to s")
     } else if(width >= 992 && width < 1200 && !this.wasMediumLayout){
@@ -148,6 +149,7 @@ define([
         this.toggleControlls() 
       this.wasMediumLayout = true
       this.wasSmallLayout = this.wasLargeLayout = false
+      window.isMobile = false
       
       //console.log("Setting layout to m")
     } else if(width >= 1200 && !this.wasLargeLayout){
@@ -161,6 +163,7 @@ define([
       this.wasLargeLayout = true
       this.wasSmallLayout = this.wasMediumLayout = false
       
+      window.isMobile = false
       //console.log("Setting layout to l")
     }
 
