@@ -62,7 +62,7 @@ var ImageProcessing, _ref, module,
     }
 
     ImageProcessing.prototype.initContext = function(){
-      this.context = new Context(this.canvasOrigin, this.canvasStage)
+      
       var canvases = 
         {
             canvasOrigin: this.canvasOrigin
@@ -70,6 +70,8 @@ var ImageProcessing, _ref, module,
           , canvasShown: this.canvasShown
           , canvasCloneElement : this.canvasShownClone
         }
+
+      this.context = new Context(canvases)  
 
       // Menubar
       this.brightness = new BrightnessStrategy(canvases, this.imageProcessor)

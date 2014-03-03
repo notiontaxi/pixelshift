@@ -22,6 +22,8 @@ define([], function() {
     * @param {boolean} keepChangesForUndo Changes will be reorded for undo() if true
     */
     function Canvas(id, keepChangesForUndo){
+
+      this.currentScale = 1.0
       
       this.id = id
       this.keepChangesForUndo = keepChangesForUndo
@@ -32,6 +34,7 @@ define([], function() {
       this.canvasWidth = this.cv.width
       this.imageHeight = this.cv.height 
       this.imageWidth = this.cv.width
+      this.updateCurrentImageSize()
 
       this.visibleArea = {
           x1: 0
@@ -54,7 +57,6 @@ define([], function() {
       this.gotNewImage = true
 
       this.scale = 1
-      this.currentScale = 1.0
 
       this.clones = new Array()
       this.undoStack = new Array()
@@ -98,7 +100,7 @@ define([], function() {
             this.pixelPerMove -= 4
 
           this.currentScale = parseFloat(this.currentScale.toFixed(1))
-
+          this.updateCurrentImageSize()
           this.draw()
         }
       }
@@ -118,6 +120,7 @@ define([], function() {
             this.pixelPerMove += 4
 
           this.currentScale = parseFloat(this.currentScale.toFixed(1))
+          this.updateCurrentImageSize()
 
           if(this.currentScale === 1.00)
             this.zoomReset()
@@ -132,12 +135,18 @@ define([], function() {
       // workaround ToDo: fix issues with negative zoom
       if(!this.previeMode){        
         this.currentScale = 1.0
+        this.updateCurrentImageSize()
         this.computeVisibleArea()
         this.visibleArea.x1 = 0
         this.visibleArea.y1 = 0
 
         this.draw()
       }
+    }
+
+    Canvas.prototype.updateCurrentImageSize = function(){
+      this.currentImageWidth  = this.imageWidth * this.currentScale
+      this.currentImageHeight = this.imageHeight * this.currentScale     
     }
 
     /**
@@ -255,21 +264,29 @@ define([], function() {
       if(!!imageData){
         this.previewImageData = imageData
         this.previeMode = true
+
+        this.ctx.putImageData(imageData,0,0)
+
       }else{
+        console.log(this.currentScale)
+        console.log(this.id)
         var zoomAmountToPass = this.currentScale >= 1 ? 0 : this.currentScale
         imageData = this.parent.getImageData(zoomAmountToPass)
         this.previeMode = false
+
+        if(this.currentScale < 1){
+          this.clear()
+          this.ctx.putImageData(imageData,0,0)
+        }
+        //pixel repetation and pixels of viewport
+        else if(this.currentScale >= 1){
+          var area = this.getAreaPixels()
+          this.setAreaPixels(area)
+        }
+
       }
 
-      if(this.currentScale < 1){
-        this.clear()
-        this.ctx.putImageData(imageData,0,0)
-      }
-      //pixel repetation and pixels of viewport
-      else if(this.currentScale >= 1){
-        var area = this.getAreaPixels()
-        this.setAreaPixels(area)
-      }
+
 
       if(this.currentScale >= this.gridZoomLevel  && this.drawGrid){
         if(this.alphaGrid)
@@ -849,7 +866,11 @@ define([], function() {
 
     }
 
+    Canvas.prototype.copyParent = function(){
 
+      this.putImageData(this.parent.getImageData())
+
+    }
 
     /**
     * Returns the ImageData of this canvas without the image borders (the pure image)
@@ -863,7 +884,11 @@ define([], function() {
         // compute scaled image data
         imageData = this.getScaledImageData(scale)
       }else{
-        imageData = this.getContext().getImageData(0,0,this.imageWidth, this.imageHeight)
+        this.updateCurrentImageSize()
+        console.log(this.currentImageWidth+" "+this.currentImageHeight)
+        console.log(this.imageWidth+" "+this.imageHeight)
+        console.log(this.currentScale)
+        imageData = this.getContext().getImageData(0,0,this.currentImageWidth, this.currentImageHeight)
       }
 
       return imageData

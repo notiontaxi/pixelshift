@@ -19,9 +19,10 @@ define([], function() {
 
 
 
-  function Context(canvasOrigin, canvasStage){
-    this.canvasOrigin = canvasOrigin
-    this.canvasStage = canvasStage
+  function Context(canvases){
+    this.canvasOrigin = canvases.canvasOrigin
+    this.canvasStage = canvases.canvasStage
+    this.canvasShown = canvases.canvasShown
     this.oneClickStrategies = Array()
     this.StackableStrategies = Array()
   }
@@ -57,9 +58,7 @@ define([], function() {
     if(!_this)
       var _this = this
 
-     var zoomAmountToPass = _this.canvasStage.currentScale >= 1 ? 0 : _this.canvasStage.currentScale
-     console.log(zoomAmountToPass)
-    _this.imageData = _this.canvasOrigin.getImageData(zoomAmountToPass)
+    _this.imageData = _this.canvasStage.getImageData()
 
     for(var i = 0; i < _this.StackableStrategies.length; i++){
       if(_this.StackableStrategies[i].changed){
@@ -71,9 +70,9 @@ define([], function() {
     }
       
     if(changes > 0)
-      this.canvasStage.draw(_this.imageData)
+      _this.canvasShown.draw(_this.imageData)
     else
-      this.canvasStage.draw()
+      _this.canvasShown.copyParent()
   }
 
 
