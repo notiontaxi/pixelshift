@@ -20,7 +20,7 @@ define(['text!templates/toolbar.html'], function(toolbarTemplate) {
     function Toolbar(containerIdentifier){
       this.containerIdentifier = containerIdentifier
       this.colorPickerColorIdent = "#color-picker-color"
-      this.buttonIdent = "#toolbar-foreground-color"
+      this.buttonIdent = ".toolbar-foreground-color"
 
       this.initialize()
       this.addEventListeners()
@@ -40,7 +40,7 @@ define(['text!templates/toolbar.html'], function(toolbarTemplate) {
 
       $(this.colorPickerColorIdent).on('new-color', 
         function(event, color){
-          $("#toolbar-foreground-color").css({'background-color': color})
+          $(".toolbar-foreground-color").css({'background-color': color})
       })
 
       $(".action-show-color-picker").click(function(){
@@ -76,7 +76,7 @@ define(['text!templates/toolbar.html'], function(toolbarTemplate) {
 
 
     Toolbar.prototype.foregroundColor = function(){
-      var color = $(this.buttonIdent).css('background-color')
+      var color = $($(this.buttonIdent)[0]).css('background-color')
 
       var start = color.indexOf("(") +1
       var stop = color.indexOf(")") 

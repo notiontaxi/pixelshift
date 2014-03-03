@@ -737,16 +737,14 @@ define([], function() {
             _this.imageWidth = img.width
             _this.imageHeight = img.height
           }
-          
         } else {
-
           if(img.height >= _this.cv.height){
             _this.imageHeight = _this.cv.height
             _this.imageWidth = Math.round(img.width * (_this.cv.height/img.height))
           }else{
             _this.imageHeight = img.height
             _this.imageWidth = img.width  
-          }   
+          }
         }
       // }else{
       //   _this.imageHeight = img.height

@@ -186,6 +186,7 @@ define([
 
   CanvasGui.prototype.toggleControlls = function(){
     if(this.wasBigMenu){
+      $("#toolbar").hide()
       $(".big-device").hide()
       $(".small-device").show()
       $(".content-container").removeClass("big-device-options")
@@ -198,6 +199,7 @@ define([
       $(".controls").addClass("small-device-options")      
     }
     else{
+      $("#toolbar").show()
       $(".big-device").show()
       $(".small-device").hide()
       $(".content-container").removeClass("small-device-options")

@@ -30,15 +30,16 @@
         , "top": $('#container').offset().top+"px"
       })
 
-      var device = window.outerWidth < 992 ? 'small' : 'big'
-
-      $('#grey-panel-menu').css({
-          "width":  $('.menu-bar.'+device+'-device').css('width')
-        , "height": $('.menu-bar.'+device+'-device').css('height')
-        , "left": $('.menu-bar.'+device+'-device').offset().left+"px"
-        , "top": $('.menu-bar.'+device+'-device').offset().top+"px"
-      }) 
-    }  
+      if(!window.isMobile){
+        var device = window.outerWidth < 992 ? 'small' : 'big'
+        $('#grey-panel-menu').css({
+            "width":  $('.menu-bar.'+device+'-device').css('width')
+          , "height": $('.menu-bar.'+device+'-device').css('height')
+          , "left": $('.menu-bar.'+device+'-device').offset().left+"px"
+          , "top": $('.menu-bar.'+device+'-device').offset().top+"px"
+        }) 
+      }  
+    }
   }
 
 
@@ -66,6 +67,7 @@ __extends = function(child, parent) {
 
 
 // HACKS
+
   $('.modalbox-overlay').hide()
 
   // hide while it is not in use
