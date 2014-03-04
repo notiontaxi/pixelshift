@@ -88,10 +88,7 @@ var ImageProcessingToolbarStrategy, _ref, module,
 
       this.submenu.css('top', relPos+'px')  
 
-      // position clone for small devices
-      var item = $(".tool-items.small-device"+" #toolbar-"+this.name+"-submenu")
-      item.css('top', '0%')
-    }  
+    }
  
 
     ImageProcessingToolbarStrategy.prototype.addToolbarAction = function(){

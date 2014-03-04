@@ -186,7 +186,7 @@ define([
 
   CanvasGui.prototype.toggleControlls = function(){
     if(this.wasBigMenu){
-      $("#toolbar").hide()
+
       $(".big-device").hide()
       $(".small-device").show()
       $(".content-container").removeClass("big-device-options")
@@ -198,11 +198,16 @@ define([
       $(".controls").removeClass("big-device-options")
       $(".controls").addClass("small-device-options") 
 
-      $("#small-device-menu-color").append($("#color-picker-modal")) 
-      $("#color-picker-modal").show()    
+      $("#small-device-menu-color .inner-content").append($("#color-picker-modal")) 
+      $("#color-picker-modal").show()  
+
+      $("#small-device-menu-painting .inner-content").append($("#toolbar")) 
+      $("#toolbar .action-show-color-picker").hide()
+      $("#toolbar .header").hide()
+      $("#toolbar").show()           
     }
     else{
-      $("#toolbar").show()
+
       $(".big-device").show()
       $(".small-device").hide()
       $(".content-container").removeClass("small-device-options")
@@ -212,7 +217,12 @@ define([
       $(".controls-wrapper").addClass("big-device-options")  
 
       $(".controls").removeClass("small-device-options")
-      $(".controls").addClass("big-device-options")            
+      $(".controls").addClass("big-device-options")   
+
+      $("body").append($("#color-picker-modal")) 
+      $("body").append($("#toolbar"))
+      $(".action-show-color-picker").show()
+      $("#toolbar .header").show()
     }
 
     this.wasBigMenu = !this.wasBigMenu 

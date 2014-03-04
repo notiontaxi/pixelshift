@@ -287,8 +287,6 @@ img {
   left: 50%;
   width: auto;
   height: auto;
-  margin-top: -200px;
-  margin-left: -125px;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   -ms-border-radius: 5px;
@@ -514,9 +512,15 @@ img {
   border-bottom-right-radius: 5px;
   border-bottom-left-radius: 5px;
 }
+#small-device-menu-painting #toolbar {
+  position: absolute;
+  margin: 0px;
+  left: 5% !important;
+  top: 20% !important;
+}
 #small-device-menu-painting .toolbar-submenu {
   left: 125%;
-  top: 0%;
+  top: 0% !important;
 }
 #small-device-menu-painting .tool-items {
   position: absolute;
@@ -556,6 +560,12 @@ img {
   border-bottom-left-radius: 5px;
   border-top-left-radius: 5px;
   border-left: 2px solid #c7e5e5;
+}
+.fade-over-panel.right-sided #color-picker-modal {
+  position: absolute;
+  margin: 0px;
+  left: 5% !important;
+  top: 20% !important;
 }
 .small-device-button {
   position: relative;

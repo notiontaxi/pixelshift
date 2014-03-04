@@ -398,9 +398,6 @@ canvas, img {
   width: auto;
   height: auto;
 
-  margin-top: -200px;
-  margin-left: -125px;
-
   .rounded-corners(5px);
   .solid-border(white);
 
@@ -630,9 +627,16 @@ display: none;
 
 #small-device-menu-painting{
 
+  #toolbar{
+    position: absolute;
+    margin: 0px;
+    left: 5% !important;
+    top: 20% !important;
+  }
+
   .toolbar-submenu{
     left: 125%;
-    top: 0%;
+    top: 0% !important;
   }
 
 
@@ -672,6 +676,14 @@ display: none;
     left: 100%;
     .rounded-corners-left();
     border-left: 2px solid @middleCyan;
+
+    #color-picker-modal{
+      position: absolute;
+      margin: 0px;
+      left: 5% !important;
+      top: 20% !important;
+    }  
+
   }
 
 }
