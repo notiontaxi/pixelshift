@@ -117,7 +117,7 @@ var ImageProcessing, _ref, module,
             this.context.oneClickStrategy(this.toolbar.mode()).mousedown(this.state(event))
         }.bind(this))
 
-      this.canvasShownClone.mousemove( 
+      this.canvasShownClone.mousemove(
         function(event){
           if(!!this.toolbar.lastActive && !window.isMobile)
             this.context.oneClickStrategy(this.toolbar.mode()).mousemove(this.state(event))
@@ -144,7 +144,7 @@ var ImageProcessing, _ref, module,
           // console.log('touch move')
           // console.log(event)
           if(!!this.toolbar.lastActive)
-            this.context.oneClickStrategy(this.toolbar.mode()).mousemove(this.state(event.originalEvent.touches[0]))
+            this.context.oneClickStrategy(this.toolbar.mode()).mousemove(this.state(event.originalEvent.changedTouches[0]))
         }.bind(this))
 
       this.canvasShownClone.touchend( 
