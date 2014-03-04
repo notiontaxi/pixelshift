@@ -133,7 +133,7 @@ var ImageProcessing, _ref, module,
       // Touch devices
       this.canvasShownClone.touchstart( 
         function(event){
-          console.log('touch start')
+          // console.log('touch start')
           // console.log(event)
           if(!!this.toolbar.lastActive)
             this.context.oneClickStrategy(this.toolbar.mode()).mousedown(this.state(event.originalEvent.touches[0]))
@@ -141,7 +141,7 @@ var ImageProcessing, _ref, module,
 
       this.canvasShownClone.touchmove( 
         function(event){
-          console.log('touch move')
+          // console.log('touch move')
           // console.log(event)
           if(!!this.toolbar.lastActive)
             this.context.oneClickStrategy(this.toolbar.mode()).mousemove(this.state(event.originalEvent.touches[0]))
@@ -149,8 +149,8 @@ var ImageProcessing, _ref, module,
 
       this.canvasShownClone.touchend( 
         function(event){
-          console.log('touch end')
-          console.log(event)
+          // console.log('touch end')
+          // console.log(event)
           if(!!this.toolbar.lastActive)
             this.context.oneClickStrategy(this.toolbar.mode()).mouseup(this.state(event.originalEvent.changedTouches[0]))
         }.bind(this))  
@@ -162,10 +162,10 @@ var ImageProcessing, _ref, module,
     }
 
     ImageProcessing.prototype.state = function(event){
-      console.log(event)
-      var mouseCoords = this.canvasShown.mouseCoords(event)
 
-      var totalImagePosition = this.canvasStage.totalImagePosition(mousesCoords)
+      var mouseCoords = this.canvasShown.mouseCoords(event)
+      var totalImagePosition = this.canvasStage.totalImagePosition(mouseCoords)
+
       return {
               color: this.toolbar.foregroundColor()
             , mouse: mouseCoords
