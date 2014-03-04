@@ -268,8 +268,6 @@ define([], function() {
         this.ctx.putImageData(imageData,0,0)
 
       }else{
-        console.log(this.currentScale)
-        console.log(this.id)
         var zoomAmountToPass = this.currentScale >= 1 ? 0 : this.currentScale
         imageData = this.parent.getImageData(zoomAmountToPass)
         this.previeMode = false
@@ -285,8 +283,6 @@ define([], function() {
         }
 
       }
-
-
 
       if(this.currentScale >= this.gridZoomLevel  && this.drawGrid){
         if(this.alphaGrid)
@@ -883,9 +879,6 @@ define([], function() {
         imageData = this.getScaledImageData(scale)
       }else{
         this.updateCurrentImageSize()
-        console.log(this.currentImageWidth+" "+this.currentImageHeight)
-        console.log(this.imageWidth+" "+this.imageHeight)
-        console.log(this.currentScale)
         imageData = this.getContext().getImageData(0,0,this.currentImageWidth, this.currentImageHeight)
       }
 

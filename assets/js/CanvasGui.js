@@ -196,7 +196,10 @@ define([
       $(".controls-wrapper").addClass("small-device-options")   
 
       $(".controls").removeClass("big-device-options")
-      $(".controls").addClass("small-device-options")      
+      $(".controls").addClass("small-device-options") 
+
+      $("#small-device-menu-color").append($("#color-picker-modal")) 
+      $("#color-picker-modal").show()    
     }
     else{
       $("#toolbar").show()

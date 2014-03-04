@@ -35,6 +35,9 @@ define(['text!templates/toolbar.html'], function(toolbarTemplate) {
       this.toolbar.draggable()
     }
 
+    Toolbar.prototype.getElement = function(){
+      return this.toolbar;
+    }
    
     Toolbar.prototype.addEventListeners = function(containerIdentifier){
 

@@ -74,17 +74,23 @@ var ImageProcessingToolbarStrategy, _ref, module,
       this.submenu = $('#toolbar-'+this.name+'-submenu').append($(this.submenuTemplate))
       this.arrow = $(this.button).find('.toolbar-submenu-arrow')
  
-    }      
+    }
 
     ImageProcessingToolbarStrategy.prototype.positionSubmenu = function(){
 
+      // position original toolbar item
       var relPos = parseInt(
                       this.button.offset().top
                     - $('#toolbar').offset().top
                     - $('#toolbar-'+this.name+'-submenu').height()/2
                     + this.button.height()/2
                      , 10 )
+
       this.submenu.css('top', relPos+'px')  
+
+      // position clone for small devices
+      var item = $(".tool-items.small-device"+" #toolbar-"+this.name+"-submenu")
+      item.css('top', '0%')
     }  
  
 
