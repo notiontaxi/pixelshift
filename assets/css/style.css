@@ -113,7 +113,7 @@ footer {
   display: none;
 }
 .controls.small-device-options {
-  padding-top: 15px;
+  padding-top: 20px;
   padding-bottom: 30px;
 }
 .controls.small-device-options .slider-set {
@@ -429,6 +429,19 @@ img {
 }
 #grey-panel-menu {
   z-index: 1003;
+}
+.small-device .button-in-the-middle {
+  margin: 5px;
+  padding: 10px;
+  width: 17%;
+  top: -10%;
+  left: 2%;
+  border: 1px solid lightgrey;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
 }
 .small-device.controll-overlay {
   background-color: lightcyan;

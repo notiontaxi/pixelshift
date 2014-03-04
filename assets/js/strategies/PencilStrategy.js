@@ -69,7 +69,7 @@ var PencilStrategy, _ref, module,
       this.canvasOrigin.ctx.beginPath()
       this.canvasOrigin.ctx.moveTo(currentState.totalCartesianImagePosition.x, currentState.totalCartesianImagePosition.y)
 
-      if(this.recordedMouseStates.length === 1){
+      if(this.recordedMouseStates.length === 0){
         this.canvasOrigin.ctx.arc(currentState.totalCartesianImagePosition.x, currentState.totalCartesianImagePosition.y, Math.round(this.thickness/2), 0, 2 * Math.PI, false)
         this.canvasOrigin.ctx.fillStyle = "rgba("+currentState.color.r+", "+currentState.color.g+", "+currentState.color.b+", "+currentState.color.a+")"
         this.canvasOrigin.ctx.fill()

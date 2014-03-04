@@ -262,8 +262,13 @@ define([
       }.bind(this))
     $('.view-actions-list-sd').hide()    
 
+    var that = this
+
     $('.small-device-button.action-toggle-panel.left-panel').click(
       function(event, ui){
+
+        that.slideRightPanelIfVisible()
+
         var dir = $("#left-panel-small-device").position().left
         var amount = dir < 0 ? '0%' : '-80%'
         $("#left-panel-small-device").animate({left: amount})
@@ -272,6 +277,8 @@ define([
 
     $('.small-device-button.action-toggle-panel.right-panel').click(
       function(event, ui){
+        that.slideLeftPanelIfVisible()
+
         var dir = $("#right-panel-small-device").position().left
         var amount = dir > $('body').width()/2 ? '20%' : '100%' 
         $("#right-panel-small-device").animate({left: amount});
@@ -282,6 +289,22 @@ define([
     $('.small-device').hide()
   }
 
+
+  CanvasGui.prototype.slideLeftPanelIfVisible = function(){
+        var dir = $("#left-panel-small-device").position().left
+        var visible = dir >= 0 ? true : false
+
+        if(visible)
+          $("#left-panel-small-device").animate({left: "-80%"});
+  }
+  CanvasGui.prototype.slideRightPanelIfVisible = function(){
+        var dir = $("#right-panel-small-device").position().left
+        var visible = dir < $('body').width()/2 ? true : false
+
+        if(visible)
+          $("#right-panel-small-device").animate({left: "100%"});
+  }  
+
   CanvasGui.prototype.addEventListeners = function(){
 
     // redirect click on own button to invisible input field
@@ -290,6 +313,7 @@ define([
         event.stopPropagation()
         event.preventDefault()
         $('input[type="file"]').click()
+        this.slideLeftPanelIfVisible()
       }.bind(this))
 
     $(".action-save-image").click(
@@ -297,7 +321,7 @@ define([
         event.stopPropagation()
         event.preventDefault()
         this.fileProcessor.saveCanvasToDisk(this.canvasOrigin.getHtmlElementCopy())
-    
+        this.slideLeftPanelIfVisible()
     }.bind(this))   
 
     // load image, when filename was changed
@@ -328,6 +352,7 @@ define([
         event.preventDefault()
         this.canvasOrigin.clearFull()
         this.canvasStage.draw()
+        this.slideRightPanelIfVisible()
     }.bind(this))  
 
     $(".action-grayscale").click(
@@ -336,6 +361,7 @@ define([
         event.preventDefault()
         var newImg = this.imageProcessor.processGrayscale(this.canvasOrigin.getImageData(), this.canvasOrigin.getImageWidth())
         this.canvasOrigin.putImageData(newImg)
+        this.slideRightPanelIfVisible()
     }.bind(this))    
 
     $(".action-bitmap").click(
@@ -344,6 +370,7 @@ define([
         event.preventDefault()
         var newImg = this.imageProcessor.processThreshold(this.imageProcessor.computeThreshold(this.canvasOrigin.getImageData()) ,this.canvasOrigin.getImageData())
         this.canvasOrigin.putImageData(newImg)
+        this.slideRightPanelIfVisible()
     }.bind(this))  
 
     $(".action-invert").click(
@@ -352,6 +379,7 @@ define([
         event.preventDefault()
         var newImg = this.imageProcessor.processInvertColors(this.canvasOrigin.getImageData(), this.canvasOrigin.getImageWidth())
         this.canvasOrigin.putImageData(newImg)
+        this.slideRightPanelIfVisible()
     }.bind(this))          
 
     $(".action-emboss").click(
@@ -368,6 +396,7 @@ define([
         )
 
         this.canvasOrigin.putImageData(this.processedImageData)
+        this.slideRightPanelIfVisible()
     }.bind(this))   
 
     $(".action-sharpen").click(
@@ -384,6 +413,7 @@ define([
         )
 
         this.canvasOrigin.putImageData(this.processedImageData)
+        this.slideRightPanelIfVisible()
     }.bind(this))  
 
     $(".action-highpass").click(
@@ -401,6 +431,7 @@ define([
         )
 
         this.canvasOrigin.putImageData(this.processedImageData)
+        this.slideRightPanelIfVisible()
     }.bind(this)) 
 
     $(".action-lowpass").click(
@@ -418,6 +449,7 @@ define([
         )
 
         this.canvasOrigin.putImageData(this.processedImageData)
+        this.slideRightPanelIfVisible()
     }.bind(this)) 
                 
   }  

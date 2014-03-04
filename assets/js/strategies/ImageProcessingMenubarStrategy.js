@@ -64,7 +64,25 @@ var ImageProcessingMenubarStrategy, _ref, module,
     }         
 
     ImageProcessingStrategy.prototype.slideToggle = function(){
-      $("."+this.name+"-controls").slideToggle("fast", updateGreyPanels)
+      // DIRTY
+      var dir = $("#right-panel-small-device").position().left
+      var visible = dir < $('body').width()/2 ? true : false
+
+      if(visible){
+        $("#right-panel-small-device").animate({left: "100%"}, "fast", function(){
+          if(window.isMobile){
+            $(".controls").slideUp("fast")
+          }
+          $("."+this.name+"-controls").slideToggle("fast")
+        }.bind(this));
+      }else{
+        $("."+this.name+"-controls").slideToggle("fast")
+        if(window.isMobile){
+          $(".controls").slideUp("fast")
+        }
+        
+      }
+
     }
 
     ImageProcessingMenubarStrategy.prototype.initializeTools = function(){
