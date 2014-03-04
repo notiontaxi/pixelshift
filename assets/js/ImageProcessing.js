@@ -111,23 +111,23 @@ var ImageProcessing, _ref, module,
     ImageProcessing.prototype.initCanvasStrategies = function(){
 
       // mouse devices
-      // this.canvasShownClone.mousedown( 
-      //   function(event){
-      //     if(!!this.toolbar.lastActive && !window.isMobile)
-      //       this.context.oneClickStrategy(this.toolbar.mode()).mousedown(this.state(event))
-      //   }.bind(this))
+      this.canvasShownClone.mousedown( 
+        function(event){
+          if(!!this.toolbar.lastActive && !window.isMobile)
+            this.context.oneClickStrategy(this.toolbar.mode()).mousedown(this.state(event))
+        }.bind(this))
 
-      // this.canvasShownClone.mousemove(
-      //   function(event){
-      //     if(!!this.toolbar.lastActive && !window.isMobile)
-      //       this.context.oneClickStrategy(this.toolbar.mode()).mousemove(this.state(event))
-      //   }.bind(this))
+      this.canvasShownClone.mousemove(
+        function(event){
+          if(!!this.toolbar.lastActive && !window.isMobile)
+            this.context.oneClickStrategy(this.toolbar.mode()).mousemove(this.state(event))
+        }.bind(this))
 
-      // this.canvasShownClone.mouseup( 
-      //   function(event){
-      //     if(!!this.toolbar.lastActive && !window.isMobile)
-      //       this.context.oneClickStrategy(this.toolbar.mode()).mouseup(this.state(event))
-      //   }.bind(this))   
+      this.canvasShownClone.mouseup( 
+        function(event){
+          if(!!this.toolbar.lastActive && !window.isMobile)
+            this.context.oneClickStrategy(this.toolbar.mode()).mouseup(this.state(event))
+        }.bind(this))   
 
 
       // Touch devices
