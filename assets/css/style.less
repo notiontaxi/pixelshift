@@ -584,14 +584,26 @@ display: none;
     .rounded-corners();
 
     ul{
-      position: static;
       background-color: lightcyan;
       padding: 5px 5px 5px 10px;
+
+      &.nav-tabs{
+        height: 15%;
+      }
+    }
+
+    .nav-tabs{
+      .rounded-corners-top();      
     }
 
     .tab-content{
+
+      .rounded-corners-bottom();
+      height: 85%;
+      overflow-y: scroll;  
+
       li{
-        padding: 5px 15px 5px 25px;
+        padding: 10px 15px 10px 25px;
         font-size: 14px;
         list-style: none;
       }
@@ -605,6 +617,13 @@ display: none;
         padding: 0px;
       }
     }
+
+    .tab-pane{
+        ul{
+          .rounded-corners-bottom(); 
+        }
+    }
+
   }
 }
 
