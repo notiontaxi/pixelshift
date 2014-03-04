@@ -133,18 +133,21 @@ var ImageProcessing, _ref, module,
       // Touch devices
       this.canvasShownClone.touchstart( 
         function(event){
+          console.log('touch start')
           if(!!this.toolbar.lastActive)
             this.context.oneClickStrategy(this.toolbar.mode()).mousedown(this.state(event.originalEvent.touches[0]))
         }.bind(this))
 
       this.canvasShownClone.touchmove( 
         function(event){
+          console.log('touch move')
           if(!!this.toolbar.lastActive)
             this.context.oneClickStrategy(this.toolbar.mode()).mousemove(this.state(event.originalEvent.touches[0]))
         }.bind(this))
 
       this.canvasShownClone.touchend( 
         function(event){
+          console.log('touch end')
           if(!!this.toolbar.lastActive)
             this.context.oneClickStrategy(this.toolbar.mode()).mouseup(this.state(event.originalEvent.touches[0]))
         }.bind(this))  

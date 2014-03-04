@@ -98,7 +98,6 @@ footer {
   z-index: 4012;
   left: 13%;
   width: 74%;
-  height: 13%;
 }
 .controls {
   background-color: #c7e5e5;
@@ -483,6 +482,7 @@ img {
   border-top-left-radius: 5px;
 }
 .small-device.fade-over-panel .tab-content {
+  z-index: 4021;
   -webkit-border-bottom-right-radius: 5px;
   -webkit-border-bottom-left-radius: 5px;
   -moz-border-radius-bottomright: 5px;
