@@ -131,11 +131,12 @@ var ImageProcessing, _ref, module,
 
 
       // Touch devices
-      this.canvasShownClone.touchcancel(
-        function(event){
+      this.canvasShownClone.on('touchcancel', function() {
           console.log('event cancelled!')
           console.log(event)
-        })
+      });
+
+
       this.canvasShownClone.touchstart(
         function(event){
           event.preventDefault()
