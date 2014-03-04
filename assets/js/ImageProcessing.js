@@ -131,8 +131,14 @@ var ImageProcessing, _ref, module,
 
 
       // Touch devices
-      this.canvasShownClone.touchstart( 
+      this.canvasShownClone.touchcancel(
         function(event){
+          console.log('event cancelled!')
+          console.log(event)
+        })
+      this.canvasShownClone.touchstart(
+        function(event){
+          event.preventDefault()
           console.log('touch start')
           // console.log(event)
           if(!!this.toolbar.lastActive){
@@ -142,6 +148,7 @@ var ImageProcessing, _ref, module,
 
       this.canvasShownClone.touchmove( 
         function(event){
+          event.preventDefault()
           console.log(  "x: "+
                         event.originalEvent.changedTouches[0].pageX+
                         ", y: "+
@@ -155,6 +162,7 @@ var ImageProcessing, _ref, module,
 
       this.canvasShownClone.touchend( 
         function(event){
+          event.preventDefault()
           console.log('touch end')
           // console.log(event)
           if(!!this.toolbar.lastActive){
