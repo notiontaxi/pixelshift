@@ -140,7 +140,7 @@ var ImageProcessing, _ref, module,
       this.canvasShownClone.touchstart(
         function(event){
           event.preventDefault()
-          console.log('touch start')
+          // console.log('touch start')
           // console.log(event)
           if(!!this.toolbar.lastActive){
             this.context.oneClickStrategy(this.toolbar.mode()).mousedown(this.state(event.originalEvent.touches[0]))
@@ -150,10 +150,10 @@ var ImageProcessing, _ref, module,
       this.canvasShownClone.touchmove( 
         function(event){
           event.preventDefault()
-          console.log(  "x: "+
-                        event.originalEvent.changedTouches[0].pageX+
-                        ", y: "+
-                        event.originalEvent.changedTouches[0].pageY)
+          // console.log(  "x: "+
+          //               event.originalEvent.changedTouches[0].pageX+
+          //               ", y: "+
+          //               event.originalEvent.changedTouches[0].pageY)
           // console.log('touch move')
           // console.log(event)
           if(!!this.toolbar.lastActive){
@@ -164,7 +164,7 @@ var ImageProcessing, _ref, module,
       this.canvasShownClone.touchend( 
         function(event){
           event.preventDefault()
-          console.log('touch end')
+          // console.log('touch end')
           // console.log(event)
           if(!!this.toolbar.lastActive){
             this.context.oneClickStrategy(this.toolbar.mode()).mouseup(this.state(event.originalEvent.changedTouches[0]))
