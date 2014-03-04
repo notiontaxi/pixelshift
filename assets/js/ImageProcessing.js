@@ -105,10 +105,12 @@ var ImageProcessing, _ref, module,
     }
   
 
-
+    /**
+    * get matching strategy funcion, call it and pass current state
+    */
     ImageProcessing.prototype.initCanvasStrategies = function(){
-      // get matching strategy funcion, call it and pass current state
 
+      // mouse devices
       this.canvasShownClone.mousedown( 
         function(event){
           if(!!this.toolbar.lastActive)
@@ -127,6 +129,25 @@ var ImageProcessing, _ref, module,
             this.context.oneClickStrategy(this.toolbar.mode()).mouseup(this.state(event))
         }.bind(this))   
 
+
+      // Touch devices
+      this.canvasShownClone.touchstart( 
+        function(event){
+          if(!!this.toolbar.lastActive)
+            this.context.oneClickStrategy(this.toolbar.mode()).mousedown(this.state(event.originalEvent.touches[0]))
+        }.bind(this))
+
+      this.canvasShownClone.touchmove( 
+        function(event){
+          if(!!this.toolbar.lastActive)
+            this.context.oneClickStrategy(this.toolbar.mode()).mousemove(this.state(event.originalEvent.touches[0]))
+        }.bind(this))
+
+      this.canvasShownClone.touchend( 
+        function(event){
+          if(!!this.toolbar.lastActive)
+            this.context.oneClickStrategy(this.toolbar.mode()).mouseup(this.state(event.originalEvent.touches[0]))
+        }.bind(this))  
     }
 
     ImageProcessing.prototype.runTests = function(){
@@ -136,6 +157,7 @@ var ImageProcessing, _ref, module,
 
     ImageProcessing.prototype.state = function(event){
       var mouseCoords = this.canvasShown.mouseCoords(event)
+
       var totalImagePosition = this.canvasStage.totalImagePosition(mouseCoords)
       return {
               color: this.toolbar.foregroundColor()

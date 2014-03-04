@@ -68,6 +68,13 @@ __extends = function(child, parent) {
 
 // HACKS
 
+
+  // Mobile
+  // no elastic scrolling
+  document.body.addEventListener('touchmove', function (event) {
+      event.preventDefault()
+  }, false)
+
   $('.modalbox-overlay').hide()
 
   // hide while it is not in use
