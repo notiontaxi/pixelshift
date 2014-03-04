@@ -432,9 +432,7 @@ img {
 }
 .small-device .button-in-the-middle {
   margin: 5px;
-  padding: 10px;
   width: 17%;
-  top: -10%;
   left: 2%;
   border: 1px solid lightgrey;
   -webkit-border-radius: 5px;
