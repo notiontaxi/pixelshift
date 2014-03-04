@@ -515,15 +515,17 @@ img {
   border-bottom-left-radius: 5px;
 }
 #small-device-menu-painting #toolbar {
+  position: absolute;
   margin: 0px;
-  left: 26% !important;
-  top: 30% !important;
+  left: 9% !important;
+  top: 20% !important;
 }
 #small-device-menu-painting .toolbar-submenu {
   left: 125%;
   top: 0% !important;
 }
 #small-device-menu-painting .tool-items {
+  position: absolute;
   top: 20%;
   left: 10%;
 }
