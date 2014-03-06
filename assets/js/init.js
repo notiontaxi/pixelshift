@@ -6,6 +6,10 @@
 
   // FUNCTIONS
 
+  function isTouchDevice() {
+    return ('ontouchstart' in window) || ('onmsgesturechange' in window) // IE10
+  }
+
   function hideGreyPanels(){
     $('#grey-panel').hide()
     $('#grey-panel-menu').hide() 

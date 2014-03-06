@@ -110,66 +110,68 @@ var ImageProcessing, _ref, module,
     */
     ImageProcessing.prototype.initCanvasStrategies = function(){
 
-      // mouse devices
-      this.canvasShownClone.mousedown( 
-        function(event){
-          if(!!this.toolbar.lastActive && !window.isMobile)
-            this.context.oneClickStrategy(this.toolbar.mode()).mousedown(this.state(event))
-        }.bind(this))
-
-      this.canvasShownClone.mousemove(
-        function(event){
-          if(!!this.toolbar.lastActive && !window.isMobile)
-            this.context.oneClickStrategy(this.toolbar.mode()).mousemove(this.state(event))
-        }.bind(this))
-
-      this.canvasShownClone.mouseup( 
-        function(event){
-          if(!!this.toolbar.lastActive && !window.isMobile)
-            this.context.oneClickStrategy(this.toolbar.mode()).mouseup(this.state(event))
-        }.bind(this))   
-
-
-      // Touch devices
-      this.canvasShownClone.on('touchcancel', function() {
-          console.log('event cancelled!')
-          console.log(event)
-      });
-
-
-      this.canvasShownClone.touchstart(
-        function(event){
-          event.preventDefault()
-          // console.log('touch start')
-          // console.log(event)
-          if(!!this.toolbar.lastActive){
-            this.context.oneClickStrategy(this.toolbar.mode()).mousedown(this.state(event.originalEvent.touches[0]))
+      if(isTouchDevice()){
+        this.canvasShownClone.on('touchcancel', 
+          function() {
+              console.log('event cancelled!')
+              console.log(event)
           }
-        }.bind(this))
+        )
 
-      this.canvasShownClone.touchmove( 
-        function(event){
-          event.preventDefault()
-          // console.log(  "x: "+
-          //               event.originalEvent.changedTouches[0].pageX+
-          //               ", y: "+
-          //               event.originalEvent.changedTouches[0].pageY)
-          // console.log('touch move')
-          // console.log(event)
-          if(!!this.toolbar.lastActive){
-            this.context.oneClickStrategy(this.toolbar.mode()).mousemove(this.state(event.originalEvent.changedTouches[0]))
-          }
-        }.bind(this))
+        this.canvasShownClone.touchstart(
+          function(event){
+            event.preventDefault()
+            if(!!this.toolbar.lastActive){
+              this.context.oneClickStrategy(this.toolbar.mode()).mousedown(this.state(event.originalEvent.touches[0]))
+            }
+          }.bind(this)
+        )
 
-      this.canvasShownClone.touchend( 
-        function(event){
-          event.preventDefault()
-          // console.log('touch end')
-          // console.log(event)
-          if(!!this.toolbar.lastActive){
-            this.context.oneClickStrategy(this.toolbar.mode()).mouseup(this.state(event.originalEvent.changedTouches[0]))
-          }
-        }.bind(this))  
+        this.canvasShownClone.touchmove( 
+          function(event){
+            event.preventDefault()
+            // console.log(  "x: "+
+            //               event.originalEvent.changedTouches[0].pageX+
+            //               ", y: "+
+            //               event.originalEvent.changedTouches[0].pageY)
+            // console.log('touch move')
+            // console.log(event)
+            if(!!this.toolbar.lastActive){
+              this.context.oneClickStrategy(this.toolbar.mode()).mousemove(this.state(event.originalEvent.changedTouches[0]))
+            }
+          }.bind(this)
+        )
+
+        this.canvasShownClone.touchend(
+          function(event){
+            event.preventDefault()
+            if(!!this.toolbar.lastActive){
+              this.context.oneClickStrategy(this.toolbar.mode()).mouseup(this.state(event.originalEvent.changedTouches[0]))
+            }
+          }.bind(this)
+        )  
+      }else{
+        this.canvasShownClone.mousedown(
+          function(event){
+            if(!!this.toolbar.lastActive)
+              this.context.oneClickStrategy(this.toolbar.mode()).mousedown(this.state(event))
+          }.bind(this)
+        )
+
+        this.canvasShownClone.mousemove(
+          function(event){
+            if(!!this.toolbar.lastActive)
+              this.context.oneClickStrategy(this.toolbar.mode()).mousemove(this.state(event))
+          }.bind(this)
+        )
+
+        this.canvasShownClone.mouseup(
+          function(event){
+            if(!!this.toolbar.lastActive)
+              this.context.oneClickStrategy(this.toolbar.mode()).mouseup(this.state(event))
+          }.bind(this)
+        )
+      }
     }
 
     ImageProcessing.prototype.runTests = function(){
