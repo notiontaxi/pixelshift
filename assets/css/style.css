@@ -546,6 +546,10 @@ img {
 #small-device-menu-painting .toolbar-item {
   margin-bottom: 25px;
 }
+#small-device-menu-painting .small-device-options .ui-slider-handle {
+  width: 42px;
+  height: 22px;
+}
 #small-device-menu-color .action-close-color-picker {
   display: none;
 }

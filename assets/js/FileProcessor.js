@@ -64,7 +64,7 @@ define([], function() {
   if (!window.ActiveXObject) {
       var saveClick = document.createElement('a')
       saveClick.href = fileURL
-      save.target = '_blank'
+      saveClick.target = '_blank'
       saveClick.download = fileName || fileURL
       var evt = document.createEvent('MouseEvents')
       // simulate event

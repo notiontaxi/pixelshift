@@ -207,7 +207,8 @@ define([
       $("#small-device-menu-painting .inner-content").append($("#toolbar")) 
       $("#toolbar .action-show-color-picker").hide()
       $("#toolbar .header").hide()
-      $("#toolbar").show()           
+      $("#toolbar").show()
+      $("#toolbar").addClass('small-device-options')           
     }
     else{
 
@@ -226,6 +227,7 @@ define([
       $("body").append($("#toolbar"))
       $(".action-show-color-picker").show()
       $("#toolbar .header").show()
+      $("#toolbar").removeClass('small-device-options')    
     }
 
     this.wasBigMenu = !this.wasBigMenu 
