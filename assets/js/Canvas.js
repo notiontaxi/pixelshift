@@ -36,14 +36,7 @@ define([], function() {
       this.imageWidth = this.cv.width
       this.updateCurrentImageSize()
 
-      this.visibleArea = {
-          x1: 0
-        , y1: 0
-        , x2: this.canvasWidth        
-        , y2: this.canvasHeight
-      }
-      this.oldVisibleWidth = this.canvasWidth
-      this.oldVisibleHeight =  this.canvasHeight      
+      this.resetVisibleArea()    
 
       // change this value for bigger or smaller steps
       if(window.isTouchDevice )
@@ -115,10 +108,12 @@ define([], function() {
       if(!this.previeMode){      
         if(this.currentScale > .1){
 
-          if(this.currentScale <= 1)
+          if(this.currentScale <= 1){
             this.currentScale -= .1
-          else
+            this.resetVisibleArea()
+          }else{
             this.currentScale--
+          }
 
           if(this.pixelPerMove < 50 && this.currentScale < 13)
             this.pixelPerMove += 4
@@ -134,6 +129,16 @@ define([], function() {
       }
     }
 
+    Canvas.prototype.resetVisibleArea = function(){
+      this.visibleArea = {
+          x1: 0
+        , y1: 0
+        , x2: this.canvasWidth        
+        , y2: this.canvasHeight
+      }
+      this.oldVisibleWidth = this.canvasWidth
+      this.oldVisibleHeight =  this.canvasHeight        
+    }
 
     Canvas.prototype.zoomReset = function(){
       // workaround ToDo: fix issues with negative zoom
