@@ -342,6 +342,11 @@ define([
     )  
     $('.image-navigate-down').hide().removeClass('hidden')  
 
+    $('.small-device-button').click(
+      function(){
+        this.blur()
+      })
+
     $('.small-device').hide()
   }
 
