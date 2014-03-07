@@ -32,7 +32,10 @@ define(['text!templates/toolbar.html'], function(toolbarTemplate) {
       this.toolbar = $("#toolbar")
       //this.toolbar.hide()
       this.toolbar.removeClass('hidden')
-      this.toolbar.draggable()
+
+      if(!window.isTouchDevice){
+        this.toolbar.draggable()
+      }
     }
 
     Toolbar.prototype.getElement = function(){

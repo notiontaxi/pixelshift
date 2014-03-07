@@ -110,7 +110,7 @@ var ImageProcessing, _ref, module,
     */
     ImageProcessing.prototype.initCanvasStrategies = function(){
 
-      if(isTouchDevice()){
+      if(window.isTouchDevice){
         this.canvasShownClone.on('touchcancel', 
           function() {
               console.log('event cancelled!')
@@ -192,6 +192,7 @@ var ImageProcessing, _ref, module,
           }
     }
 
+    // TODO: move this to own class
     ImageProcessing.prototype.initColorPicker = function(){
 
       $('.modalbox-wrapper.hidden').hide()
@@ -209,7 +210,9 @@ var ImageProcessing, _ref, module,
         $('#toolbar-foreground-color').css({'background-color': color})
       })
 
-      $("#color-picker-modal").draggable()
+      if(!window.isTouchDevice){
+        $("#color-picker-modal").draggable()
+      }
 
     }
 
