@@ -45,7 +45,7 @@ var ImageProcessingMenubarStrategy, _ref, module,
       }.bind(this))
 
       $("."+name+"-controls").click(function(){
-        if(this.isEnabled()){
+        if(this.isVisible()){
           this.cancel()
           this.slideToggle()
         }
@@ -55,8 +55,12 @@ var ImageProcessingMenubarStrategy, _ref, module,
 
     }     
 
-    ImageProcessingStrategy.prototype.isEnabled = function(){
-      return $("."+this.name+"-controls").attr("enabled") === "true" ? true : false
+    // ImageProcessingStrategy.prototype.isEnabled = function(){
+    //   return $("."+this.name+"-controls").attr("enabled") === "true" ? true : false
+    // }
+
+    ImageProcessingStrategy.prototype.isVisible = function(){
+      return $("."+this.name+"-controls").is(':visible')
     }
 
     ImageProcessingStrategy.prototype.enable = function(enable){
@@ -64,23 +68,22 @@ var ImageProcessingMenubarStrategy, _ref, module,
     }         
 
     ImageProcessingStrategy.prototype.slideToggle = function(){
-      // DIRTY
+      // TODO: maka that nice
       var dir = $("#right-panel-small-device").position().left
-      var visible = dir < $('body').width()/2 ? true : false
+      var MenuSliderIsVisible = dir < $('body').width()/2 ? true : false
 
-      if(visible){
+      if(MenuSliderIsVisible){
         $("#right-panel-small-device").animate({left: "100%"}, "fast", function(){
-          if(window.isMobile){
+          if(window.isSmallDevice){
             $(".controls").slideUp("fast")
           }
           $("."+this.name+"-controls").slideToggle("fast")
         }.bind(this));
       }else{
         $("."+this.name+"-controls").slideToggle("fast")
-        if(window.isMobile){
+        if(window.isSmallDevice){
           $(".controls").slideUp("fast")
         }
-        
       }
 
     }

@@ -543,6 +543,9 @@ img {
 #small-device-menu-painting .toolbar-item {
   margin-bottom: 25px;
 }
+#small-device-menu-color .action-close-color-picker {
+  display: none;
+}
 .fade-over-panel {
   padding: 5px;
   height: 86%;

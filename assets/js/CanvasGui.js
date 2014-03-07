@@ -136,7 +136,7 @@ define([
       this.toggleControlls()
       this.wasSmallLayout = true
       this.wasMediumLayout = this.wasLargeLayout = false
-      window.isMobile = true
+      window.isSmallDevice = true
       
       //console.log("Setting layout to s")
     } else if(width >= 992 && width < 1200 && !this.wasMediumLayout){
@@ -149,7 +149,7 @@ define([
         this.toggleControlls() 
       this.wasMediumLayout = true
       this.wasSmallLayout = this.wasLargeLayout = false
-      window.isMobile = false
+      window.isSmallDevice = false
       
       //console.log("Setting layout to m")
     } else if(width >= 1200 && !this.wasLargeLayout){
@@ -163,7 +163,7 @@ define([
       this.wasLargeLayout = true
       this.wasSmallLayout = this.wasMediumLayout = false
       
-      window.isMobile = false
+      window.isSmallDevice = false
       //console.log("Setting layout to l")
     }
 
@@ -280,7 +280,13 @@ define([
         that.slideLeftPanelIfVisible()
 
         var dir = $("#right-panel-small-device").position().left
-        var amount = dir > $('body').width()/2 ? '20%' : '100%' 
+        var amount = dir > $('body').width()/2 ? '20%' : '100%'
+
+        // TODO: do this in a nice way
+        if(dir > $('body').width()/2){
+          $('.controls').each(function(){this.click()})
+        }
+
         $("#right-panel-small-device").animate({left: amount});
       }
     )
@@ -294,15 +300,17 @@ define([
         var dir = $("#left-panel-small-device").position().left
         var visible = dir >= 0 ? true : false
 
-        if(visible)
+        if(visible){
           $("#left-panel-small-device").animate({left: "-80%"});
+        }
   }
   CanvasGui.prototype.slideRightPanelIfVisible = function(){
         var dir = $("#right-panel-small-device").position().left
         var visible = dir < $('body').width()/2 ? true : false
 
-        if(visible)
+        if(visible){
           $("#right-panel-small-device").animate({left: "100%"});
+        }
   }  
 
   CanvasGui.prototype.addEventListeners = function(){

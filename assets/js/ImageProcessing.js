@@ -85,7 +85,7 @@ var ImageProcessing, _ref, module,
 
       this.outline = new OutlineStrategy(canvases, this.imageProcessor)
 
-      this.vector = new VectorizerStrategy(canvases, this.imageProcessor)
+      //this.vector = new VectorizerStrategy(canvases, this.imageProcessor)
 
 
       // Toolbar
@@ -98,8 +98,11 @@ var ImageProcessing, _ref, module,
       this.shape = new ShapeStrategy(canvases, this.imageProcessor, this.toolbar)
       this.context.addOneClickStrategy(this.shape)         
 
-      this.crop = new CropStrategy(canvases, this.imageProcessor, this.toolbar)
-      this.context.addOneClickStrategy(this.crop)      
+      // TODO: debug crop for touch device
+      if(!window.isTouchDevice){
+        this.crop = new CropStrategy(canvases, this.imageProcessor, this.toolbar)
+        this.context.addOneClickStrategy(this.crop)    
+      }
 
       this.initCanvasStrategies()
     }
@@ -210,9 +213,8 @@ var ImageProcessing, _ref, module,
         $('#toolbar-foreground-color').css({'background-color': color})
       })
 
-      if(!window.isTouchDevice){
-        $("#color-picker-modal").draggable()
-      }
+      $("#color-picker-modal").draggable()
+
 
     }
 

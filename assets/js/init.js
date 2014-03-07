@@ -1,7 +1,7 @@
 // GLOBALS
 
   // VARS
-  window.isMobile = false
+  window.isSmallDevice = false
   var greyPanelsAreHidden = true
 
   // FUNCTIONS
@@ -35,7 +35,7 @@
         , "top": $('#container').offset().top+"px"
       })
 
-      if(!window.isMobile){
+      if(!window.isSmallDevice){
         var device = window.outerWidth < 992 ? 'small' : 'big'
         $('#grey-panel-menu').css({
             "width":  $('.menu-bar.'+device+'-device').css('width')
