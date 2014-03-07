@@ -11,7 +11,7 @@ https://github.com/notiontaxi
 define([
   'text!templates/cropSubmenu.html',
   'js/strategies/ImageProcessingToolbarStrategy',
-  'js/lib/jCrop/jquery.Jcrop.min'], function(
+  'lib/jCrop/jquery.Jcrop.min'], function(
     Submenu,
     ImageProcessingToolbarStrategy, 
     JCrop) {

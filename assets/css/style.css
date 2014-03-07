@@ -503,6 +503,9 @@ img {
   height: 85%;
   overflow-y: scroll;
 }
+.small-device.fade-over-panel .tab-content ul {
+  margin: 0px 0px 15px 0px;
+}
 .small-device.fade-over-panel .tab-content li {
   padding: 10px 15px 10px 25px;
   font-size: 14px;
@@ -585,6 +588,7 @@ img {
 }
 .small-device-button {
   position: relative;
+  color: black;
   background-color: #c7e5e5;
   border: none;
   font-size: 22px;

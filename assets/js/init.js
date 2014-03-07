@@ -50,11 +50,12 @@
 
 // DEP MANAGEMENT
   require.config({
-      baseUrl: 'assets/js/lib',
+      baseUrl: 'assets/lib',
       paths: {
-            jquery: 'js/jquery-1.9.1'
-          , templates: '../../templates'
-          , js: '../'
+            templates: '../templates'
+          , js: '../js'
+          , home: '../'
+          , lib: '.'
       }
   });
 
@@ -83,7 +84,7 @@ __extends = function(child, parent) {
   $('.modalbox-overlay').hide()
 
   // hide while it is not in use
-  jQuery.mobile.autoInitializePage = false
+   jQuery.mobile.autoInitializePage = false
 
 
   // workaround for older safari versions

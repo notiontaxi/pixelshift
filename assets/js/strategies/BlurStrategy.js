@@ -7,7 +7,7 @@ https://github.com/notiontaxi
 
 "use strict"
 
-define(['text!templates/task-blur.html','js/strategies/ImageProcessingMenubarStrategy', 'js/lib/StackBlur'], function(contentTemplate, ImageProcessingMenubarStrategy, StackBlur) {
+define(['text!templates/task-blur.html','js/strategies/ImageProcessingMenubarStrategy', 'lib/StackBlur'], function(contentTemplate, ImageProcessingMenubarStrategy, StackBlur) {
 
 var BlurStrategy, _ref, module,
 
