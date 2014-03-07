@@ -88,7 +88,10 @@ define([
     this.initializeTools()
     this.initializeEditFunctionality()
     this.initializeViewFunctionality()
-    this.addKeyBindings()
+
+    if(!window.isTouchDevice ){    
+      this.addKeyBindings()
+    }
 
     this.initTabs()
 
