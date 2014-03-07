@@ -217,12 +217,12 @@ define([
       $(".content-container").addClass("big-device-options")
 
       $(".controls-wrapper").removeClass("small-device-options")
-      $(".controls-wrapper").addClass("big-device-options")  
+      $(".controls-wrapper").addClass("big-device-options")
 
       $(".controls").removeClass("small-device-options")
-      $(".controls").addClass("big-device-options")   
+      $(".controls").addClass("big-device-options")
 
-      $("body").append($("#color-picker-modal")) 
+      $("body").append($("#color-picker-modal"))
       $("body").append($("#toolbar"))
       $(".action-show-color-picker").show()
       $("#toolbar .header").show()
@@ -232,6 +232,9 @@ define([
   }
 
   CanvasGui.prototype.initializeSmallDevicesMenu = function(){
+
+    // guess what
+    var that = this
 
     $("#file-actions-list-sd-btn").click(
       function(event, ui){
@@ -265,8 +268,6 @@ define([
       }.bind(this))
     $('.view-actions-list-sd').hide()    
 
-    var that = this
-
     $('.small-device-button.action-toggle-panel.left-panel').click(
       function(event, ui){
 
@@ -294,6 +295,52 @@ define([
       }
     )
 
+    $('.small-device-button.action-show-image-navigation').click(
+      function(event, ui){
+        that.slideLeftPanelIfVisible()
+        $(".navigation-button").fadeToggle();
+      }
+    )
+
+    $('.image-navigate-left').click(
+      function(event, ui){
+        event.stopPropagation()
+        event.preventDefault()
+        $('.image-navigate-left').blur()
+        this.canvasStage.moveCanvas("left")
+      }.bind(this)
+    )
+    $('.image-navigate-left').hide().removeClass('hidden')   
+
+    $('.image-navigate-up').click(
+      function(event, ui){
+        event.stopPropagation()
+        event.preventDefault()
+        $('.image-navigate-up').blur()
+        this.canvasStage.moveCanvas("up")
+      }.bind(this)
+    )   
+    $('.image-navigate-up').hide().removeClass('hidden')  
+
+    $('.image-navigate-right').click(
+      function(event, ui){
+        event.stopPropagation()
+        event.preventDefault()
+        $('.image-navigate-right').blur()
+        this.canvasStage.moveCanvas("right")
+      }.bind(this)
+    )   
+    $('.image-navigate-right').hide().removeClass('hidden')  
+
+    $('.image-navigate-down').click(
+      function(event, ui){
+        event.stopPropagation()
+        event.preventDefault()
+        $('.image-navigate-down').blur()
+        this.canvasStage.moveCanvas("down")
+      }.bind(this)
+    )  
+    $('.image-navigate-down').hide().removeClass('hidden')  
 
     $('.small-device').hide()
   }

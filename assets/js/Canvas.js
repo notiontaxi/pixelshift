@@ -45,7 +45,11 @@ define([], function() {
       this.oldVisibleWidth = this.canvasWidth
       this.oldVisibleHeight =  this.canvasHeight      
 
-      this.pixelPerMove = 50 // change this value for bigger or smaller steps
+      // change this value for bigger or smaller steps
+      if(window.isTouchDevice )
+        this.pixelPerMove = 20
+      else
+        this.pixelPerMove = 50 
 
       this.gotNewImage = true
 
