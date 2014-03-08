@@ -6,10 +6,10 @@
         id        = "de.notiontaxi.phonegap.trial"
         version   = "0.2.0">
 
-    <name>Phonegap-trial</name>
+    <name>Pixelshift</name>
 
     <description>
-        My first sample application using phonegap.
+        Image processing
     </description>
 
     <author href="https://github.com/notiontaxi" email="florian.wokurka@gmail.com">
