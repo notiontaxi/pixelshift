@@ -40,6 +40,7 @@
     <!-- Plugins -->
 
     <!-- Core plugins -->
+    <gap:plugin name="org.apache.cordova.AccelListener" />
     <gap:plugin name="org.apache.cordova.battery-status" />
     <gap:plugin name="org.apache.cordova.camera" />
     <gap:plugin name="org.apache.cordova.media-capture" />
