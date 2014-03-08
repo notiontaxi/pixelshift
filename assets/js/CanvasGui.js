@@ -13,7 +13,8 @@ define([
     'text!templates/footer-small-device.html', 
     'text!templates/header-small-device.html', 
     'text!templates/left-panel-small-device.html',     
-    'text!templates/right-panel-small-device.html', 
+    'text!templates/right-panel-small-device.html',
+    'text!templates/navigation-buttons.html',  
     'js/FileProcessor', 
     'js/ImageProcessor', 
     'js/Canvas', 
@@ -26,6 +27,7 @@ define([
     headerTemplateSmallDevice,
     leftPanelSmallDevice,
     rightPanelSmallDevice,
+    navigationsButtons,
     FileProcessor, 
     ImageProcessor, 
     Canvas, 
@@ -57,6 +59,7 @@ define([
 
     $(this.menuContainerIdentifier).html($(menuTemplate))
 
+    $(canvasContainerIdentifier).append($(navigationsButtons))
     
     $(this.overlayElementsIdentifier).append($(headerTemplateSmallDevice))
     $(this.overlayElementsIdentifier).append($(footerTemplateSmallDevice))
@@ -133,7 +136,10 @@ define([
       width = Math.floor(this.viewport.width - 20)
       height = Math.floor(this.viewport.height*.71 - 30)
 
-      this.updateCanvasSizes(width,height)
+      if(window.isTouchDevice)
+        this.updateCanvasSizes(width,height, true)
+      else
+        this.updateCanvasSizes(width,height)
       
       $(this.canvasWrapId).css({"width": ""+width+"px", "height":""+(height+20)+"px"})
       this.toggleControlls()
@@ -177,10 +183,15 @@ define([
 
   }
 
-  CanvasGui.prototype.updateCanvasSizes = function(width, height){
+  CanvasGui.prototype.updateCanvasSizes = function(width, height, all){
     this.canvasShown.updateSize(width, height)
     this.canvasStage.updateSize(width, height)
 
+    // destroys imaga data
+    if(!!all)
+      this.canvasOrigin.updateSize(width, height)
+
+    // canvas for drawing
     $('#canvas-shown-clone').css({"width":""+width+"px", "height":""+height+"px"})
     $('#canvas-shown-clone')[0].width = width
     $('#canvas-shown-clone')[0].height = height
@@ -228,6 +239,8 @@ define([
       $(".action-show-color-picker").show()
       $("#toolbar .header").show()
       $("#toolbar").removeClass('small-device-options')    
+
+      $(".navigation-button").hide()
     }
 
     this.wasBigMenu = !this.wasBigMenu 

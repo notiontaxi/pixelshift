@@ -191,7 +191,8 @@ footer {
   height: auto;
 }
 .hidden {
-  display: none;
+  display: none !important;
+  visibility: hidden !important;
 }
 .menu-element-sd {
   padding-left: 0px;
