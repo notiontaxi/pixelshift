@@ -16,12 +16,9 @@
         Florian Wokurka
     </author>
 
-    <!--
-        If you do not want any permissions to be added to your app, add the
-        following tag to your config.xml; you will still have the INTERNET
-        permission on your app, which PhoneGap requires.
-    -->
-    <preference name="permissions"                value="none"/>
+    <feature name="http://api.phonegap.com/1.0/accelerometer" />
+    <feature name="http://api.phonegap.com/1.0/device" />
+    <feature name="http://api.phonegap.com/1.0/camera" />
 
     <!-- Customize your app and platform with the preference element. -->
     <preference name="phonegap-version"           value="3.1.0" />          <!-- all: current version of PhoneGap -->
@@ -47,7 +44,6 @@
     <gap:plugin name="org.apache.cordova.device-orientation" />
     <gap:plugin name="org.apache.cordova.file" />
     <gap:plugin name="org.apache.cordova.file-transfer" />
-    <gap:plugin name="org.apache.cordova.globalization" />
     <gap:plugin name="org.apache.cordova.inappbrowser" />
     <gap:plugin name="org.apache.cordova.media" />
 
