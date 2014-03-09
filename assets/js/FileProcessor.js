@@ -106,8 +106,26 @@ define([], function() {
 
  
   FileProcessor.prototype.getFileReader = function(){
+    if (!this.reader)
+    {
+      if(this.checkFileReaderSupport()){
+        this.reader = new FileReader();
 
-    return null
+        this.reader.addEventListener("load", function(event) {
+          // place spinner
+        });  
+        
+        this.reader.addEventListener("loadend", function(event) {
+          this.callback(this.img, this.callbackObj);
+        }.bind(this)); 
+
+        return this.reader;
+      }
+      else
+        alert("Your browser doesn't support the File API");
+        return undefined;
+    }
+    return this.reader;
   }
 
 
