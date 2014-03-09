@@ -35,9 +35,11 @@
     <feature name="http://api.phonegap.com/1.0/accelerometer" />
     <feature name="http://api.phonegap.com/1.0/device" />
     <feature name="http://api.phonegap.com/1.0/camera" />
-    <feature name="http://api.phonegap.com/1.0/geolocation" />
+    
     <!-- Core plugins -->
     <gap:plugin name="org.apache.cordova.camera" />
+    <gap:plugin name="org.apache.cordova.media-capture" />
+    <gap:plugin name="org.apache.cordova.console" />    
     <gap:plugin name="org.apache.cordova.device" />
     <gap:plugin name="org.apache.cordova.device-motion" />
     <gap:plugin name="org.apache.cordova.device-orientation" />
