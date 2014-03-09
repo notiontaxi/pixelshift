@@ -3,8 +3,8 @@
 <!-- config.xml reference: https://build.phonegap.com/docs/config-xml -->
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
-        id        = "de.notiontaxi.phonegap.trial"
-        version   = "0.2.0">
+        id        = "de.notiontaxi.pixelshift"
+        version   = "0.3.9">
 
     <name>Pixelshift</name>
 
@@ -35,7 +35,7 @@
     <feature name="http://api.phonegap.com/1.0/accelerometer" />
     <feature name="http://api.phonegap.com/1.0/device" />
     <feature name="http://api.phonegap.com/1.0/camera" />
-    
+
     <!-- Core plugins -->
     <gap:plugin name="org.apache.cordova.camera" />
     <gap:plugin name="org.apache.cordova.media-capture" />
