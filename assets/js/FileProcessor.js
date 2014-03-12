@@ -109,7 +109,7 @@ define([], function() {
     if (!this.reader)
     {
       if(this.checkFileReaderSupport()){
-        this.reader = new FileReader()._realReader;
+        this.reader = new FileReader();
 
         this.reader.addEventListener("load", function(event) {
           // place spinner
