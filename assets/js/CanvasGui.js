@@ -16,7 +16,6 @@ define([
     'text!templates/right-panel-small-device.html',
     'text!templates/navigation-buttons.html',  
     'js/FileProcessor', 
-    'js/ImageProcessor', 
     'js/Canvas', 
     'js/DragNDrop',
     'js/Toolbar'], 
@@ -28,8 +27,7 @@ define([
     leftPanelSmallDevice,
     rightPanelSmallDevice,
     navigationsButtons,
-    FileProcessor, 
-    ImageProcessor, 
+    FileProcessor,
     Canvas, 
     DragNDrop, 
     Toolbar
@@ -43,7 +41,7 @@ define([
 
 
   // tell wehre the menu should be rendered and where i can find the canvas
-  function CanvasGui(canvasContainerIdentifier){
+  function CanvasGui(canvasContainerIdentifier, imageProcessor){
 
     this.menuContainerIdentifier = "#menu-container"
     this.containerIdentifier = "#container"
@@ -53,7 +51,6 @@ define([
     this.canvasShownIdentifier = "canvas-shown"
 
     this.canvasWrapId = "#dragg-container"
-    this.toolbar =  new Toolbar('#toolbar .content')
 
     $(canvasContainerIdentifier).html($(canvasGuiTemplate))
 
@@ -85,7 +82,7 @@ define([
     this.canvasShown.setParent(this.canvasStage)
 
     this.fileProcessor = new FileProcessor()
-    this.imageProcessor = new ImageProcessor()
+    this.imageProcessor = imageProcessor
 
     this.addEventListeners()
     this.initializeTools()
@@ -99,6 +96,7 @@ define([
     this.initTabs()
 
     this.initializeSmallDevicesMenu()
+
   }
 
   CanvasGui.prototype.initialize = function(){
@@ -406,6 +404,7 @@ define([
     var changeFile = function(evt){
       var file = evt.target.files[0] // FileList object
       this.canvasStage.zoomReset()
+      console.log(URL.createObjectURL(file))
       this.fileProcessor.loadFileFromFilesystem(URL.createObjectURL(file), this.canvasOrigin.drawImage, this.canvasOrigin)
       // remove and add in order to load the same image again
       $('#action-upload').remove()

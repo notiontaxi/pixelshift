@@ -19,8 +19,9 @@ define(['text!templates/image-processing.html',
   'js/strategies/ShapeStrategy',
   'js/CanvasGui', 
   'js/test/Test',
+  'js/Context',
   'js/Toolbar',
-  'js/Context',], function(contentTemplate, 
+  'js/ImageProcessor',], function(contentTemplate, 
     OutlineStrategy, 
     VectorizerStrategy, 
     FloodfillStrategy,
@@ -32,46 +33,46 @@ define(['text!templates/image-processing.html',
     ShapeStrategy,
     CanvasGui, 
     Test, 
+    Context,
     Toolbar,
-    Context) {
+    ImageProcessor) {
 
 var ImageProcessing, _ref, module,
 
 
   module = function() {}
   ImageProcessing = (function(_super){
-    __extends(ImageProcessing, CanvasGui);
+    //__extends(ImageProcessing, CanvasGui);
 // --------------------------------------
 
 
 
     function ImageProcessing(containerIdentifier){   
       // render templates
+      this.imageProcessor = new ImageProcessor()
       $(containerIdentifier).html($(contentTemplate))
-
-      ImageProcessing.__super__.constructor("#canvas-container")
+      this.toolbar =  new Toolbar('#toolbar .content')
+      this.canvasGui = new CanvasGui("#canvas-container", this.imageProcessor);
       
       this.initColorPicker()
-      
       this.initContext()
       
-      this.initialize()
-      
-      //this.runTests()
+      this.canvasGui.initialize()
 
+      //this.runTests()
     }
 
     ImageProcessing.prototype.initContext = function(){
       
       var canvases = 
         {
-            canvasOrigin: this.canvasOrigin
-          , canvasStage: this.canvasStage
-          , canvasShown: this.canvasShown
-          , canvasCloneElement : this.canvasShownClone
+            canvasOrigin: this.canvasGui.canvasOrigin
+          , canvasStage: this.canvasGui.canvasStage
+          , canvasShown: this.canvasGui.canvasShown
+          , canvasCloneElement : this.canvasGui.canvasShownClone
         }
 
-      this.context = new Context(canvases)  
+      this.context = new Context(canvases)
 
       // Menubar
       this.brightness = new BrightnessStrategy(canvases, this.imageProcessor)
@@ -84,9 +85,6 @@ var ImageProcessing, _ref, module,
       this.context.addStackableStrategy(this.blur)
 
       this.outline = new OutlineStrategy(canvases, this.imageProcessor)
-
-      //this.vector = new VectorizerStrategy(canvases, this.imageProcessor)
-
 
       // Toolbar
       this.floodfill = new FloodfillStrategy(canvases, this.imageProcessor, this.toolbar)
@@ -114,14 +112,14 @@ var ImageProcessing, _ref, module,
     ImageProcessing.prototype.initCanvasStrategies = function(){
 
       if(window.isTouchDevice){
-        this.canvasShownClone.on('touchcancel', 
+        this.canvasGui.canvasShownClone.on('touchcancel', 
           function() {
               console.log('event cancelled!')
               console.log(event)
           }
         )
 
-        this.canvasShownClone.touchstart(
+        this.canvasGui.canvasShownClone.touchstart(
           function(event){
             event.preventDefault()
             if(!!this.toolbar.lastActive){
@@ -130,22 +128,16 @@ var ImageProcessing, _ref, module,
           }.bind(this)
         )
 
-        this.canvasShownClone.touchmove( 
+        this.canvasGui.canvasShownClone.touchmove( 
           function(event){
             event.preventDefault()
-            // console.log(  "x: "+
-            //               event.originalEvent.changedTouches[0].pageX+
-            //               ", y: "+
-            //               event.originalEvent.changedTouches[0].pageY)
-            // console.log('touch move')
-            // console.log(event)
             if(!!this.toolbar.lastActive){
               this.context.oneClickStrategy(this.toolbar.mode()).mousemove(this.state(event.originalEvent.changedTouches[0]))
             }
           }.bind(this)
         )
 
-        this.canvasShownClone.touchend(
+        this.canvasGui.canvasShownClone.touchend(
           function(event){
             event.preventDefault()
             if(!!this.toolbar.lastActive){
@@ -154,21 +146,21 @@ var ImageProcessing, _ref, module,
           }.bind(this)
         )  
       }else{
-        this.canvasShownClone.mousedown(
+        this.canvasGui.canvasShownClone.mousedown(
           function(event){
             if(!!this.toolbar.lastActive)
               this.context.oneClickStrategy(this.toolbar.mode()).mousedown(this.state(event))
           }.bind(this)
         )
 
-        this.canvasShownClone.mousemove(
+        this.canvasGui.canvasShownClone.mousemove(
           function(event){
             if(!!this.toolbar.lastActive)
               this.context.oneClickStrategy(this.toolbar.mode()).mousemove(this.state(event))
           }.bind(this)
         )
 
-        this.canvasShownClone.mouseup(
+        this.canvasGui.canvasShownClone.mouseup(
           function(event){
             if(!!this.toolbar.lastActive)
               this.context.oneClickStrategy(this.toolbar.mode()).mouseup(this.state(event))
@@ -184,14 +176,14 @@ var ImageProcessing, _ref, module,
 
     ImageProcessing.prototype.state = function(event){
 
-      var mouseCoords = this.canvasShown.mouseCoords(event)
-      var totalImagePosition = this.canvasStage.totalImagePosition(mouseCoords)
+      var mouseCoords = this.canvasGui.canvasShown.mouseCoords(event)
+      var totalImagePosition = this.canvasGui.canvasStage.totalImagePosition(mouseCoords)
 
       return {
               color: this.toolbar.foregroundColor()
             , mouse: mouseCoords
             , totalImagePosition: totalImagePosition
-            , totalCartesianImagePosition: this.canvasStage.totalCartesianImagePosition(mouseCoords)
+            , totalCartesianImagePosition: this.canvasGui.canvasStage.totalCartesianImagePosition(mouseCoords)
           }
     }
 

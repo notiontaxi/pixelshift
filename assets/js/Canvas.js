@@ -44,6 +44,11 @@ define([], function() {
       else
         this.pixelPerMove = 50 
 
+      if(window.isTouchDevice )
+        this.undoStackSize = 20
+      else
+        this.undoStackSize = 40       
+
       this.gotNewImage = true
 
       this.ctx.font = "bold 12px sans-serif"
@@ -518,9 +523,6 @@ define([], function() {
               allPixels.data[positionDestination] = area.pixels[positionSource]
               allPixels.data[positionDestination+1] = area.pixels[positionSource+1]
               allPixels.data[positionDestination+2] = area.pixels[positionSource+2]
-              if(this.originalIsBackground)
-                allPixels.data[positionDestination+3] = 50
-              else
                 allPixels.data[positionDestination+3] = area.pixels[positionSource+3]
             }
           }
@@ -583,8 +585,8 @@ define([], function() {
         var imageData = this.getFullImageData()
         var x = 0
 
+        // DIFF strategy
         if(pixelChanges[0] === 'diff'){
-          //console.log("undo using diff strategy")
           pixelRevets.push('diff')
           for(var i = 1; i < pixelChanges.length; i+=2){
             pos = pixelChanges[i]
@@ -610,8 +612,9 @@ define([], function() {
             x=x>>8
             imageData.data[pos]   = x&(255)
           }
+        // ImageData strategy
         }else if(pixelChanges[0] === 'ImagaData'){
-            //console.log("undo using ImagaData strategy")
+            
             pixelRevets.push('ImagaData')
             pixelRevets.push(this.getFullImageData().data)
             var lastPixels = pixelChanges[1]
@@ -654,7 +657,6 @@ define([], function() {
         aComp = imageDataNew.data[i+3] === imageDataOld.data[i+3]
 
         if(!(rComp && gComp && bComp && aComp)){
-
           x=imageDataOld.data[i]
           x=x<<8
           x+=imageDataOld.data[i+1]
@@ -663,8 +665,9 @@ define([], function() {
           x=x<<8
           x+=imageDataOld.data[i+3]
 
+
           diff.push(i) // position
-          diff.push(x)   // r,g,b,a
+          diff.push(x) // r,g,b,a
         }
       }
 
@@ -704,7 +707,7 @@ define([], function() {
           //console.log("push diff to undo stack ("+diff['pixel'].length+")")
     
           // avoid big data mass
-          if(this.undoStack.length > 20){
+          if(this.undoStack.length >= this.undoStackSize){
             this.undoStack.shift()
           }
           // set pointer to current state
@@ -731,8 +734,8 @@ define([], function() {
       _this.imageWidth = 0
 
       // ToDo: no maximum image size
-      // if(!!scaleToCanvas)
-      // {
+       if(window.isSmallDevice || window.isTouchDevice)
+       {
         if(img.width > img.height)
         {
           if(img.width >= _this.cv.width){
@@ -751,10 +754,10 @@ define([], function() {
             _this.imageWidth = img.width  
           }
         }
-      // }else{
-      //   _this.imageHeight = img.height
-      //   _this.imageWidth = img.width
-      // }
+       }else{
+         _this.imageHeight = _this.canvasHeight = img.height
+         _this.imageWidth = _this.canvasWidth = img.width
+       }
 
       _this.gotNewImage = true
       _this.clear()

@@ -7,7 +7,7 @@ https://github.com/notiontaxi
 
 "use strict"
 
-define(['js/Toolbar'], function(Toolbar) {
+define([], function() {
 
 var ImageProcessingStrategy, _ref, module,
 
