@@ -129,7 +129,7 @@ define([
 
     this.updateViewport()
 
-    if(width < 992 && !this.wasSmallLayout){
+    if(width < 992 && !this.wasSmallLayout && window.isTouchDevice){
       $("#footerLink").hide()
       width = Math.floor(this.viewport.width - 20)
       height = Math.floor(this.viewport.height*.71 - 30)
@@ -149,9 +149,9 @@ define([
     } else if(width >= 992 && width < 1200 && !this.wasMediumLayout){
       $("#footerLink").show()
 
-      this.updateCanvasSizes(700,560)
+      this.updateCanvasSizes(700,525)
 
-      $(this.canvasWrapId).css({"width":"700px", "height":"560px"})
+      $(this.canvasWrapId).css({"width":"700px", "height":"525px"})
       if(this.wasSmallLayout)
         this.toggleControlls() 
       this.wasMediumLayout = true
@@ -162,9 +162,9 @@ define([
     } else if(width >= 1200 && !this.wasLargeLayout){
       $("#footerLink").show()
 
-      this.updateCanvasSizes(1100,800)
+      this.updateCanvasSizes(1100,825)
 
-      $(this.canvasWrapId).css({"width":"1100px", "height":"800px"})
+      $(this.canvasWrapId).css({"width":"1100px", "height":"825px"})
       if(this.wasSmallLayout)
         this.toggleControlls()
       this.wasLargeLayout = true
