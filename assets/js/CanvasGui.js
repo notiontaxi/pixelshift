@@ -162,9 +162,9 @@ define([
     } else if(width >= 1200 && !this.wasLargeLayout){
       $("#footerLink").show()
 
-      this.updateCanvasSizes(800,640)
+      this.updateCanvasSizes(1100,800)
 
-      $(this.canvasWrapId).css({"width":"800px", "height":"640px"})
+      $(this.canvasWrapId).css({"width":"1100px", "height":"800px"})
       if(this.wasSmallLayout)
         this.toggleControlls()
       this.wasLargeLayout = true
@@ -193,7 +193,8 @@ define([
     $('#canvas-shown-clone').css({"width":""+width+"px", "height":""+height+"px"})
     $('#canvas-shown-clone')[0].width = width
     $('#canvas-shown-clone')[0].height = height
-    
+    console.log(width)
+    console.log(height)
   }
 
   CanvasGui.prototype.toggleControlls = function(){
