@@ -468,9 +468,9 @@ define([
       var imgData = this.canvasOrigin.getImageData()
 
       this.processedImageData = this.imageProcessor.convolute( imgData,
-        [ 1, 1, 1,
-          1, .7, -1,
-          -1, -1, -1 ]
+        [ -2, -1, 0,
+          -1, 1, 1,
+          0, 1, 2 ]
         )
 
         this.canvasOrigin.putImageData(this.processedImageData)
