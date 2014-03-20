@@ -193,8 +193,6 @@ define([
     $('#canvas-shown-clone').css({"width":""+width+"px", "height":""+height+"px"})
     $('#canvas-shown-clone')[0].width = width
     $('#canvas-shown-clone')[0].height = height
-    console.log(width)
-    console.log(height)
   }
 
   CanvasGui.prototype.toggleControlls = function(){
@@ -405,7 +403,7 @@ define([
     var changeFile = function(evt){
       var file = evt.target.files[0] // FileList object
       this.canvasStage.zoomReset()
-      console.log(URL.createObjectURL(file))
+      
       this.fileProcessor.loadFileFromFilesystem(URL.createObjectURL(file), this.canvasOrigin.drawImage, this.canvasOrigin)
       // remove and add in order to load the same image again
       $('#action-upload').remove()
@@ -572,13 +570,6 @@ define([
         event.preventDefault()
         this.canvasStage.zoomReset()
     }.bind(this))              
-
-    $(".action-show-toolbar").click(
-      function(event, ui){
-        event.stopPropagation()
-        event.preventDefault()
-        this.toolbar.show()
-    }.bind(this)) 
 
     /*
     $(".action-show-color-picker").click(

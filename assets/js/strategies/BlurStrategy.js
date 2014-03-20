@@ -44,7 +44,6 @@ var BlurStrategy, _ref, module,
       if(!!preview){
         this.processedImageData = stackBlurImage(imgData, imgData.width, imgData.height, this.currentValue, false )
       }else{
-
         // calculate relative blur value
         var zoomAmountToPass = this.canvasStage.currentScale >= 1 ? 1 : 1/this.canvasStage.currentScale
         var imgData = this.canvasOrigin.getImageData()

@@ -55,6 +55,7 @@ define(['text!templates/toolbar.html'], function(toolbarTemplate) {
 
       $(".action-close-toolbar").click(
       function(event, ui){
+
         this.hide()
       }.bind(this)) 
 

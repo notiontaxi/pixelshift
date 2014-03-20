@@ -55,6 +55,7 @@ var ImageProcessing, _ref, module,
       this.canvasGui = new CanvasGui("#canvas-container", this.imageProcessor);
       
       this.initColorPicker()
+      this.initToolbar()
       this.initContext()
       
       this.canvasGui.initialize()
@@ -209,6 +210,15 @@ var ImageProcessing, _ref, module,
 
 
     }
+
+    ImageProcessing.prototype.initToolbar = function(){
+
+      $(".action-show-toolbar").click(
+        function(event, ui){
+          this.toolbar.show()
+      }.bind(this)) 
+
+    }    
 
 
 

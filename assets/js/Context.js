@@ -58,7 +58,7 @@ define([], function() {
     if(!_this)
       var _this = this
 
-    _this.imageData = _this.canvasStage.getImageData()
+    _this.imageData = _this.canvasStage.getFullImageData()
 
     for(var i = 0; i < _this.StackableStrategies.length; i++){
       if(_this.StackableStrategies[i].changed){
