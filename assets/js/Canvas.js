@@ -160,7 +160,9 @@ define([], function() {
 
     Canvas.prototype.updateCurrentImageSize = function(){
       this.currentImageWidth  = this.imageWidth * this.currentScale
-      this.currentImageHeight = this.imageHeight * this.currentScale     
+      this.currentImageHeight = this.imageHeight * this.currentScale 
+      this.currentImageWidth  = this.currentImageWidth  > this.canvasWidth ? this.canvasWidth : this.currentImageWidth
+      this.currentImageHeight = this.currentImageHeight > this.canvasHeight ? this.canvasHeight : this.currentImageHeight      
     }
 
     /**
