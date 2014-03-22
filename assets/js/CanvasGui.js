@@ -134,10 +134,7 @@ define([
       width = Math.floor(this.viewport.width - 20)
       height = Math.floor(this.viewport.height*.71 - 30)
 
-      if(window.isTouchDevice)
-        this.updateCanvasSizes(width,height, true)
-      else
-        this.updateCanvasSizes(width,height)
+      this.updateCanvasSizes(width,height)
       
       $(this.canvasWrapId).css({"width": ""+width+"px", "height":""+(height+20)+"px"})
       this.toggleControlls()
