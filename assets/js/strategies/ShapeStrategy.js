@@ -69,7 +69,9 @@ var shapeStrategy, _ref, module,
         this.updateDirection(state)
         if(this.moveShape)
           this.correctStartPositions(state)  
-        else{
+        else if(this.nDeg){
+          this.manipulateDegree()
+        }else{
           this.updateSize(state)
         }  
 
@@ -82,7 +84,7 @@ var shapeStrategy, _ref, module,
     shapeStrategy.prototype.mouseup = function(state){
       if (this.started) {       
 
-        if (!!this.w && !!this.h){
+        if (!!this.w || !!this.h){
           this.handleDrawing(true, state)
         }
 
@@ -93,6 +95,13 @@ var shapeStrategy, _ref, module,
         this.canvasOrigin.registerContentModification()
       }
     } 
+
+    shapeStrategy.prototype.manipulateDegree = function(){
+      if(Math.abs(this.h) <= 50)
+        this.h = 0
+      else if(Math.abs(this.w) <= 50)
+        this.w = 0
+    }
 
     shapeStrategy.prototype.handleDrawing = function(finalDraw, state){
 
@@ -146,9 +155,10 @@ var shapeStrategy, _ref, module,
       ctx.beginPath()
       ctx.moveTo(this.x,this.y)
       ctx.lineTo(this.x+this.w, this.y+this.h)
+
       ctx.closePath()
       ctx.stroke()
-    }      
+    }
 
     shapeStrategy.prototype.updateSize = function(state){
       this.w = Math.floor((state.mouse.x - this.fromCanvas.x))
@@ -204,7 +214,19 @@ var shapeStrategy, _ref, module,
           event.stopPropagation()
           event.preventDefault()
           this.moveShape = false
-      }.bind(this), 'keyup')    
+      }.bind(this), 'keyup')
+
+      Mousetrap.bind('shift', function(event, ui){
+          event.stopPropagation()
+          event.preventDefault()
+          this.nDeg = true
+      }.bind(this), 'keydown')
+
+      Mousetrap.bind('shift', function(event, ui){
+          event.stopPropagation()
+          event.preventDefault()
+          this.nDeg = false
+      }.bind(this), 'keyup')
 
     }
 

@@ -71,6 +71,8 @@ define([], function() {
       evt.initMouseEvent('click', true, true, window, 1, 0, 0, 0, 0,
           false, false, false, false, 0, null)
       saveClick.dispatchEvent(evt)
+      console.log(window.URL)
+      console.log(window.webkitURL)
       (window.URL || window.webkitURL).revokeObjectURL(saveClick.href)
   }
 

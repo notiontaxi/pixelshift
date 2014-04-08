@@ -150,7 +150,7 @@ define([
 
       $(this.canvasWrapId).css({"width":"700px", "height":"525px"})
       if(this.wasSmallLayout)
-        this.toggleControlls() 
+        this.toggleControlls()
       this.wasMediumLayout = true
       this.wasSmallLayout = this.wasLargeLayout = false
       window.isSmallDevice = false
