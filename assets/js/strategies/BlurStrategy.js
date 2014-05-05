@@ -36,7 +36,7 @@ var BlurStrategy, _ref, module,
     }
 
     BlurStrategy.prototype.initializeTools = function(){
-      this.initializeDefaultSlider(BlurStrategy.NAME, 0, 0, 180)
+      this.initializeDefaultSlider(BlurStrategy.NAME, 0, 0, 50)
     }
 
     BlurStrategy.prototype.execute = function(imgData, preview){
