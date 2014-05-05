@@ -158,6 +158,21 @@ define([], function() {
       }
     }
 
+    Canvas.prototype.fitImageToCanvas = function(){
+      var zoom = parseFloat(this.canvasWidth/this.imageWidth).toFixed(1)
+      zoom = parseFloat(zoom) + .1
+      if(zoom <= .1){
+        zoom = .2
+      }
+      console.log(zoom)
+      if(zoom <= 1){
+        this.currentScale = zoom
+        this.zoomOut()
+      }else{
+        this.zoomReset()
+      }
+    }
+
     Canvas.prototype.updateCurrentImageSize = function(){
       this.currentImageWidth  = this.imageWidth * this.currentScale
       this.currentImageHeight = this.imageHeight * this.currentScale 
@@ -772,10 +787,11 @@ define([], function() {
       _this.cv.height = _this.imageHeight
       _this.cv.height = _this.imageHeight
       
-      if(!!imageData)
+      if(!!imageData){
         _this.ctx.putImageData(img,0,0)
-      else
+      }else{
         _this.getContext().drawImage(img, 0, 0, _this.imageWidth, _this.imageHeight)
+      }
       
       _this.registerContentModification()
       _this.drawClones()
@@ -1223,14 +1239,6 @@ define([], function() {
     Canvas.prototype.destroyClone = function(id){
       this.clone.destroy()
     }    
-
-    /**
-    * Static helper
-    */
-    Canvas.colorEquals = function(pos1, pos2){
-
-    }
-
 
 
 // --------------------------------------

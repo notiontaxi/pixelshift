@@ -396,12 +396,17 @@ define([
         this.slideLeftPanelIfVisible()
     }.bind(this))   
 
+    var putFile = function(img){
+      this.canvasOrigin.drawImage(img)
+      this.canvasStage.fitImageToCanvas()
+    }.bind(this)
+
     // load image, when filename was changed
     var changeFile = function(evt){
       var file = evt.target.files[0] // FileList object
       this.canvasStage.zoomReset()
       
-      this.fileProcessor.loadFileFromFilesystem(URL.createObjectURL(file), this.canvasOrigin.drawImage, this.canvasOrigin)
+      this.fileProcessor.loadFileFromFilesystem(URL.createObjectURL(file), putFile, this.canvasOrigin)
       // remove and add in order to load the same image again
       $('#action-upload').remove()
       $("<input type='file' name='image' id='action-upload' accept='image/*' class='hide' />").change(changeFile).appendTo($('#container'));
@@ -565,7 +570,7 @@ define([
       function(event, ui){
         event.stopPropagation()
         event.preventDefault()
-        this.canvasStage.zoomReset()
+        this.canvasStage.fitImageToCanvas()
     }.bind(this))              
 
     /*
@@ -615,7 +620,7 @@ define([
     }.bind(this))
 
     Mousetrap.bind('command+0', function(event, ui){
-        this.canvasStage.zoomReset()
+        this.canvasStage.fitImageToCanvas()
     }.bind(this))    
 
     Mousetrap.bind('up', function(event, ui){
