@@ -70,9 +70,7 @@ var CropStrategy, _ref, module,
           , selectedArea.x1 + selectedArea.w <= this.canvasStage.imageWidth ? selectedArea.w : this.canvasStage.imageWidth - selectedArea.x1
           , selectedArea.y1 + selectedArea.h <= this.canvasStage.imageHeight ? selectedArea.h : this.canvasStage.imageHeight - selectedArea.y1
         )
-
-        this.canvasOrigin.putImageData(croppedArea)
-        this.canvasOrigin.copyToClones()
+        this.canvasOrigin.drawImage(croppedArea, this.canvasOrigin , true)
         this.inactiveAction()
         this.toolbar.lastActive.setInactive()
 

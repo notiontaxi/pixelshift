@@ -727,7 +727,7 @@ define([], function() {
     * @param {canvas} _this The canvas onto the image shall be drawn 
     *
     */
-    Canvas.prototype.drawImage = function(img, _this, scaleToCanvas){
+    Canvas.prototype.drawImage = function(img, _this, imageData){
       if(!_this)
         var _this = this
 
@@ -770,7 +770,13 @@ define([], function() {
       })
       _this.cv.width = _this.imageWidth
       _this.cv.height = _this.imageHeight
-      _this.getContext().drawImage(img, 0, 0, _this.imageWidth, _this.imageHeight)
+      _this.cv.height = _this.imageHeight
+      
+      if(!!imageData)
+        _this.ctx.putImageData(img,0,0)
+      else
+        _this.getContext().drawImage(img, 0, 0, _this.imageWidth, _this.imageHeight)
+      
       _this.registerContentModification()
       _this.drawClones()
     }
