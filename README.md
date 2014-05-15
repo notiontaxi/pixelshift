@@ -91,8 +91,8 @@ Different layouts for mobile (adjusting to screen size) and desktop (currently t
 * [Text.js](http://github.com/requirejs/text)  
   MIT License
 * [StackBlur](http://www.quasimondo.com/StackBlurForCanvas/StackBlurDemo.html)  
-  MIT License
-  Modified
+  MIT License  
+  Source-code is modified
 
 ##Used Resources
 * [IcoMoon](http://icomoon.io/)  
