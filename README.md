@@ -99,8 +99,11 @@ Different layouts for mobile (adjusting to screen size) and desktop (currently t
   GNU GENERAL PUBLIC LICENSE v 3.0
 
 
-##The missing parts
+##To do
 * Crop for mobiles
+* Change image resolution
+* Image rotation
+* Flip image (horizontal/vertical)
 * Text-tool
 * Layers  
   * File format for layers
